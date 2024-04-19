@@ -1,4 +1,4 @@
-package com.jobseeker.cluedetectivenotes.card;
+package com.jobseeker.cluedetectivenotes.model.card;
 
 public enum DefaultCard {
     SCARLET, MUSTARD, WHITE, GREEN, PEACOCK, PLUM,

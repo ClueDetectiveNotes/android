@@ -1,4 +1,4 @@
-package com.jobseeker.cluedetectivenotes.sheet.exceptions;
+package com.jobseeker.cluedetectivenotes.model.sheet.exceptions;
 
 public class NotMultiSelectionModeException extends Exception{
     public NotMultiSelectionModeException(){

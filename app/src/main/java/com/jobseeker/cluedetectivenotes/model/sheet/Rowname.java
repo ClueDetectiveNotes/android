@@ -1,6 +1,6 @@
-package com.jobseeker.cluedetectivenotes.sheet;
+package com.jobseeker.cluedetectivenotes.model.sheet;
 
-import com.jobseeker.cluedetectivenotes.card.DefaultCard;
+import com.jobseeker.cluedetectivenotes.model.card.DefaultCard;
 
 public class Rowname {
     DefaultCard card;

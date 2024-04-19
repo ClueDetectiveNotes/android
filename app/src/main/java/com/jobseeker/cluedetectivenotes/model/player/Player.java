@@ -1,4 +1,4 @@
-package com.jobseeker.cluedetectivenotes.player;
+package com.jobseeker.cluedetectivenotes.model.player;
 
 public class Player {
     String name;

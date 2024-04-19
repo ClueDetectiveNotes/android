@@ -1,6 +1,6 @@
-package com.jobseeker.cluedetectivenotes.sheet;
+package com.jobseeker.cluedetectivenotes.model.sheet;
 
-import com.jobseeker.cluedetectivenotes.player.Player;
+import com.jobseeker.cluedetectivenotes.model.player.Player;
 
 public class Colname {
     Player player;

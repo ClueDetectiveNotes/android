@@ -1,9 +1,11 @@
-package com.jobseeker.cluedetectivenotes.sheet;
+package com.jobseeker.cluedetectivenotes.model.sheet;
 
-import com.jobseeker.cluedetectivenotes.card.DefaultCard;
-import com.jobseeker.cluedetectivenotes.player.Player;
-import com.jobseeker.cluedetectivenotes.sheet.exceptions.CellNotFindException;
-import com.jobseeker.cluedetectivenotes.sheet.exceptions.NotMultiSelectionMode;
+import com.jobseeker.cluedetectivenotes.model.card.DefaultCard;
+import com.jobseeker.cluedetectivenotes.model.player.Player;
+import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
+import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
+import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CellNotFindException;
+import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.NotMultiSelectionModeException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,10 +63,10 @@ public class Sheet {
         return !selectedCells.isEmpty();
     }
 
-    public Cell selectCell(Rowname rowname, Colname colname) throws Exception {
+    public List<Cell> selectCell(Rowname rowname, Colname colname) throws Exception {
         Cell selectedCell = findCell(rowname,colname);
-        this.selectedCells.add(selectedCell);
-        return selectedCell;
+        selectedCells.add(selectedCell);
+        return selectedCells;
     }
 
     private Cell findCell(Rowname rowname, Colname colname) throws CellNotFindException{
@@ -98,16 +100,24 @@ public class Sheet {
         multiMode = !multiMode;
     }
 
-    public List<Cell> multiSelectCell(Rowname rowname, Colname colname) throws CellNotFindException, NotMultiSelectionMode {
-        if(!isMultiSelectionMode()) throw new NotMultiSelectionMode();
-        Cell cell = findCell(rowname,colname);
+    public List<Cell> multiSelectCell(Rowname rowname, Colname colname) throws CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException {
+        if(!isMultiSelectionMode()) throw new NotMultiSelectionModeException();
+        if(isSelectedCell(rowname, colname)) throw new CanNotSelectAlreadySelectedCellException();
 
-        int idx = selectedCells.indexOf(cell);
-        if(idx == -1){
-            selectedCells.add(cell);
-        }else{
-            selectedCells.remove(idx);
-        }
+        selectedCells.add(findCell(rowname,colname));
         return selectedCells;
+    }
+
+    public List<Cell> multiUnselectCell(Rowname rowname, Colname colname) throws CellNotFindException, NotMultiSelectionModeException, CanNotUnselectNeverChosenCellException {
+        if(!isMultiSelectionMode()) throw new NotMultiSelectionModeException();
+        if(!isSelectedCell(rowname, colname)) throw new CanNotUnselectNeverChosenCellException();
+
+        selectedCells.remove(findCell(rowname,colname));
+        return selectedCells;
+    }
+
+    public boolean isSelectedCell(Rowname rowname, Colname colname) throws CellNotFindException {
+        Cell cell = findCell(rowname,colname);
+        return selectedCells.indexOf(cell) != -1;
     }
 }

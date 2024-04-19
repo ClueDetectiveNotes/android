@@ -1,4 +1,4 @@
-package com.jobseeker.cluedetectivenotes.sheet;
+package com.jobseeker.cluedetectivenotes.model.sheet;
 
 import java.util.ArrayList;
 import java.util.List;

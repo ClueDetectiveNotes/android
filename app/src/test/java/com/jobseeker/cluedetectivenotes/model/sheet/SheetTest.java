@@ -1,12 +1,12 @@
-package com.jobseeker.cluedetectivenotes.sheet;
+package com.jobseeker.cluedetectivenotes.model.sheet;
 
 import static org.junit.Assert.*;
 
-import com.jobseeker.cluedetectivenotes.card.DefaultCard;
-import com.jobseeker.cluedetectivenotes.player.Player;
+import com.jobseeker.cluedetectivenotes.model.player.Player;
+import com.jobseeker.cluedetectivenotes.model.sheet.Cell;
+import com.jobseeker.cluedetectivenotes.model.sheet.Sheet;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -30,10 +30,10 @@ public class SheetTest {
     public void selectOneCellWithoutAnyCellSelectedCanChooseMarkers() throws Exception {
         assertFalse(sheet.hasSelectedCell());
 
-        Cell selectedCell = sheet.selectCell(sheet.getRownames().get(0), sheet.getColnames().get(0));
+        List<Cell> selectedCells = sheet.selectCell(sheet.getRownames().get(0), sheet.getColnames().get(0));
 
         assertTrue(sheet.hasSelectedCell());
-        assertEquals(selectedCell.getClass(), Cell.class);
+        assertEquals(selectedCells.get(0).getClass(), Cell.class);
     }
 
     //어떤 셀이 선택된 상태에서 어떤 셀이든 선택하면 선택이 취소된다
@@ -62,6 +62,8 @@ public class SheetTest {
 
         List<Cell> selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0), sheet.getColnames().get(0));
         int selectedCellsSize = selectedCells.size();
+
+        assertFalse(sheet.isSelectedCell(sheet.getRownames().get(0), sheet.getColnames().get(1)));
         selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0), sheet.getColnames().get(1));
 
         assertEquals(selectedCellsSize+1 , selectedCells.size());
@@ -75,7 +77,9 @@ public class SheetTest {
 
         List<Cell> selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0), sheet.getColnames().get(0));
         int selectedCellsSize = selectedCells.size();
-        selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0), sheet.getColnames().get(0));
+
+        assertTrue(sheet.isSelectedCell(sheet.getRownames().get(0), sheet.getColnames().get(0)));
+        selectedCells = sheet.multiUnselectCell(sheet.getRownames().get(0), sheet.getColnames().get(0));
 
         assertEquals(selectedCellsSize-1 , selectedCells.size());
     }
