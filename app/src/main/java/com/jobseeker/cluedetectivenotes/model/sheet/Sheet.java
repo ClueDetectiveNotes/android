@@ -184,7 +184,7 @@ public class Sheet {
         return selectedRownameCrimeScene != null;
     }
 
-    public boolean unSelectRowname(Rowname rowname) {
+    public boolean unselectRowname(Rowname rowname) {
         if(rowname.equals(selectedRownameSuspect)){
             selectedRownameSuspect = null;
             return true;
@@ -204,5 +204,9 @@ public class Sheet {
 
     public boolean isSelectedColname(Colname colname) {
         return selectedColname == colname;
+    }
+
+    public void unselectColname(){
+        selectedColname = null;
     }
 }

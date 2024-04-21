@@ -139,7 +139,7 @@ public class SheetTest {
         assertTrue(sheet.hasSelectedRownameSuspect());
         assertTrue(sheet.isSelectedRowname(sheet.getRownames().get(0)));
 
-        sheet.unSelectRowname(sheet.getRownames().get(0));
+        sheet.unselectRowname(sheet.getRownames().get(0));
         assertFalse(sheet.isSelectedRowname(sheet.getRownames().get(0)));
         assertFalse(sheet.hasSelectedRownameSuspect());
 
@@ -147,7 +147,7 @@ public class SheetTest {
         assertTrue(sheet.hasSelectedRownameWeapon());
         assertTrue(sheet.isSelectedRowname(sheet.getRownames().get(6)));
 
-        sheet.unSelectRowname(sheet.getRownames().get(6));
+        sheet.unselectRowname(sheet.getRownames().get(6));
         assertFalse(sheet.isSelectedRowname(sheet.getRownames().get(6)));
         assertFalse(sheet.hasSelectedRownameWeapon());
 
@@ -155,9 +155,19 @@ public class SheetTest {
         assertTrue(sheet.hasSelectedRownameCrimeScene());
         assertTrue(sheet.isSelectedRowname(sheet.getRownames().get(12)));
 
-        sheet.unSelectRowname(sheet.getRownames().get(12));
+        sheet.unselectRowname(sheet.getRownames().get(12));
         assertFalse(sheet.isSelectedRowname(sheet.getRownames().get(12)));
         assertFalse(sheet.hasSelectedRownameCrimeScene());
+    }
+
+    //선택된 colname을 다시 선택하면 해당 colname이 선택 해제된다.
+    @Test
+    public void deselectColnameOnReselection() throws Exception{
+        sheet.selectColname(sheet.getColnames().get(0));
+        assertTrue(sheet.hasSelectedColname());
+        assertTrue(sheet.isSelectedColname(sheet.getColnames().get(0)));
+        sheet.unselectColname();
+        assertFalse(sheet.hasSelectedColname());
     }
 
     //rowname이 선택된 상태에서 같은 카테고리의 rowname이 선택되었을 때 이전 rowname은 선택 해제되고, 해당 rowname은 선택된다.
