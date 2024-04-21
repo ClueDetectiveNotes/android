@@ -1,11 +1,13 @@
 package com.jobseeker.cluedetectivenotes.model.sheet;
 
-import com.jobseeker.cluedetectivenotes.model.card.DefaultCard;
+import com.jobseeker.cluedetectivenotes.model.card.Cards;
 import com.jobseeker.cluedetectivenotes.model.player.Player;
 import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
 import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
 import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CellNotFindException;
 import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.NotMultiSelectionModeException;
+import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.NotYetSelectAnyColumnNameException;
+import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.NotYetSelectAnyRowNameException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +21,10 @@ public class Sheet {
     private boolean multiMode = false;
     private List<Cell> selectedCells;
     private Map<String, Cell> cells;
+    private Rowname selectedRownameSuspect = null;
+    private Rowname selectedRownameWeapon = null;
+    private Rowname selectedRownameCrimeScene = null;
+    private Colname selectedColname = null;
     public Sheet(List<Player> players){
         selectedCells = new ArrayList<Cell>();
         cells = new HashMap<String,Cell>();
@@ -29,27 +35,15 @@ public class Sheet {
         }
 
         rownames = new ArrayList<Rowname>();
-        rownames.add(new Rowname(DefaultCard.GREEN));
-        rownames.add(new Rowname(DefaultCard.MUSTARD));
-        rownames.add(new Rowname(DefaultCard.PEACOCK));
-        rownames.add(new Rowname(DefaultCard.PLUM));
-        rownames.add(new Rowname(DefaultCard.SCARLET));
-        rownames.add(new Rowname(DefaultCard.WHITE));
-        rownames.add(new Rowname(DefaultCard.WRENCH));
-        rownames.add(new Rowname(DefaultCard.CANDLESTICK));
-        rownames.add(new Rowname(DefaultCard.KNIFE));
-        rownames.add(new Rowname(DefaultCard.REVOLVER));
-        rownames.add(new Rowname(DefaultCard.LEAD_PIPE));
-        rownames.add(new Rowname(DefaultCard.ROPE));
-        rownames.add(new Rowname(DefaultCard.BATHROOM));
-        rownames.add(new Rowname(DefaultCard.STUDY));
-        rownames.add(new Rowname(DefaultCard.GAME_ROOM));
-        rownames.add(new Rowname(DefaultCard.GARAGE));
-        rownames.add(new Rowname(DefaultCard.BEDROOM));
-        rownames.add(new Rowname(DefaultCard.LIVING_ROOM));
-        rownames.add(new Rowname(DefaultCard.KITCHEN));
-        rownames.add(new Rowname(DefaultCard.YARD));
-        rownames.add(new Rowname(DefaultCard.DINING_ROOM));
+        for(Cards card : Cards.getSuspects()){
+            rownames.add(new Rowname(card));
+        }
+        for(Cards card : Cards.getWeapons()){
+            rownames.add(new Rowname(card));
+        }
+        for(Cards card : Cards.getCrimeScenes()) {
+            rownames.add(new Rowname(card));
+        }
 
         for(Rowname rn : rownames){
             for(Colname cn : colnames){
@@ -119,5 +113,96 @@ public class Sheet {
     public boolean isSelectedCell(Rowname rowname, Colname colname) throws CellNotFindException {
         Cell cell = findCell(rowname,colname);
         return selectedCells.indexOf(cell) != -1;
+    }
+
+    public List<Cell> selectRowname(Rowname rowname) throws CellNotFindException {
+        List<Cell> selectedRowCells = new ArrayList<Cell>();
+
+        if(Cards.getSuspects().contains(rowname.getCard())){
+            selectedRownameSuspect = rowname;
+        }else if(Cards.getWeapons().contains(rowname.getCard())){
+            selectedRownameWeapon = rowname;
+        }else if(Cards.getCrimeScenes().contains(rowname.getCard())){
+            selectedRownameCrimeScene = rowname;
+        }
+
+        for(Colname colname: colnames){
+            selectedRowCells.add(findCell(rowname, colname));
+        }
+
+        return selectedRowCells;
+    }
+
+    public List<Cell> selectColname(Colname colname) throws CellNotFindException {
+        List<Cell> selectedColCells = new ArrayList<Cell>();
+
+        selectedColname = colname;
+
+        for(Rowname rowname: rownames){
+            selectedColCells.add(findCell(rowname,colname));
+        }
+
+        return selectedColCells;
+    }
+
+    public List<Cell> getCellsIntersectionOfSelection() throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+        List<Cell> intersectionCells = new ArrayList<Cell>();
+        if(selectedColname == null){
+            throw new NotYetSelectAnyColumnNameException();
+        }else if (selectedRownameSuspect == null && selectedRownameWeapon == null && selectedRownameCrimeScene == null){
+            throw new NotYetSelectAnyRowNameException();
+        }else{
+            if(selectedRownameSuspect != null){
+                intersectionCells.add(findCell(selectedRownameSuspect,selectedColname));
+            }
+            if(selectedRownameWeapon != null){
+                intersectionCells.add(findCell(selectedRownameWeapon,selectedColname));
+            }
+            if(selectedRownameCrimeScene != null){
+                intersectionCells.add(findCell(selectedRownameCrimeScene,selectedColname));
+            }
+        }
+        return intersectionCells;
+    }
+
+    public boolean isSelectedRowname(Rowname rowname) {
+        if(rowname.equals(selectedRownameSuspect)||rowname.equals(selectedRownameWeapon)||rowname.equals(selectedRownameCrimeScene)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasSelectedRownameSuspect() {
+        return selectedRownameSuspect != null;
+    }
+
+    public boolean hasSelectedRownameWeapon() {
+        return selectedRownameWeapon != null;
+    }
+
+    public boolean hasSelectedRownameCrimeScene() {
+        return selectedRownameCrimeScene != null;
+    }
+
+    public boolean unSelectRowname(Rowname rowname) {
+        if(rowname.equals(selectedRownameSuspect)){
+            selectedRownameSuspect = null;
+            return true;
+        }else if(rowname.equals(selectedRownameWeapon)){
+            selectedRownameWeapon = null;
+            return true;
+        }else if(rowname.equals(selectedRownameCrimeScene)){
+            selectedRownameCrimeScene = null;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasSelectedColname() {
+        return selectedColname != null;
+    }
+
+    public boolean isSelectedColname(Colname colname) {
+        return selectedColname == colname;
     }
 }

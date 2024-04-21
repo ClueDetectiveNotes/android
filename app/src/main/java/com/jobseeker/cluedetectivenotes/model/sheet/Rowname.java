@@ -1,10 +1,13 @@
 package com.jobseeker.cluedetectivenotes.model.sheet;
 
-import com.jobseeker.cluedetectivenotes.model.card.DefaultCard;
+import com.jobseeker.cluedetectivenotes.model.card.Cards;
 
 public class Rowname {
-    DefaultCard card;
-    public Rowname(DefaultCard card){
+    private Cards card;
+    public Rowname(Cards card){
         this.card = card;
+    }
+    public Cards getCard() {
+        return this.card;
     }
 }
