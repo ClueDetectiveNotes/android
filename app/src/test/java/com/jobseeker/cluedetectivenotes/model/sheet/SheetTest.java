@@ -3,9 +3,7 @@ package com.jobseeker.cluedetectivenotes.model.sheet;
 import static org.junit.Assert.*;
 
 import com.jobseeker.cluedetectivenotes.model.player.Player;
-import com.jobseeker.cluedetectivenotes.model.sheet.Cell;
-import com.jobseeker.cluedetectivenotes.model.sheet.Sheet;
-import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CellNotFindException;
+import com.jobseeker.cluedetectivenotes.model.sheet.cell.Cell;
 
 import org.junit.Before;
 import org.junit.Test;

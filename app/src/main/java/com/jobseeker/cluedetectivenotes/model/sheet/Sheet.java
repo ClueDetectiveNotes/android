@@ -2,6 +2,7 @@ package com.jobseeker.cluedetectivenotes.model.sheet;
 
 import com.jobseeker.cluedetectivenotes.model.card.Cards;
 import com.jobseeker.cluedetectivenotes.model.player.Player;
+import com.jobseeker.cluedetectivenotes.model.sheet.cell.Cell;
 import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
 import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
 import com.jobseeker.cluedetectivenotes.model.sheet.exceptions.CellNotFindException;
@@ -20,14 +21,14 @@ public class Sheet {
     private List<Colname> colnames;
     private boolean multiMode = false;
     private List<Cell> selectedCells;
-    private Map<String, Cell> cells;
+    private Map<UUID, Cell> cells;
     private Rowname selectedRownameSuspect = null;
     private Rowname selectedRownameWeapon = null;
     private Rowname selectedRownameCrimeScene = null;
     private Colname selectedColname = null;
     public Sheet(List<Player> players){
         selectedCells = new ArrayList<Cell>();
-        cells = new HashMap<String,Cell>();
+        cells = new HashMap<UUID,Cell>();
 
         colnames = new ArrayList<Colname>();
         for(Player p:players){
@@ -47,7 +48,7 @@ public class Sheet {
 
         for(Rowname rn : rownames){
             for(Colname cn : colnames){
-                String id = UUID.randomUUID().toString();
+                UUID id = UUID.randomUUID();
                 Cell cell = new Cell(id, rn, cn);
                 cells.put(id, cell);
             }
@@ -64,9 +65,9 @@ public class Sheet {
     }
 
     private Cell findCell(Rowname rowname, Colname colname) throws CellNotFindException{
-        for(String ck : cells.keySet()){
+        for(UUID ck : cells.keySet()){
             Cell cell = cells.get(ck);
-            if(cell.rowname.equals(rowname) && cell.colname.equals(colname)){
+            if(cell.getRowname().equals(rowname) && cell.getColname().equals(colname)){
                 return cell;
             }
         }
