@@ -2,8 +2,9 @@ package com.jobseeker.cluedetectivenotes.model.sheet;
 
 import static org.junit.Assert.*;
 
-import com.jobseeker.cluedetectivenotes.model.player.Player;
-import com.jobseeker.cluedetectivenotes.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
 
 import org.junit.Before;
 import org.junit.Test;

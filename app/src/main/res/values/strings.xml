@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Clue Detective Notes</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_sheet">SheetActivity</string>
+    <string name="title_activity_sample">SampleActivity</string>
 </resources>

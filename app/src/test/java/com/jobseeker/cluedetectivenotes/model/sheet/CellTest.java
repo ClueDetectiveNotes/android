@@ -2,10 +2,12 @@ package com.jobseeker.cluedetectivenotes.model.sheet;
 
 import static org.junit.Assert.*;
 
-import com.jobseeker.cluedetectivenotes.model.card.Cards;
-import com.jobseeker.cluedetectivenotes.model.player.Player;
-import com.jobseeker.cluedetectivenotes.model.sheet.cell.Cell;
-import com.jobseeker.cluedetectivenotes.model.sheet.cell.Markers;
+import com.jobseeker.cluedetectivenotes.domain.model.card.Cards;
+import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.Colname;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.Rowname;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Markers;
 
 import org.junit.Before;
 import org.junit.Test;
