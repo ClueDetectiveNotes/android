@@ -1,6 +1,7 @@
 package com.jobseeker.cluedetectivenotes.domain.model.sheet;
 
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Markers;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.card.Cards;
@@ -9,23 +10,29 @@ import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFin
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotMultiSelectionModeException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSelectAnyColumnNameException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSelectAnyRowNameException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.observer.ISheetObserver;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.observer.ISheetSubject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-public class Sheet {
-    private List<Rowname> rownames;
-    private List<Colname> colnames;
+public class Sheet implements ISheetSubject {
+    private final List<Rowname> rownames;
+    private final List<Colname> colnames;
     private boolean multiMode = false;
-    private List<Cell> selectedCells;
-    private Map<UUID, Cell> cells;
+    private final List<Cell> selectedCells;
+    private final Map<UUID, Cell> cells;
     private Rowname selectedRownameSuspect = null;
     private Rowname selectedRownameWeapon = null;
     private Rowname selectedRownameCrimeScene = null;
     private Colname selectedColname = null;
+    private List<ISheetObserver> observers;
+
     public Sheet(List<Player> players){
         selectedCells = new ArrayList<Cell>();
         cells = new HashMap<UUID,Cell>();
@@ -53,6 +60,8 @@ public class Sheet {
                 cells.put(id, cell);
             }
         }
+
+        observers = new ArrayList<>();
     }
 
     public boolean hasSelectedCell() {
@@ -68,6 +77,7 @@ public class Sheet {
     private Cell findCell(Rowname rowname, Colname colname) throws CellNotFindException{
         for(UUID ck : cells.keySet()){
             Cell cell = cells.get(ck);
+            assert cell != null;
             if(cell.getRowname().equals(rowname) && cell.getColname().equals(colname)){
                 return cell;
             }
@@ -114,7 +124,7 @@ public class Sheet {
 
     public boolean isSelectedCell(Rowname rowname, Colname colname) throws CellNotFindException {
         Cell cell = findCell(rowname,colname);
-        return selectedCells.indexOf(cell) != -1;
+        return selectedCells.contains(cell);
     }
 
     public List<Cell> selectRowname(Rowname rowname) throws CellNotFindException {
@@ -168,10 +178,7 @@ public class Sheet {
     }
 
     public boolean isSelectedRowname(Rowname rowname) {
-        if(rowname.equals(selectedRownameSuspect)||rowname.equals(selectedRownameWeapon)||rowname.equals(selectedRownameCrimeScene)){
-            return true;
-        }
-        return false;
+        return rowname.equals(selectedRownameSuspect) || rowname.equals(selectedRownameWeapon) || rowname.equals(selectedRownameCrimeScene);
     }
 
     public boolean hasSelectedRownameSuspect() {
@@ -230,5 +237,45 @@ public class Sheet {
 
     public List<Cell> multiUnselectCell(UUID cellId) throws CellNotFindException, CanNotUnselectNeverChosenCellException, NotMultiSelectionModeException {
         return multiUnselectCell(cells.get(cellId).getRowname(),cells.get(cellId).getColname());
+    }
+
+    public boolean isEveryCellMarked(){
+        int markedCount = 0;
+        for(Cell cell:selectedCells){
+            if(!cell.isEmptyMainMarker()){
+                markedCount += 1;
+            }
+        }
+        return selectedCells.size() == markedCount;
+    }
+
+    public boolean isSameMarkerInEveryCell(Markers marker) {
+        List<Cell> markedCells = selectedCells.stream().filter(cell -> !cell.isEmptyMainMarker()).collect(Collectors.toList());
+
+        assert markedCells.size() != 0;
+        Cell firstCell = markedCells.get(0);
+        boolean sameMarker = firstCell.equalsMainMarker(marker);
+        AtomicInteger markedCount = new AtomicInteger();
+
+        markedCells.forEach(cell->{
+            if(firstCell.getMarker().equals(cell.getMarker())) markedCount.incrementAndGet();
+        });
+
+        return markedCells.size() == markedCount.get() && sameMarker;
+    }
+
+    @Override
+    public void registerObserver(ISheetObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(ISheetObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObserver() {
+        observers.forEach(observer->observer.update());
     }
 }

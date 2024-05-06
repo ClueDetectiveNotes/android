@@ -9,6 +9,9 @@ public class Marker {
         return marker==null?"":marker.getNotation();
     }
 
+    public boolean equals(Marker marker){
+        return this.marker == marker.marker;
+    }
     public boolean equals(Markers marker){
         return this.marker == marker;
     }

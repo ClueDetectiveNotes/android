@@ -112,7 +112,7 @@ fun SheetView(
             }
         }//Column End
         if(uiState.value.selectedIds.isNotEmpty()){
-            ControllBar(sheetViewModel = sheetViewModel, cellViewModels = cellViewModels)
+            MarkerControlBarView()
         }
     }
 }

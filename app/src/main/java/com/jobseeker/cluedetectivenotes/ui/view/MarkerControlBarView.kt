@@ -17,12 +17,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.CellViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.MarkerControlBarViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
 import java.util.UUID
 
 @Composable
-fun ControllBar(sheetViewModel: SheetViewModel, cellViewModels:Map<UUID, CellViewModel>){
+fun MarkerControlBarView(markerControlBarViewModel: MarkerControlBarViewModel = viewModel()){
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -38,19 +40,9 @@ fun ControllBar(sheetViewModel: SheetViewModel, cellViewModels:Map<UUID, CellVie
             .clickable(enabled = false) {}){
             Column (modifier = Modifier.width(screenWidth-80.dp)){
                 Row (horizontalArrangement = Arrangement.Start){
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = {
-                            for(cellId in sheetViewModel.uiState.value.selectedIds){
-                                cellViewModels[cellId]!!.onClickCrossMaker()
-                            }
-                        }
-                    ) {
-                        Text(text = "X", fontWeight = FontWeight.Bold)
-                    }
+
+                    CrossButton(markerControlBarViewModel = markerControlBarViewModel)
+                    QuestionButton(markerControlBarViewModel = markerControlBarViewModel)
                 }
             }
             Column {
@@ -60,12 +52,42 @@ fun ControllBar(sheetViewModel: SheetViewModel, cellViewModels:Map<UUID, CellVie
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
-                        onClick = { sheetViewModel.cancelClickedCells() }
+                        onClick = { markerControlBarViewModel.cancelClickedCells() }
                     ) {
                         Text(text = "취소", fontWeight = FontWeight.Bold)
                     }
                 }
             }
         }//Row End
+    }
+}
+
+@Composable
+fun CrossButton(markerControlBarViewModel: MarkerControlBarViewModel){
+    Button(
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.DarkGray,
+            contentColor = Color.White
+        ),
+        onClick = {
+            markerControlBarViewModel.onClickCrossMarker()
+        }
+    ) {
+        Text(text = "X", fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+fun QuestionButton(markerControlBarViewModel: MarkerControlBarViewModel){
+    Button(
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.DarkGray,
+            contentColor = Color.White
+        ),
+        onClick = {
+            markerControlBarViewModel.onClickQuestionMaker()
+        }
+    ) {
+        Text(text = "?", fontWeight = FontWeight.Bold)
     }
 }

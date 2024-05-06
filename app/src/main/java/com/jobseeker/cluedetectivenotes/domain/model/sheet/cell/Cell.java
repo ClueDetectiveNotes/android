@@ -6,16 +6,20 @@ import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.NotSu
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.NotSubMarkerItemMemberException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Colname;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Rowname;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.observer.ICellObserver;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.observer.ICellSubject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Cell {
+public class Cell implements ICellSubject {
     private UUID id;
     private Rowname rowname;
     private Colname colname;
     private Marker mainMarker;
     private SubMarker subMarker;
+    private List<ICellObserver> observers;
 
     public Cell(UUID id, Rowname rowname, Colname colname) {
         this.id = id;
@@ -23,6 +27,7 @@ public class Cell {
         this.colname = colname;
         this.mainMarker = new Marker();
         this.subMarker = new SubMarker();
+        this.observers = new ArrayList<>();
     }
 
     public Rowname getRowname() {
@@ -75,5 +80,20 @@ public class Cell {
 
     public Marker getMarker() {
         return mainMarker;
+    }
+
+    @Override
+    public void registerObserver(ICellObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(ICellObserver observer) {
+        observers.remove(observer);
+
+    }
+    @Override
+    public void notifyObserver() {
+        observers.forEach(observer -> observer.update());
     }
 }

@@ -1,4 +1,4 @@
-package com.jobseeker.cluedetectivenotes.application.useCase;
+package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
 import android.annotation.SuppressLint;
 
@@ -17,13 +17,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class ClickCellUseCase {
-    private Sheet sheet = GameSetter.getSheetInstance();
+    private final Sheet sheet = GameSetter.getSheetInstance();
 
     @SuppressLint("NewApi")
     public JSONObject execute(UUID cellId) throws JSONException, CellNotFindException, CanNotUnselectNeverChosenCellException, NotMultiSelectionModeException {
         if(sheet.isMultiSelectionMode()){
             if(sheet.isSelectedCell(cellId)){
-                return createState(sheet.multiUnselectCell(cellId));
+                List<Cell> selectedCells = sheet.multiUnselectCell(cellId);
+                if(selectedCells.isEmpty()) sheet.switchSelectionMode();
+                return createState(selectedCells);
             }else{
                 return createState(sheet.selectCell(cellId));
             }
