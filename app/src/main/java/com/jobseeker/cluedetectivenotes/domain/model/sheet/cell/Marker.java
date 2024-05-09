@@ -12,6 +12,9 @@ public class Marker {
     public boolean equals(Markers marker){
         return this.marker == marker;
     }
+    public boolean equals(Marker marker){
+        return this.marker == marker.marker;
+    }
 
     public void setMarker(Markers marker) throws MarkerMismatchException {
         if(Markers.SUB_MARKER == marker) throw new MarkerMismatchException();

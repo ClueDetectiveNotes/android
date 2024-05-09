@@ -1,6 +1,4 @@
-package com.jobseeker.cluedetectivenotes.application.useCase;
-
-import android.annotation.SuppressLint;
+package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Colname;
@@ -17,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class LoadSheetUseCase {
+public class InitSheetStructUseCase {
     private Sheet sheet = GameSetter.getSheetInstance();
-    @SuppressLint("NewApi")
+
     public JSONObject execute() throws JSONException {
         JSONObject sheet = new JSONObject();
 

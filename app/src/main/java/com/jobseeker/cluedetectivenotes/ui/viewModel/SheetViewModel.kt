@@ -1,10 +1,11 @@
 package com.jobseeker.cluedetectivenotes.ui.viewModel
 
 import androidx.lifecycle.ViewModel
-import com.jobseeker.cluedetectivenotes.application.useCase.ClickCellUseCase
-import com.jobseeker.cluedetectivenotes.application.useCase.LongClickCellUseCase
-import com.jobseeker.cluedetectivenotes.application.useCase.CancelClickedCellUseCase
-import com.jobseeker.cluedetectivenotes.application.useCase.LoadSheetUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.sheet.ClickCellUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.sheet.LongClickCellUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.sheet.CancelClickedCellUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.sheet.LoadSheetUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.sheet.InitSheetStructUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,13 +22,27 @@ class SheetViewModel: ViewModel(){
     private val _uiState : MutableStateFlow<SheetUiState> = MutableStateFlow(SheetUiState())
     val uiState : StateFlow<SheetUiState> = _uiState.asStateFlow()
 
-    private val loadSheetUseCase : LoadSheetUseCase = LoadSheetUseCase()
-    private val clickCellUseCase : ClickCellUseCase = ClickCellUseCase()
-    private val longClickCellUseCase : LongClickCellUseCase = LongClickCellUseCase()
-    private val cancelClickedCellUseCase : CancelClickedCellUseCase = CancelClickedCellUseCase()
+    private val loadSheetUseCase : LoadSheetUseCase =
+        LoadSheetUseCase()
+    private val initSheetUseCase : InitSheetStructUseCase =
+        InitSheetStructUseCase()
+    private val clickCellUseCase : ClickCellUseCase =
+        ClickCellUseCase()
+    private val longClickCellUseCase : LongClickCellUseCase =
+        LongClickCellUseCase()
+    private val cancelClickedCellUseCase : CancelClickedCellUseCase =
+        CancelClickedCellUseCase()
 
-    fun onLoadSheet() : JSONObject{
-        return loadSheetUseCase.execute()
+    init {
+        val sheetState = loadSheetUseCase.execute()
+        val isMultiSelectionMode : Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
+
+        _uiState.update { it.copy( isMultiMode = isMultiSelectionMode ) }
+        _uiState.update { it.copy( selectedIds = selectedCellsIdList) }
+    }
+    fun onInitSheet() : JSONObject{
+        return initSheetUseCase.execute()
     }
 
     fun onClickCell(cellId:UUID){

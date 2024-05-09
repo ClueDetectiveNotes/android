@@ -19,10 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.jobseeker.cluedetectivenotes.ui.viewModel.CellViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
-import java.util.UUID
 
 @Composable
-fun ControllBar(sheetViewModel: SheetViewModel, cellViewModels:Map<UUID, CellViewModel>){
+fun MarkerControlBar(sheetViewModel: SheetViewModel, cellViewModel:CellViewModel){
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -43,13 +42,18 @@ fun ControllBar(sheetViewModel: SheetViewModel, cellViewModels:Map<UUID, CellVie
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
-                        onClick = {
-                            for(cellId in sheetViewModel.uiState.value.selectedIds){
-                                cellViewModels[cellId]!!.onClickCrossMaker()
-                            }
-                        }
+                        onClick = { cellViewModel.onClickCrossMaker() }
                     ) {
                         Text(text = "X", fontWeight = FontWeight.Bold)
+                    }
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { cellViewModel.onClickQuestionMaker() }
+                    ) {
+                        Text(text = "?", fontWeight = FontWeight.Bold)
                     }
                 }
             }

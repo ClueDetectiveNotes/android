@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,30 +28,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cheonjaeung.compose.grid.SimpleGridCells
 import com.cheonjaeung.compose.grid.VerticalGrid
+import com.jobseeker.cluedetectivenotes.ui.viewModel.CellUiState
 import com.jobseeker.cluedetectivenotes.ui.viewModel.CellViewModel
-//import com.jobseeker.cluedetectivenotes.ui.viewModel.CellViewModelFactory
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
 import java.util.UUID
 
 @Composable
 fun SheetView(
-    sheetViewModel:SheetViewModel = viewModel()
+    sheetViewModel:SheetViewModel = viewModel(),
+    cellViewModel: CellViewModel = viewModel()
 ) {
     val uiState = sheetViewModel.uiState.collectAsState()
 
-    val sheet = sheetViewModel.onLoadSheet()
+    val sheet = sheetViewModel.onInitSheet()
     val cells = sheet.get("cells") as Map<String, Map<String, UUID>>
     val rownames = sheet.get("rownames") as List<Map<String,String>>
     val colnames = sheet.get("colnames") as List<String>
-
-    val cellViewModels = HashMap<UUID, CellViewModel>()
-    for(row in cells.keys){
-        for(col in cells[row]?.keys!!){
-            cells[row]?.get(col)?.let {
-                cellViewModels.put(it, CellViewModel(it))
-            }
-        }
-    }
 
     Surface() {
         Column(modifier = Modifier
@@ -95,7 +88,7 @@ fun SheetView(
                                 val cellId = rowCell[col]!!
 
                                 GridCell(
-                                    cellViewModel = cellViewModels[cellId]!!,
+                                    uiState = cellViewModel.cells[cellId]!!.collectAsState(),
                                     selected = uiState.value.selectedIds.contains(cellId),
                                     clickAction = { sheetViewModel.onClickCell(cellId) },
                                     longClickAction = { sheetViewModel.onLongClickCell(cellId) }
@@ -112,7 +105,7 @@ fun SheetView(
             }
         }//Column End
         if(uiState.value.selectedIds.isNotEmpty()){
-            ControllBar(sheetViewModel = sheetViewModel, cellViewModels = cellViewModels)
+            MarkerControlBar(sheetViewModel = sheetViewModel, cellViewModel = cellViewModel)
         }
     }
 }
@@ -167,7 +160,7 @@ fun RownameCell(text: String, modifier: Modifier){
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GridCell(cellViewModel: CellViewModel, selected: Boolean, clickAction: () -> Unit, longClickAction: () -> Unit){
+fun GridCell(uiState: State<CellUiState>, selected: Boolean, clickAction: () -> Unit, longClickAction: () -> Unit){
     Surface(
         modifier = Modifier
             .height(40.dp)
@@ -175,6 +168,6 @@ fun GridCell(cellViewModel: CellViewModel, selected: Boolean, clickAction: () ->
             .combinedClickable(onClick = { clickAction() }, onLongClick = { longClickAction() })
         , color = if(selected) Color(android.graphics.Color.parseColor("#feffba")) else Color.White
         ){
-        CellView(cellViewModel = cellViewModel)
+        CellView(uiState = uiState)
     }
 }

@@ -1,4 +1,4 @@
-package com.jobseeker.cluedetectivenotes.application.useCase;
+package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
