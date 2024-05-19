@@ -10,18 +10,18 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class LoadCellUseCase {
     public JSONArray execute() throws JSONException {
         JSONArray cellsArr = new JSONArray();
-        //Cell cell = GameSetter.getCellInstance(id);
         Sheet sheet = GameSetter.getSheetInstance();
         Map<UUID,Cell> cells = sheet.getCells();
         for(UUID id : cells.keySet()){
             JSONObject cellObj = new JSONObject();
             cellObj.put("id", id);
-            cellObj.put("mainMarker", cells.get(id).getMarker().getNotation());
+            cellObj.put("mainMarker", Objects.requireNonNull(cells.get(id)).getMarker().getNotation());
             cellsArr.put(cellObj);
         }
         return cellsArr;

@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.jobseeker.cluedetectivenotes.ui.viewModel.CellUiState
+import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable

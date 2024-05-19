@@ -17,11 +17,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.jobseeker.cluedetectivenotes.ui.viewModel.CellViewModel
-import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 
 @Composable
-fun MarkerControlBar(sheetViewModel: SheetViewModel, cellViewModel:CellViewModel){
+fun ControlBar(controlBarViewModel:ControlBarViewModel){
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -42,7 +41,7 @@ fun MarkerControlBar(sheetViewModel: SheetViewModel, cellViewModel:CellViewModel
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
-                        onClick = { cellViewModel.onClickCrossMaker() }
+                        onClick = { controlBarViewModel.intent.onClickCrossMaker() }
                     ) {
                         Text(text = "X", fontWeight = FontWeight.Bold)
                     }
@@ -51,7 +50,7 @@ fun MarkerControlBar(sheetViewModel: SheetViewModel, cellViewModel:CellViewModel
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
-                        onClick = { cellViewModel.onClickQuestionMaker() }
+                        onClick = { controlBarViewModel.intent.onClickQuestionMaker() }
                     ) {
                         Text(text = "?", fontWeight = FontWeight.Bold)
                     }
@@ -64,7 +63,7 @@ fun MarkerControlBar(sheetViewModel: SheetViewModel, cellViewModel:CellViewModel
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
-                        onClick = { sheetViewModel.cancelClickedCells() }
+                        onClick = { controlBarViewModel.intent.cancelClickedCells() }
                     ) {
                         Text(text = "취소", fontWeight = FontWeight.Bold)
                     }

@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -18,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,19 +32,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cheonjaeung.compose.grid.SimpleGridCells
 import com.cheonjaeung.compose.grid.VerticalGrid
-import com.jobseeker.cluedetectivenotes.ui.viewModel.CellUiState
-import com.jobseeker.cluedetectivenotes.ui.viewModel.CellViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
+import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
 import java.util.UUID
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun SheetView(
     sheetViewModel:SheetViewModel = viewModel(),
-    cellViewModel: CellViewModel = viewModel()
+    controlBarViewModel: ControlBarViewModel = viewModel()
 ) {
-    val uiState = sheetViewModel.uiState.collectAsState()
+    val uiState = sheetViewModel.store.uiState.collectAsState()
+    val isDisplayControlBar by mutableStateOf(uiState.value.selectedIds.isNotEmpty())
 
-    val sheet = sheetViewModel.onInitSheet()
+    val sheet = sheetViewModel.intent.onInitSheet()
     val cells = sheet.get("cells") as Map<String, Map<String, UUID>>
     val rownames = sheet.get("rownames") as List<Map<String,String>>
     val colnames = sheet.get("colnames") as List<String>
@@ -88,24 +94,24 @@ fun SheetView(
                                 val cellId = rowCell[col]!!
 
                                 GridCell(
-                                    uiState = cellViewModel.cells[cellId]!!.collectAsState(),
+                                    uiState = controlBarViewModel.store.cells[cellId]!!.collectAsState(),
                                     selected = uiState.value.selectedIds.contains(cellId),
-                                    clickAction = { sheetViewModel.onClickCell(cellId) },
-                                    longClickAction = { sheetViewModel.onLongClickCell(cellId) }
+                                    clickAction = { sheetViewModel.intent.onClickCell(cellId) },
+                                    longClickAction = { sheetViewModel.intent.onLongClickCell(cellId) }
                                 )
                             }
                         }
                     }//VerticalGrid End
                 }
             }//Row End
-            if(uiState.value.selectedIds.isNotEmpty()){
+            if(isDisplayControlBar){
                 Row() {
                     Spacer(modifier = Modifier.height(50.dp))
                 }
             }
         }//Column End
-        if(uiState.value.selectedIds.isNotEmpty()){
-            MarkerControlBar(sheetViewModel = sheetViewModel, cellViewModel = cellViewModel)
+        if(isDisplayControlBar){
+            ControlBar(controlBarViewModel = controlBarViewModel)
         }
     }
 }

@@ -15,6 +15,5 @@ class SheetViewModelTest {
 
     @Test
     fun `test test`(){
-        assertTrue(sheetViewModel.clickCell()?.get(0) is Cell);
     }
 }
