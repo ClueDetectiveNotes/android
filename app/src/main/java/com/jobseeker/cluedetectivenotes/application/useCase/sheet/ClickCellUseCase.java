@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
+import com.jobseeker.cluedetectivenotes.application.useCase.UseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
@@ -14,23 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ClickCellUseCase {
+public class ClickCellUseCase<V> extends UseCase<V> {
     private final Sheet sheet = GameSetter.getSheetInstance();
 
-    public JSONObject execute(UUID cellId) throws JSONException, CellNotFindException, CanNotUnselectNeverChosenCellException, NotMultiSelectionModeException {
+    @Override
+    public <T> V execute(T cellId) throws JSONException, CellNotFindException, CanNotUnselectNeverChosenCellException, NotMultiSelectionModeException {
         if(sheet.isMultiSelectionMode()){
-            if(sheet.isSelectedCell(cellId)){
-                return createState(sheet.multiUnselectCell(cellId));
+            if(sheet.isSelectedCell((UUID)cellId)){
+                return (V) createState(sheet.multiUnselectCell((UUID)cellId));
             }else{
-                return createState(sheet.selectCell(cellId));
+                return (V) createState(sheet.selectCell((UUID)cellId));
             }
         }else{
-            if(sheet.isSelectedCell(cellId)){
+            if(sheet.isSelectedCell((UUID)cellId)){
                 sheet.unselectCell();
-                return createState(sheet.getSelectedCells());
+                return (V) createState(sheet.getSelectedCells());
             }else{
                 sheet.unselectCell();
-                return createState(sheet.selectCell(cellId));
+                return (V) createState(sheet.selectCell((UUID)cellId));
             }
         }
     }

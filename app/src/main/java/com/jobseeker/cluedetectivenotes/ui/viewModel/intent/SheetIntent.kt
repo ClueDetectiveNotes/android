@@ -1,10 +1,11 @@
 package com.jobseeker.cluedetectivenotes.ui.viewModel.intent
 
+import com.jobseeker.cluedetectivenotes.application.useCase.UseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.sheet.ClickCellUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.sheet.InitSheetStructUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.sheet.LoadSheetUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.sheet.LongClickCellUseCase
-import com.jobseeker.cluedetectivenotes.ui.viewModel.store.controlBar.ControlBarActionStore
+import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.SnapshotDecorator
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.sheet.SheetActionStore
 import org.json.JSONObject
 import java.util.UUID
@@ -13,15 +14,15 @@ class SheetIntent(private val store: SheetActionStore) {
 
     private val initSheetUseCase : InitSheetStructUseCase = InitSheetStructUseCase()
     private val loadSheetUseCase : LoadSheetUseCase = LoadSheetUseCase()
-    private val clickCellUseCase : ClickCellUseCase = ClickCellUseCase()
-    private val longClickCellUseCase : LongClickCellUseCase = LongClickCellUseCase()
+    private val clickCellUseCase : UseCase<JSONObject> = SnapshotDecorator(ClickCellUseCase())
+    private val longClickCellUseCase : UseCase<JSONObject> = SnapshotDecorator(LongClickCellUseCase())
 
     fun onInitSheet() : JSONObject{
         return initSheetUseCase.execute()
     }
 
     fun loadSheetState(){
-        val sheetState = loadSheetUseCase.execute()
+        val sheetState : JSONObject = loadSheetUseCase.execute()
         val isMultiSelectionMode : Boolean = sheetState.get("isMultiSelectionMode") as Boolean
         val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
 
@@ -37,7 +38,7 @@ class SheetIntent(private val store: SheetActionStore) {
     }
 
     fun onLongClickCell(cellId: UUID) {
-        val sheetState: JSONObject = longClickCellUseCase.execute(cellId);
+        val sheetState: JSONObject = longClickCellUseCase.execute(cellId)
         val isMultiSelectionMode: Boolean = sheetState.get("isMultiSelectionMode") as Boolean
         val selectedCellsIdList: List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
 

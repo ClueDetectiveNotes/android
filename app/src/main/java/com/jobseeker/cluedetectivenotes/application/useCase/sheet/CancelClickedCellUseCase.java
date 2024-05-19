@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
+import com.jobseeker.cluedetectivenotes.application.useCase.UseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
@@ -11,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CancelClickedCellUseCase {
-    private Sheet sheet = GameSetter.getSheetInstance();
-    public JSONObject execute() throws JSONException {
+public class CancelClickedCellUseCase<V> extends UseCase<V> {
+    private final Sheet sheet = GameSetter.getSheetInstance();
+    @Override
+    public <T> V execute(T param) throws JSONException {
         if(sheet.isMultiSelectionMode()) sheet.switchSelectionMode();
         sheet.unselectCell();
-        return createState(sheet.isMultiSelectionMode(), sheet.getSelectedCells());
+        return (V) createState(sheet.isMultiSelectionMode(), sheet.getSelectedCells());
     }
 
     private JSONObject createState(Boolean isMultiSelectionMode, List<Cell> selectedCells) throws JSONException {

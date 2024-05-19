@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.application.useCase.cell;
 
+import com.jobseeker.cluedetectivenotes.application.useCase.UseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
@@ -12,20 +13,18 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public abstract class ChooseMainMarkerUseCase {
-    private Markers mainMarker;
+public abstract class ChooseMainMarkerUseCase<V> extends UseCase<V> {
+    private final Markers mainMarker;
     public ChooseMainMarkerUseCase(Markers mainMarker){
         this.mainMarker = mainMarker;
     }
-    public JSONArray execute() throws JSONException, MarkerMismatchException {
+    @Override
+    public <T> V execute(T param) throws JSONException, MarkerMismatchException {
         Sheet sheet = GameSetter.getSheetInstance();
 
         if(sheet.isMultiSelectionMode()){
             if(sheet.isEveryCellMarked() && sheet.isSameMarkerInEveryCell(mainMarker)){
-                sheet.getSelectedCells().forEach(cell->{
-                            cell.removeMainMarker();
-                        }
-                );
+                sheet.getSelectedCells().forEach(Cell::removeMainMarker);
             }else{
                 sheet.getSelectedCells().forEach(cell->{
                     try {
@@ -43,7 +42,7 @@ public abstract class ChooseMainMarkerUseCase {
                 cell.setMainMarker(mainMarker);
             }
         }
-        return createState(sheet.getSelectedCells());
+        return (V) createState(sheet.getSelectedCells());
     }
     private JSONArray createState(List<Cell> selectedCells) throws JSONException {
         JSONArray cellsArr = new JSONArray();
