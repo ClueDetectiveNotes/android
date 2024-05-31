@@ -6,6 +6,7 @@ import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.NotSu
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public enum Markers {
     CHECK("O",true),CROSS("X",true),QUESTION("?",true),SLASH("/",false),EXCLAMATION("!",false)
@@ -58,5 +59,11 @@ public enum Markers {
 
     public static List<Markers> getDefaultMarkers(){
         return defaultMarkers;
+    }
+
+    public static Markers findMainMarker(String notation) throws Exception {
+        List<Markers> foundMarker = allMarkers.stream().filter(makers->makers.notation.equals(notation)).collect(Collectors.toList());
+        if(foundMarker.isEmpty()) throw new Exception();
+        return foundMarker.get(0);
     }
 }

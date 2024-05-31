@@ -34,7 +34,7 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel){
                 bottom.linkTo(parent.bottom)
             }
             .clickable(enabled = false) {}){
-            Column (modifier = Modifier.width(screenWidth-80.dp)){
+            Column (modifier = Modifier.width(screenWidth-240.dp)){
                 Row (horizontalArrangement = Arrangement.Start){
                     Button(
                         colors = ButtonDefaults.buttonColors(
@@ -66,6 +66,26 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel){
                         onClick = { controlBarViewModel.intent.cancelClickedCells() }
                     ) {
                         Text(text = "취소", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.undo() }
+                    ) {
+                        Text(text = "Undo", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.redo() }
+                    ) {
+                        Text(text = "Redo", fontWeight = FontWeight.Bold)
                     }
                 }
             }

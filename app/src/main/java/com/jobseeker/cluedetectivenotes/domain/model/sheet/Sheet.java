@@ -230,6 +230,10 @@ public class Sheet {
         return selectedCells;
     }
 
+    public List<Cell> multiSelectCell(UUID cellId) throws CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException {
+        return multiSelectCell(cells.get(cellId).getRowname(),cells.get(cellId).getColname());
+    }
+
     public List<Cell> multiUnselectCell(UUID cellId) throws CellNotFindException, CanNotUnselectNeverChosenCellException, NotMultiSelectionModeException {
         return multiUnselectCell(cells.get(cellId).getRowname(),cells.get(cellId).getColname());
     }

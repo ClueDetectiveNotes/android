@@ -5,7 +5,9 @@ import com.jobseeker.cluedetectivenotes.application.useCase.cell.ChooseCrossMark
 import com.jobseeker.cluedetectivenotes.application.useCase.cell.ChooseQuestionMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.cell.LoadCellUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.sheet.CancelClickedCellUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.RedoUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.SnapshotDecorator
+import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.UndoUseCase
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.controlBar.ControlBarActionStore
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.sheet.SheetActionStore
 import org.json.JSONArray
@@ -17,6 +19,8 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     private val chooseCrossMarkerUseCase : UseCase<JSONArray> = SnapshotDecorator(ChooseCrossMarkerUseCase())
     private val chooseQuestionMarkerUseCase : UseCase<JSONArray> = SnapshotDecorator(ChooseQuestionMarkerUseCase())
     private val cancelClickedCellUseCase : UseCase<JSONObject> = SnapshotDecorator(CancelClickedCellUseCase())
+    private val undoUseCase : UndoUseCase = UndoUseCase()
+    private val redoUseCase : RedoUseCase = RedoUseCase()
 
     fun initCells(){
         store.initCells(loadCellUseCase.execute())
@@ -37,5 +41,27 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
 
         sheetStore.parseSelectedIds(selectedCellsIdList)
         sheetStore.parseIsMultiMode(isMultiSelectionMode)
+    }
+
+    fun undo(){
+        val sheetState : JSONObject = undoUseCase.execute()
+        val isMultiSelectionMode : Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
+        val cells : JSONArray = sheetState.get("cells") as JSONArray
+
+        sheetStore.parseSelectedIds(selectedCellsIdList)
+        sheetStore.parseIsMultiMode(isMultiSelectionMode)
+        store.parseCells(cells)
+    }
+
+    fun redo(){
+        val sheetState : JSONObject = redoUseCase.execute()
+        val isMultiSelectionMode : Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
+        val cells : JSONArray = sheetState.get("cells") as JSONArray
+
+        sheetStore.parseSelectedIds(selectedCellsIdList)
+        sheetStore.parseIsMultiMode(isMultiSelectionMode)
+        store.parseCells(cells)
     }
 }
