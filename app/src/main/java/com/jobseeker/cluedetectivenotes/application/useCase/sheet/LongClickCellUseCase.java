@@ -17,7 +17,7 @@ public class LongClickCellUseCase<V> extends UseCase<V>{
     @Override
     public <T> V execute(T param) throws Exception {
         if(!sheet.isMultiSelectionMode()) sheet.switchSelectionMode();
-        return (V) createState(sheet.isMultiSelectionMode(), sheet.selectCell((UUID) param));
+        return (V) createState(sheet.isMultiSelectionMode(), sheet.multiSelectCell((UUID) param));
     }
 
     private JSONObject createState(Boolean isMultiSelectionMode, List<Cell> selectedCells) throws JSONException {
