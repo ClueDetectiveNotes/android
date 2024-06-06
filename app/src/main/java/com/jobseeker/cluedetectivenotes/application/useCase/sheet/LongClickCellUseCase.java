@@ -4,6 +4,10 @@ import com.jobseeker.cluedetectivenotes.application.useCase.UseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFindException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.InferenceModeException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotMultiSelectionModeException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +19,7 @@ import java.util.UUID;
 public class LongClickCellUseCase<V> extends UseCase<V>{
     private final Sheet sheet = GameSetter.getSheetInstance();
     @Override
-    public <T> V execute(T param) throws Exception {
+    public <T> V execute(T param) throws InferenceModeException, CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException, JSONException {
         if(!sheet.isMultiSelectionMode()) sheet.switchSelectionMode();
         return (V) createState(sheet.isMultiSelectionMode(), sheet.multiSelectCell((UUID) param));
     }

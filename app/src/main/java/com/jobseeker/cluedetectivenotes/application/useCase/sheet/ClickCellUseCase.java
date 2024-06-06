@@ -6,6 +6,7 @@ import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFindException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.InferenceModeException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotMultiSelectionModeException;
 
 import org.json.JSONException;
@@ -19,7 +20,7 @@ public class ClickCellUseCase<V> extends UseCase<V> {
     private final Sheet sheet = GameSetter.getSheetInstance();
 
     @Override
-    public <T> V execute(T cellId) throws JSONException, CellNotFindException, CanNotUnselectNeverChosenCellException, NotMultiSelectionModeException {
+    public <T> V execute(T cellId) throws JSONException, CellNotFindException, CanNotUnselectNeverChosenCellException, NotMultiSelectionModeException, InferenceModeException {
         if(sheet.isMultiSelectionMode()){
             if(sheet.isSelectedCell((UUID)cellId)){
                 return (V) createState(sheet.multiUnselectCell((UUID)cellId));

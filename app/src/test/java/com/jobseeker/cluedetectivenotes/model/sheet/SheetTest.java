@@ -3,14 +3,27 @@ package com.jobseeker.cluedetectivenotes.model.sheet;
 import static org.junit.Assert.*;
 
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Markers;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.MarkerMismatchException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFindException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.InferenceModeException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotMultiSelectionModeException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSelectAnyColumnNameException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSelectAnyRowNameException;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SheetTest {
     private Sheet sheet;
@@ -47,7 +60,7 @@ public class SheetTest {
 
     //어떤 셀도 선택되지 않은 상태에서 멀티 선택 모드로 스위치(long press)했을 때 멀티 선택 모드가 된다.
     @Test
-    public void switchToMultiSelectionModeFromNoCellSelectedStateOnLongPress(){
+    public void switchToMultiSelectionModeFromNoCellSelectedStateOnLongPress() throws InferenceModeException {
         assertFalse(sheet.hasSelectedCell());
         assertFalse(sheet.isMultiSelectionMode());
         sheet.switchSelectionMode();
@@ -217,4 +230,258 @@ public class SheetTest {
         List<Cell> reason = sheet.getCellsIntersectionOfSelection();
         assertEquals(3, reason.size());
     }
+
+    //(추가됨) 멀티모드에서 셀들을 선택하고 마커를 선택했을 때, 현재 설정된 마커와 관계없이 선택된 모든 셀에 마킹이 된다.
+    //선택된 셀에 마커가 하나도 없는 경우
+    @Test
+    public void whenSelectUnmarkedCellsAndChooseMarkerInMultimode_AllSelectedCellsAreMarkedOfTheCurrentlySetMarker() throws CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException, InferenceModeException {
+        sheet.switchSelectionMode();
+        assertTrue(sheet.isMultiSelectionMode());
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(0));
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(1));
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(2));
+
+        sheet.getSelectedCells().forEach(cell->{
+            try {
+                cell.setMainMarker(Markers.CROSS);
+            } catch (MarkerMismatchException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().equals(Markers.CROSS));
+        }
+    }
+
+    //선택된 셀에 일부만 마커가 있는 경우
+    @Test
+    public void whenSelectMarkedOrUnmarkedCellsAndChooseMarkerInMultimode_AllSelectedCellsAreMarkedOfTheCurrentlySetMarker() throws CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException, MarkerMismatchException, InferenceModeException {
+        sheet.switchSelectionMode();
+        assertTrue(sheet.isMultiSelectionMode());
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(0));
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(1));
+        List<Cell> selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(2));
+
+        //선택된 셀에 일부만 X마커가 있는 경우
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.removeMainMarker();
+        }
+
+        selectedCells.get(0).setMainMarker(Markers.CROSS);
+
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.setMainMarker(Markers.CROSS);
+        }
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().equals(Markers.CROSS));
+        }
+
+        //선택된 셀에 일부만 ?마커가 있는 경우
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.removeMainMarker();
+        }
+
+        selectedCells.get(0).setMainMarker(Markers.QUESTION);
+
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.setMainMarker(Markers.CROSS);
+        }
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().equals(Markers.CROSS));
+        }
+
+        //선택된 셀에 일부는 X마커가 일부는 ?마커가 있고 나머지는 마커가 없는 경우
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.removeMainMarker();
+        }
+
+        selectedCells.get(0).setMainMarker(Markers.QUESTION);
+        selectedCells.get(1).setMainMarker(Markers.CROSS);
+
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.setMainMarker(Markers.CROSS);
+        }
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().equals(Markers.CROSS));
+        }
+    }
+
+    //선택된 모든 셀에 마커가 있는 경우
+    @Test
+    public void whenSelectMarkedCellsAndChooseMarkerInMultimode_AllSelectedCellsAreMarkedOfTheCurrentlySetMarker() throws CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException, MarkerMismatchException, InferenceModeException {
+        sheet.switchSelectionMode();
+        assertTrue(sheet.isMultiSelectionMode());
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(0));
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(1));
+        List<Cell> selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(2));
+
+        //선택된 셀에 모두 X마커가 있는 경우
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.removeMainMarker();
+        }
+
+        selectedCells.get(0).setMainMarker(Markers.CROSS);
+        selectedCells.get(1).setMainMarker(Markers.CROSS);
+        selectedCells.get(2).setMainMarker(Markers.CROSS);
+
+        marking(Markers.CROSS);
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().isEmpty());
+        }
+
+        //선택된 셀에 모두 ?마커가 있는 경우
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.removeMainMarker();
+        }
+
+        selectedCells.get(0).setMainMarker(Markers.QUESTION);
+        selectedCells.get(1).setMainMarker(Markers.QUESTION);
+        selectedCells.get(2).setMainMarker(Markers.QUESTION);
+
+        marking(Markers.CROSS);
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().equals(Markers.CROSS));
+        }
+
+        //선택된 셀에 일부는 X마커가 있고 나머지는 ?마커가 있는 경우
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.removeMainMarker();
+        }
+
+        selectedCells.get(0).setMainMarker(Markers.QUESTION);
+        selectedCells.get(1).setMainMarker(Markers.QUESTION);
+        selectedCells.get(2).setMainMarker(Markers.CROSS);
+
+        marking(Markers.CROSS);
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().equals(Markers.CROSS));
+        }
+    }
+
+    private void marking(Markers mainMarker){
+        if(sheet.isEveryCellMarked() && sheet.isSameMarkerInEveryCell(mainMarker)){
+            sheet.getSelectedCells().forEach(Cell::removeMainMarker);
+        }else{
+            sheet.getSelectedCells().forEach(cell->{
+                try {
+                    cell.setMainMarker(mainMarker);
+                } catch (MarkerMismatchException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    //(추가됨) 멀티모드에서 특정 마커가 선택한 모든 셀에 있을 때 해당 마커를 한 번 더 선택하면 모든 마커가 지워진다
+    @Test
+    public void whenSameMarkerInSelectedCellsOneMoreSelectionOfThatMarkerClearsAllMarker() throws CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException, MarkerMismatchException, InferenceModeException {
+        sheet.switchSelectionMode();
+        assertTrue(sheet.isMultiSelectionMode());
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(0));
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(1));
+        List<Cell> selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(2));
+
+        //선택된 셀에 모두 X마커가 있는 경우
+        for(Cell cell:sheet.getSelectedCells()){
+            cell.removeMainMarker();
+        }
+
+        selectedCells.get(0).setMainMarker(Markers.CROSS);
+        selectedCells.get(1).setMainMarker(Markers.CROSS);
+        selectedCells.get(2).setMainMarker(Markers.CROSS);
+
+        marking(Markers.CROSS);
+
+        for(Cell cell:sheet.getSelectedCells()){
+            assertTrue(cell.getMarker().isEmpty());
+        }
+    }
+
+    //(추가됨) 멀티모드에서 모든 셀을 선택해제했을 때 기본 모드가 된다.
+    @Test
+    public void whenAllCellsAreDeselectedInMultimodeThenGoToDefaultMode () throws CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException, CanNotUnselectNeverChosenCellException, InferenceModeException {
+        sheet.switchSelectionMode();
+        assertTrue(sheet.isMultiSelectionMode());
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(0));
+        sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(1));
+        List<Cell> selectedCells = sheet.multiSelectCell(sheet.getRownames().get(0),sheet.getColnames().get(2));
+        List<Cell> tempSelectedCells = new ArrayList<>(selectedCells);
+
+        for(Cell cell:tempSelectedCells){
+            sheet.multiUnselectCell(cell.getId());
+        }
+
+        assertTrue(sheet.getSelectedCells().isEmpty());
+        assertFalse(sheet.isMultiSelectionMode());
+    }
+
+    //(추가됨) 추리모드에서 셀을 클릭하면 모드를 변경하는 예외가 발생한다.(2024-05-26)
+    @Test
+    public void whenACellIsClickedInInferenceModeThenAnExceptionOccursToChangeMode() throws CellNotFindException, InferenceModeException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+        sheet.selectRowname(sheet.getRownames().get(0));
+        sheet.selectRowname(sheet.getRownames().get(6));
+        sheet.selectRowname(sheet.getRownames().get(12));
+        sheet.selectColname(sheet.getColnames().get(0));
+
+        assertTrue(sheet.isEqualSelectionMode(SelectionMode.INFERENCE));
+
+        Throwable exception = assertThrows(InferenceModeException.class,()-> {
+            sheet.selectCell(sheet.getRownames().get(0),sheet.getColnames().get(0));
+        });
+        assertEquals(exception.getMessage(),new InferenceModeException().getMessage());
+    }
+
+    //(추가됨) 추리전모드에서 셀을 클릭하면 모드를 변경하는 예외가 발생한다.(2024-05-26)
+    @Test
+    public void whenACellIsClickedInPreinferenceModeThenAnExceptionOccursToChangeMode() throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+        sheet.selectRowname(sheet.getRownames().get(0));
+        sheet.selectRowname(sheet.getRownames().get(6));
+        sheet.selectRowname(sheet.getRownames().get(12));
+
+        assertTrue(sheet.isEqualSelectionMode(SelectionMode.PRE_INFERENCE));
+
+        Throwable exception = assertThrows(InferenceModeException.class,()-> {
+            sheet.selectCell(sheet.getRownames().get(0),sheet.getColnames().get(0));
+        });
+        assertEquals(exception.getMessage(),new InferenceModeException().getMessage());
+    }
+
+    //(추가됨) 추리모드에서 셀을 길게 누르면 모드를 변경하는 예외가 발생한다.(2024-05-26)
+    @Test
+    public void whenACellIsLongPressInInferenceModeThenAnExceptionOccursToChangeMode() throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+        sheet.selectRowname(sheet.getRownames().get(0));
+        sheet.selectRowname(sheet.getRownames().get(6));
+        sheet.selectRowname(sheet.getRownames().get(12));
+        sheet.selectColname(sheet.getColnames().get(0));
+
+        assertTrue(sheet.isEqualSelectionMode(SelectionMode.INFERENCE));
+
+        Throwable exception = assertThrows(InferenceModeException.class,()-> {
+            sheet.switchSelectionMode();
+        });
+        assertEquals(exception.getMessage(),new InferenceModeException().getMessage());
+    }
+
+    //(추가됨)추리전모드에서 셀을 길게 누르면 모드를 변경하는 예외가 발생한다.(2024-05-26)
+    @Test
+    public void whenACellIsLongPressInPreinferenceModeThenAnExceptionOccursToChangeMode() throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+        sheet.selectRowname(sheet.getRownames().get(0));
+        sheet.selectRowname(sheet.getRownames().get(6));
+        sheet.selectRowname(sheet.getRownames().get(12));
+
+        assertTrue(sheet.isEqualSelectionMode(SelectionMode.PRE_INFERENCE));
+
+        Throwable exception = assertThrows(InferenceModeException.class,()-> {
+            sheet.switchSelectionMode();
+        });
+        assertEquals(exception.getMessage(),new InferenceModeException().getMessage());
+    }
+
 }
