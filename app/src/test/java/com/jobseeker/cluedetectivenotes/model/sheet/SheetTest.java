@@ -17,13 +17,10 @@ import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSele
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSelectAnyRowNameException;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SheetTest {
     private Sheet sheet;
