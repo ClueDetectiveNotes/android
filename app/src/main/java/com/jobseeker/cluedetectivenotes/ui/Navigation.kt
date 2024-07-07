@@ -5,6 +5,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jobseeker.cluedetectivenotes.ui.view.HomeView
+import com.jobseeker.cluedetectivenotes.ui.view.PlayerDetailSettingView
+import com.jobseeker.cluedetectivenotes.ui.view.PlayerSettingView
 import com.jobseeker.cluedetectivenotes.ui.view.SheetView
 
 @Composable
@@ -13,6 +15,12 @@ fun Navigation(){
     NavHost(navController = navController, startDestination = Routes.Home.route){
         composable(Routes.Home.route){
             HomeView(navController = navController)
+        }
+        composable(Routes.PlayerSetting.route){
+            PlayerSettingView(navController = navController)
+        }
+        composable(Routes.PlayerDetailSetting.route){
+            PlayerDetailSettingView(navController = navController)
         }
         composable(Routes.Sheet.route){
             SheetView()

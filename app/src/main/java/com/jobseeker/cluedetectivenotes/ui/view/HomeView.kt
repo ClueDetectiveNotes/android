@@ -16,7 +16,7 @@ fun HomeView(navController: NavHostController) {
     Box(modifier = Modifier.size(50F.dp), contentAlignment = Alignment.Center){
         Button(content = { Text(text = "button") },
                 onClick = {
-                    navController.navigate(Routes.Sheet.route)
+                    navController.navigate(Routes.PlayerSetting.route)
                 })
     }
 }
