@@ -20,23 +20,27 @@ import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.ui.Routes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.RadioButton
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.ReorderableItem
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.detectReorderAfterLongPress
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.detectReorderAfterPress
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.rememberReorderableLazyListState
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.reorderable
+import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
+import java.util.UUID
 
 @Composable
-fun PlayerDetailSettingView(navController: NavHostController){
+fun PlayerDetailSettingView(navController: NavHostController, gameSettingViewModel: GameSettingViewModel = viewModel()){
 
     Surface {
         Column {
             Row {
-                VerticalReorderList()
+                VerticalReorderList(gameSettingViewModel)
             }
             Row (modifier = Modifier.height(50F.dp)){
                 Button(onClick = { navController.navigate(Routes.Sheet.route) }) {
@@ -48,15 +52,13 @@ fun PlayerDetailSettingView(navController: NavHostController){
 }
 
 @Composable
-fun VerticalReorderList() {
-    val data = remember { mutableStateOf(List(10) { "Item $it" }) }
+fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
+    val uiState = gameSettingViewModel.store.uiState.collectAsState()
+    val data = uiState.value.playerIdList
     val state = rememberReorderableLazyListState(onMove = { from, to ->
-        data.value = data.value.toMutableList().apply {
-            add(to.index, removeAt(from.index))
-        }
+        gameSettingViewModel.intent.reorderPlayer(from.index,to.index)
     })
-    val radioOptions = data.value
-    var selectedOption by remember { mutableStateOf(radioOptions[0]) }
+    var selectedOption by remember { mutableStateOf(UUID.randomUUID()) }
 
     LazyColumn(
         state = state.listState,
@@ -64,7 +66,7 @@ fun VerticalReorderList() {
             .reorderable(state)
             .detectReorderAfterLongPress(state)
     ) {
-        items(data.value, { it }) { item ->
+        items(data, { it }) { item ->
             ReorderableItem(state, key = item) { isDragging ->
                 val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp, label = "")
                 Column(
@@ -78,7 +80,7 @@ fun VerticalReorderList() {
                             .width(400.dp)
                             .background(Color.Yellow)){
                         RadioButton(selected = (selectedOption == item), onClick = { selectedOption = item })
-                        Text(item)
+                        Text(uiState.value.playerNameMap[item]!!)
                     }
                 }
             }
