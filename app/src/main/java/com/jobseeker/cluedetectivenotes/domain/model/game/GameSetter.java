@@ -9,13 +9,19 @@ import java.util.List;
 
 public class GameSetter {
     private static Sheet sheet;
+    private static final List<Player> players = new ArrayList<>();
+
+    public static List<Player> getPlayersInstance(){
+        if(players.isEmpty()){
+            players.add(new Player(""));
+            players.add(new Player(""));
+            players.add(new Player(""));
+        }
+        return players;
+    }
 
     public static Sheet getSheetInstance(){
         if(sheet == null){
-            List<Player> players = new ArrayList<>();
-            players.add(new Player("코코"));
-            players.add(new Player("다산"));
-            players.add(new Player("메리"));
             sheet = new Sheet(players);
         }
         return sheet;
