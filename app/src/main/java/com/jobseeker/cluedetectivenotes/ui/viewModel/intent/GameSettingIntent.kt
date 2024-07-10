@@ -24,6 +24,8 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parsePlayerId(playerIdList)
         store.parsePlayerName(playerNameMap)
         store.parsePlayerNumber(playerIdList.size)
+        store.parseMinusButtonEnabled(playerIdList.size>3)
+        store.parsePlusButtonEnabled(playerIdList.size<6)
     }
 
     fun removeLastPlayer() {
@@ -34,6 +36,8 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parsePlayerId(playerIdList)
         store.parsePlayerName(playerNameMap)
         store.parsePlayerNumber(playerIdList.size)
+        store.parseMinusButtonEnabled(playerIdList.size>3)
+        store.parsePlusButtonEnabled(playerIdList.size<6)
     }
 
     fun addPlayer() {
@@ -44,10 +48,28 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parsePlayerId(playerIdList)
         store.parsePlayerName(playerNameMap)
         store.parsePlayerNumber(playerIdList.size)
+        store.parseMinusButtonEnabled(playerIdList.size>3)
+        store.parsePlusButtonEnabled(playerIdList.size<6)
     }
 
     fun setPlayerName(id: UUID, name: String) {
-        setPlayerNameUseCase.execute(id, name)
+        val playerState : JSONObject = setPlayerNameUseCase.execute(id, name)
+        val playerNameMap:Map<UUID,String> = playerState.get("playerNameMap") as Map<UUID, String>
+
+        var playerSettingNextButtonEnabled = true
+        val playerNames : HashSet<String> = HashSet()
+        for(key in playerNameMap.keys){
+            val playerName = playerNameMap[key]
+            if(playerName == ""){
+                playerSettingNextButtonEnabled = false
+            }
+            playerNames.add(playerName!!)
+        }
+        if(playerNameMap.keys.size != playerNames.size){
+            playerSettingNextButtonEnabled = false
+        }
+
+        store.parsePlayerSettingNextButtonEnabled(playerSettingNextButtonEnabled)
     }
 
     fun reorderPlayer(from: Int, to: Int) {
@@ -55,5 +77,9 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         val playerIdList:List<UUID> = playerState.get("playerIdList") as List<UUID>
 
         store.parsePlayerId(playerIdList)
+    }
+
+    fun selectPlayer(id: UUID) {
+        store.parsePlayerOrderSettingNextButtonEnabled(true)
     }
 }

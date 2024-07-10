@@ -22,4 +22,20 @@ class GameSettingStore : GameSettingStateStore, GameSettingActionStore {
     override fun parsePlayerNumber(playerNumber: Int) {
         _uiState.update { it.copy(playerNumber = playerNumber) }
     }
+
+    override fun parsePlusButtonEnabled(plusButtonEnabled: Boolean) {
+        _uiState.update { it.copy(plusButtonEnabled = plusButtonEnabled) }
+    }
+
+    override fun parseMinusButtonEnabled(minusButtonEnabled: Boolean) {
+        _uiState.update { it.copy(minusButtonEnabled = minusButtonEnabled) }
+    }
+
+    override fun parsePlayerSettingNextButtonEnabled(playerSettingNextButtonEnabled: Boolean) {
+        _uiState.update { it.copy(playerSettingNextButtonEnabled = playerSettingNextButtonEnabled) }
+    }
+
+    override fun parsePlayerOrderSettingNextButtonEnabled(playerOrderSettingNextButtonEnabled: Boolean) {
+        _uiState.update { it.copy(playerOrderSettingNextButtonEnabled = playerOrderSettingNextButtonEnabled) }
+    }
 }
