@@ -1,8 +1,5 @@
-package com.jobseeker.cluedetectivenotes.ui.viewModel.store.controlBar
+package com.jobseeker.cluedetectivenotes.ui.viewModel.store.cell
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,10 +8,9 @@ import kotlinx.coroutines.flow.update
 import org.json.JSONArray
 import java.util.UUID
 
-class ControlBarStore : ControlBarActionStore, ControlBarStateStore {
+class CellStore : CellActionStore, CellStateStore {
     override val _cells: HashMap<UUID, MutableStateFlow<CellUiState>> = HashMap()
     override val cells: HashMap<UUID, StateFlow<CellUiState>> = HashMap()
-
 
     override fun initCells(cells: JSONArray) {
         for(idx in 0 until cells.length()){

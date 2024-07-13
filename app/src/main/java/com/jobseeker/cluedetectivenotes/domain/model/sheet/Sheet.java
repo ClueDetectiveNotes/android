@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.domain.model.sheet;
 
+import com.jobseeker.cluedetectivenotes.domain.model.card.exceptions.CardNotFoundException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
@@ -7,10 +8,12 @@ import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Markers;
 import com.jobseeker.cluedetectivenotes.domain.model.card.Cards;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFindException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.ColnameNotFoundException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.InferenceModeException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotMultiSelectionModeException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSelectAnyColumnNameException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.NotYetSelectAnyRowNameException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.RownameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +67,10 @@ public class Sheet {
     }
 
     public List<Cell> selectCell(Rowname rowname, Colname colname) throws CellNotFindException, InferenceModeException {
-        if(selectionMode == SelectionMode.PRE_INFERENCE || selectionMode == SelectionMode.INFERENCE) throw new InferenceModeException();
+        if(selectionMode == SelectionMode.PRE_INFERENCE || selectionMode == SelectionMode.INFERENCE){
+            switchInferenceMode();
+            throw new InferenceModeException();
+        }
 
         Cell selectedCell = findCell(rowname,colname);
         selectedCells.add(selectedCell);
@@ -90,7 +96,15 @@ public class Sheet {
         return colnames;
     }
 
-    public void unselectCell() {
+    public void unselectCell() throws CellNotFindException, InferenceModeException {
+        if(selectionMode == SelectionMode.PRE_INFERENCE || selectionMode == SelectionMode.INFERENCE){
+            switchInferenceMode();
+            throw new InferenceModeException();
+        }
+        selectedCells.clear();
+    }
+
+    public void unselectCellDoNotCareInferenceMode(){
         selectedCells.clear();
     }
 
@@ -98,15 +112,18 @@ public class Sheet {
         return selectionMode == SelectionMode.MULTI;
     }
 
-    public void switchSelectionMode() throws InferenceModeException {
-        if(selectionMode == SelectionMode.PRE_INFERENCE || selectionMode == SelectionMode.INFERENCE) throw new InferenceModeException();
+    public void switchSelectionMode() throws InferenceModeException, CellNotFindException {
+        if(selectionMode == SelectionMode.PRE_INFERENCE || selectionMode == SelectionMode.INFERENCE){
+            switchInferenceMode();
+            throw new InferenceModeException();
+        }
 
         if(isMultiSelectionMode() && hasSelectedCell()) unselectCell();
         selectionMode = selectionMode==SelectionMode.MULTI? SelectionMode.DEFAULT: SelectionMode.MULTI;
     }
 
-    public void setDefaultSelectionMode(){
-        unselectCell();
+    public void setDefaultSelectionMode() {
+        unselectCellDoNotCareInferenceMode();
         selectionMode = SelectionMode.DEFAULT;
     }
 
@@ -132,13 +149,18 @@ public class Sheet {
         return selectedCells.contains(cell);
     }
 
-    private void switchInferenceMode() throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+    private void switchInferenceMode() throws CellNotFindException{
         if(selectedColname == null & selectedRownameSuspect == null && selectedRownameWeapon == null && selectedRownameCrimeScene == null){
             selectionMode = SelectionMode.DEFAULT;
             selectedCells.clear();
         }else if(selectedColname != null & selectedRownameSuspect != null && selectedRownameWeapon != null && selectedRownameCrimeScene != null){
-            selectionMode = SelectionMode.INFERENCE;
-            selectedCells.addAll(getCellsIntersectionOfSelection());
+            try{
+                selectedCells.clear();
+                selectedCells.addAll(getCellsIntersectionOfSelection());
+                selectionMode = SelectionMode.INFERENCE;
+            }catch (NotYetSelectAnyRowNameException | NotYetSelectAnyColumnNameException e){
+                selectedCells.addAll(new ArrayList<>());
+            }
         }else{
             selectionMode = SelectionMode.PRE_INFERENCE;
             selectedCells.clear();
@@ -149,7 +171,7 @@ public class Sheet {
         return this.selectionMode == selectionMode;
     }
 
-    public List<Cell> selectRowname(Rowname rowname) throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+    public List<Cell> selectRowname(Rowname rowname) throws CellNotFindException {
         List<Cell> selectedRowCells = new ArrayList<Cell>();
 
         if(Cards.getSuspects().contains(rowname.getCard())){
@@ -161,7 +183,9 @@ public class Sheet {
         }
 
         for(Colname colname: colnames){
-            selectedRowCells.add(findCell(rowname, colname));
+            if(selectedRownameSuspect != null) selectedRowCells.add(findCell(selectedRownameSuspect, colname));
+            if(selectedRownameWeapon != null) selectedRowCells.add(findCell(selectedRownameWeapon, colname));
+            if(selectedRownameCrimeScene != null) selectedRowCells.add(findCell(selectedRownameCrimeScene, colname));
         }
 
         switchInferenceMode();
@@ -169,7 +193,24 @@ public class Sheet {
         return selectedRowCells;
     }
 
-    public List<Cell> selectColname(Colname colname) throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+    private Rowname findRowname(String cardName) throws CardNotFoundException, RownameNotFoundException {
+        Cards card = Cards.findCard(cardName);
+        Rowname foundRowname = null;
+        for(Rowname rowname:rownames){
+            if(card == rowname.getCard()){
+                foundRowname = rowname;
+                break;
+            }
+        }
+        if(foundRowname == null) throw new RownameNotFoundException();
+        return foundRowname;
+    }
+
+    public List<Cell> selectRowname(String cardName) throws CardNotFoundException, CellNotFindException, RownameNotFoundException {
+        return selectRowname(findRowname(cardName));
+    }
+
+    public List<Cell> selectColname(Colname colname) throws CellNotFindException{
         List<Cell> selectedColCells = new ArrayList<Cell>();
 
         selectedColname = colname;
@@ -181,6 +222,22 @@ public class Sheet {
         switchInferenceMode();
 
         return selectedColCells;
+    }
+
+    public Colname findColname(String playerName) throws ColnameNotFoundException {
+        Colname foundColname = null;
+        for(Colname colname:colnames){
+            if(playerName.equals(colname.player.getName())){
+                foundColname = colname;
+                break;
+            }
+        }
+        if(foundColname == null) throw new ColnameNotFoundException();
+        return foundColname;
+    }
+
+    public List<Cell> selectColname(String playerName) throws CellNotFindException, ColnameNotFoundException {
+        return selectColname(findColname(playerName));
     }
 
     public List<Cell> getCellsIntersectionOfSelection() throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
@@ -207,6 +264,10 @@ public class Sheet {
         return rowname.equals(selectedRownameSuspect) || rowname.equals(selectedRownameWeapon) || rowname.equals(selectedRownameCrimeScene);
     }
 
+    public boolean isSelectedRowname(String cardName) throws RownameNotFoundException, CardNotFoundException {
+        return isSelectedRowname(findRowname(cardName));
+    }
+
     public boolean hasSelectedRownameSuspect() {
         return selectedRownameSuspect != null;
     }
@@ -219,21 +280,30 @@ public class Sheet {
         return selectedRownameCrimeScene != null;
     }
 
-    public boolean unselectRowname(Rowname rowname) throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+    public List<Cell> unselectRowname(Rowname rowname) throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+        List<Cell> selectedRowCells = new ArrayList<>();
+
         if(rowname.equals(selectedRownameSuspect)){
             selectedRownameSuspect = null;
             switchInferenceMode();
-            return true;
         }else if(rowname.equals(selectedRownameWeapon)){
             selectedRownameWeapon = null;
             switchInferenceMode();
-            return true;
         }else if(rowname.equals(selectedRownameCrimeScene)){
             selectedRownameCrimeScene = null;
             switchInferenceMode();
-            return true;
         }
-        return false;
+        for(Colname colname: colnames){
+            if(selectedRownameSuspect != null) selectedRowCells.add(findCell(selectedRownameSuspect, colname));
+            if(selectedRownameWeapon != null) selectedRowCells.add(findCell(selectedRownameWeapon, colname));
+            if(selectedRownameCrimeScene != null) selectedRowCells.add(findCell(selectedRownameCrimeScene, colname));
+        }
+
+        return selectedRowCells;
+    }
+
+    public List<Cell> unselectRowname(String cardName) throws RownameNotFoundException, CardNotFoundException, CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+        return unselectRowname(findRowname(cardName));
     }
 
     public boolean hasSelectedColname() {
@@ -244,8 +314,19 @@ public class Sheet {
         return selectedColname == colname;
     }
 
-    public void unselectColname() throws CellNotFindException, NotYetSelectAnyColumnNameException, NotYetSelectAnyRowNameException {
+    public boolean isSelectedColname(String playerName) throws ColnameNotFoundException {
+        return isSelectedColname(findColname(playerName));
+    }
+
+    public void unselectColname() throws CellNotFindException {
         selectedColname = null;
+        switchInferenceMode();
+    }
+
+    public void unselectRowname() throws CellNotFindException {
+        selectedRownameWeapon = null;
+        selectedRownameSuspect = null;
+        selectedRownameCrimeScene = null;
         switchInferenceMode();
     }
 
@@ -295,5 +376,42 @@ public class Sheet {
         });
 
         return markedCells.size() == markedCount.get() && sameMarker;
+    }
+
+    public List<Cell> getSelectedRownameCells() throws CellNotFindException {
+        List<Cell> selectedRownameCells = new ArrayList<>();
+        if(selectedRownameSuspect != null) selectedRownameCells.addAll(selectRowname(selectedRownameSuspect));
+        if(selectedRownameWeapon != null) selectedRownameCells.addAll(selectRowname(selectedRownameWeapon));
+        if(selectedRownameCrimeScene != null) selectedRownameCells.addAll(selectRowname(selectedRownameCrimeScene));
+        return selectedRownameCells;
+    }
+
+    public List<Cell> getSelectedColnameCells() throws CellNotFindException {
+        List<Cell> selectedColnameCells = new ArrayList<>();
+        if(selectedColname != null ) selectedColnameCells.addAll(selectColname(selectedColname));
+        return selectedColnameCells;
+    }
+
+    public List<Rowname> getSelectedRownames() {
+        List<Rowname> selectedRowname = new ArrayList<>();
+        if(selectedRownameSuspect != null) selectedRowname.add(selectedRownameSuspect);
+        if(selectedRownameWeapon != null) selectedRowname.add(selectedRownameWeapon);
+        if(selectedRownameCrimeScene != null) selectedRowname.add(selectedRownameCrimeScene);
+        return selectedRowname;
+    }
+
+    public List<Colname> getSelectedColname() {
+        List<Colname> selectedColnames = new ArrayList<>();
+        if(selectedColname != null) selectedColnames.add(selectedColname);
+        return selectedColnames;
+    }
+
+    public void selectNextColname() {
+        int currentIndex = colnames.indexOf(selectedColname);
+        if(currentIndex == colnames.size()-1){
+            selectedColname = colnames.get(0);
+        }else{
+            selectedColname = colnames.get((currentIndex+1)%(colnames.size()-1));
+        }
     }
 }

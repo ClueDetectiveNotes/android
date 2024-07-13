@@ -1,12 +1,11 @@
-package com.jobseeker.cluedetectivenotes.ui.viewModel.store.controlBar
+package com.jobseeker.cluedetectivenotes.ui.viewModel.store.cell
 
-import androidx.compose.runtime.MutableState
 import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONArray
 import java.util.UUID
 
-interface ControlBarActionStore {
+interface CellActionStore {
     val _cells : HashMap<UUID, MutableStateFlow<CellUiState>>
 
     fun initCells(cells : JSONArray)

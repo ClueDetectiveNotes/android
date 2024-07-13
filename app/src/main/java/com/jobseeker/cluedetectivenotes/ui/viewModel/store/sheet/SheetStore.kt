@@ -18,4 +18,16 @@ class SheetStore(
     override fun parseIsMultiMode(isMultiMode: Boolean) {
         _uiState.update { it.copy( isMultiMode = isMultiMode ) }
     }
+
+    override fun parseSelectedRownameCellIds(selectedRownameCellsIdList: List<UUID>) {
+        _uiState.update { it.copy( selectedRownameIds = selectedRownameCellsIdList ) }
+    }
+
+    override fun parseSelectedColnameCellIds(selectedColnameCellsIdList: List<UUID>) {
+        _uiState.update { it.copy( selectedColnameIds = selectedColnameCellsIdList ) }
+    }
+
+    override fun parseOpenConfirmToDefaultModeDialog(openConfirmToDefaultModeDialog: Boolean) {
+        _uiState.update { it.copy( openConfirmToDefaultModeDialog = openConfirmToDefaultModeDialog ) }
+    }
 }

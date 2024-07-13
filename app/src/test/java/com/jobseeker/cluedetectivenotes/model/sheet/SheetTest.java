@@ -57,7 +57,7 @@ public class SheetTest {
 
     //어떤 셀도 선택되지 않은 상태에서 멀티 선택 모드로 스위치(long press)했을 때 멀티 선택 모드가 된다.
     @Test
-    public void switchToMultiSelectionModeFromNoCellSelectedStateOnLongPress() throws InferenceModeException {
+    public void switchToMultiSelectionModeFromNoCellSelectedStateOnLongPress() throws InferenceModeException, CellNotFindException {
         assertFalse(sheet.hasSelectedCell());
         assertFalse(sheet.isMultiSelectionMode());
         sheet.switchSelectionMode();

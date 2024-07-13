@@ -6,74 +6,43 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 
 @Composable
-fun ControlBar(controlBarViewModel:ControlBarViewModel){
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
-
+fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boolean){
     ConstraintLayout() {
-        val (box) = createRefs()
+        val (controlBar, markerControlbar) = createRefs()
 
         Row (modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.DarkGray)
-            .constrainAs(box) {
-                bottom.linkTo(parent.bottom)
-            }
-            .clickable(enabled = false) {}){
-            Column (modifier = Modifier.width(screenWidth-240.dp)){
-                Row (horizontalArrangement = Arrangement.Start){
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = { controlBarViewModel.intent.onClickCrossMaker() }
-                    ) {
-                        Text(text = "X", fontWeight = FontWeight.Bold)
-                    }
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = { controlBarViewModel.intent.onClickQuestionMaker() }
-                    ) {
-                        Text(text = "?", fontWeight = FontWeight.Bold)
-                    }
+            .constrainAs(controlBar) {
+                if(isDisplayControlBar){
+                    bottom.linkTo(markerControlbar.top)
+                }else{
+                    bottom.linkTo(parent.bottom)
                 }
-            }
-            Column {
-                Row (horizontalArrangement = Arrangement.End){
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = { controlBarViewModel.intent.cancelClickedCells() }
-                    ) {
-                        Text(text = "취소", fontWeight = FontWeight.Bold)
-                    }
 
+            }
+            .clickable(enabled = false) {})
+        {
+            Column {
+                Row {
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
-                        onClick = { controlBarViewModel.intent.undo() }
+                        onClick = { controlBarViewModel.intent.undo() },
+                        modifier = Modifier.weight(1F)
                     ) {
                         Text(text = "Undo", fontWeight = FontWeight.Bold)
                     }
@@ -83,12 +52,95 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel){
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
-                        onClick = { controlBarViewModel.intent.redo() }
+                        onClick = { controlBarViewModel.intent.redo() },
+                        modifier = Modifier.weight(1F)
                     ) {
                         Text(text = "Redo", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.clearClickedCells() },
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(text = "Clear", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.cancelClickedCells() },
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(text = "Cancel", fontWeight = FontWeight.Bold)
                     }
                 }
             }
         }//Row End
+        if(isDisplayControlBar){
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.DarkGray)
+                .constrainAs(markerControlbar) {
+                    bottom.linkTo(parent.bottom)
+                }
+                .clickable(enabled = false) {})
+            {
+                Column {
+                    Row (horizontalArrangement = Arrangement.Start){
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.DarkGray,
+                                contentColor = Color.White
+                            ),
+                            onClick = { controlBarViewModel.intent.onClickCheckMaker() }
+                        ) {
+                            Text(text = "O", fontWeight = FontWeight.Bold)
+                        }
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.DarkGray,
+                                contentColor = Color.White
+                            ),
+                            onClick = { controlBarViewModel.intent.onClickCrossMaker() }
+                        ) {
+                            Text(text = "X", fontWeight = FontWeight.Bold)
+                        }
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.DarkGray,
+                                contentColor = Color.White
+                            ),
+                            onClick = { controlBarViewModel.intent.onClickSlashMaker() }
+                        ) {
+                            Text(text = "/", fontWeight = FontWeight.Bold)
+                        }
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.DarkGray,
+                                contentColor = Color.White
+                            ),
+                            onClick = { controlBarViewModel.intent.onClickQuestionMaker() }
+                        ) {
+                            Text(text = "?", fontWeight = FontWeight.Bold)
+                        }
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.DarkGray,
+                                contentColor = Color.White
+                            ),
+                            onClick = { controlBarViewModel.intent.onClickExclamationMaker() }
+                        ) {
+                            Text(text = "!", fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
     }
 }

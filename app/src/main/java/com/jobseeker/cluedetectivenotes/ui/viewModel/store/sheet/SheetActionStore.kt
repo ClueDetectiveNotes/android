@@ -9,4 +9,7 @@ interface SheetActionStore {
 
     fun parseSelectedIds(selectedIds : List<UUID>)
     fun parseIsMultiMode(isMultiMode : Boolean)
+    fun parseSelectedRownameCellIds(selectedRownameCellsIdList: List<UUID>)
+    fun parseSelectedColnameCellIds(selectedRownameCellsIdList: List<UUID>)
+    fun parseOpenConfirmToDefaultModeDialog(openConfirmToDefaultModeDialog: Boolean)
 }

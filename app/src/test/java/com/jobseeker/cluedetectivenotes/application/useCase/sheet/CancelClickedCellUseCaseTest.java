@@ -2,6 +2,7 @@ package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
 import static org.junit.Assert.*;
 
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.CancelClickedCellUseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;

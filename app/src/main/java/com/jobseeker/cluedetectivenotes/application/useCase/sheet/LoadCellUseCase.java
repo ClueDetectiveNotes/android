@@ -1,4 +1,4 @@
-package com.jobseeker.cluedetectivenotes.application.useCase.cell;
+package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;

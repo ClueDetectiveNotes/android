@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.domain.model.snapshot;
 
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFindException;
 import com.jobseeker.cluedetectivenotes.domain.model.snapshot.exceptions.SnapshotStackIsEmptyException;
 
 import java.util.Stack;
@@ -10,13 +11,17 @@ public class SnapshotManager {
     Snapshot tempSnapshot = new Snapshot(debugIndex++);
     Stack<Snapshot> snapshotUndoStack = new Stack<>();
     Stack<Snapshot> snapshotRedoStack = new Stack<>();
-    public static SnapshotManager getInstance(){
+
+    public SnapshotManager() throws CellNotFindException {
+    }
+
+    public static SnapshotManager getInstance() throws CellNotFindException {
         if(snapshotManager == null){
             snapshotManager = new SnapshotManager();
         }
         return snapshotManager;
     }
-    public void takeSnapshot(){
+    public void takeSnapshot() throws CellNotFindException {
         snapshotRedoStack.clear();
         snapshotUndoStack.push(tempSnapshot);
         tempSnapshot = new Snapshot(debugIndex++);
