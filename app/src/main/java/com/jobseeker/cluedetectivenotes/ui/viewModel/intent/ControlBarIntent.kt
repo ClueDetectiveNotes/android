@@ -28,7 +28,6 @@ class ControlBarIntent (private val cellStore: CellActionStore, private val shee
     private val clearClickedCellUseCase : UseCase<JSONObject> = SnapshotDecorator(ClearClickedCellUseCase())
     private val undoUseCase : UndoUseCase = UndoUseCase()
     private val redoUseCase : RedoUseCase = RedoUseCase()
-    private val selectNextColnameUseCase : SelectNextColnameUseCase<JSONObject> = SelectNextColnameUseCase();
 
     fun onClickCrossMaker(){
         val sheetState : JSONObject = chooseCrossMarkerUseCase.execute()
