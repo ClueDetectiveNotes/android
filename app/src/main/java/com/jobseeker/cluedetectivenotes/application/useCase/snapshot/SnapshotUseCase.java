@@ -38,10 +38,9 @@ public abstract class SnapshotUseCase {
             sheet.setDefaultSelectionMode();
         }else{
             sheet.unselectCell();
-        }
-
-        if(sheet.isMultiSelectionMode() != isMultiMode){
-            sheet.switchSelectionMode();
+            if(sheet.isMultiSelectionMode() != isMultiMode){
+                sheet.switchSelectionMode();
+            }
         }
 
         if(sheet.isMultiSelectionMode()){
@@ -65,12 +64,12 @@ public abstract class SnapshotUseCase {
         }
 
         //rowname 초기화
-        sheet.unselectRowname();
+        sheet.unselectRownameWithoutSwitch();
         for(String rowname:selectedRownames){
             sheet.selectRowname(rowname);
         }
-        sheet.unselectColname();
         //colname 초기화
+        sheet.unselectColnameWithoutSwitch();
         for(String colname:selectedColnames){
             sheet.selectColname(colname);
         }

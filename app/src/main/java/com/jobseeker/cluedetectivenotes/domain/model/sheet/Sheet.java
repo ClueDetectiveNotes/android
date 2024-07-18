@@ -323,11 +323,21 @@ public class Sheet {
         switchInferenceMode();
     }
 
+    public void unselectColnameWithoutSwitch(){
+        selectedColname = null;
+    }
+
     public void unselectRowname() throws CellNotFindException {
         selectedRownameWeapon = null;
         selectedRownameSuspect = null;
         selectedRownameCrimeScene = null;
         switchInferenceMode();
+    }
+
+    public void unselectRownameWithoutSwitch(){
+        selectedRownameWeapon = null;
+        selectedRownameSuspect = null;
+        selectedRownameCrimeScene = null;
     }
 
     public List<Cell> selectCell(UUID cellId) throws CellNotFindException, InferenceModeException {
