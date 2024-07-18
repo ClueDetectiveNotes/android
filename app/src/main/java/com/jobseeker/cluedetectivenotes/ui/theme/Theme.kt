@@ -9,7 +9,9 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -37,6 +39,16 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+private val OnLightCustomColorsPalette = CustomColorsPalette(
+    selectedCell = Color(android.graphics.Color.parseColor("#feffba")),
+    selectedRowAndColname = Color(android.graphics.Color.parseColor("#00ffba"))
+)
+
+private val OnDarkCustomColorsPalette = CustomColorsPalette(
+    selectedCell = Color(android.graphics.Color.parseColor("#71715a")),
+    selectedRowAndColname = Color(android.graphics.Color.parseColor("#45635b"))
+)
+
 @Composable
 fun ClueDetectiveNotesTheme(
         darkTheme: Boolean = isSystemInDarkTheme(),
@@ -62,9 +74,13 @@ fun ClueDetectiveNotesTheme(
         }
     }
 
-    MaterialTheme(
+    val customColorsPalette = if(darkTheme) OnDarkCustomColorsPalette else OnLightCustomColorsPalette
+
+    CompositionLocalProvider(LocalCustomColorsPalette provides customColorsPalette) {
+        MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
             content = content
-    )
+        )
+    }
 }

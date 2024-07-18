@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,8 +16,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,12 +32,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cheonjaeung.compose.grid.SimpleGridCells
 import com.cheonjaeung.compose.grid.VerticalGrid
+import com.jobseeker.cluedetectivenotes.ui.theme.ClueDetectiveNotesTheme
+import com.jobseeker.cluedetectivenotes.ui.theme.LocalCustomColorsPalette
 import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
@@ -230,9 +231,9 @@ fun GridCell(uiState: State<CellUiState>, selected: Boolean, rowOrColSelected: B
             .height(40.dp)
             .padding(2.dp)
             .combinedClickable(onClick = { clickAction() }, onLongClick = { longClickAction() })
-        , color = if(selected) Color(android.graphics.Color.parseColor("#feffba"))
-                    else if(rowOrColSelected) Color(android.graphics.Color.parseColor("#00ffba"))
-                    else Color.White
+        , color = if(selected) LocalCustomColorsPalette.current.selectedCell
+                    else if(rowOrColSelected) LocalCustomColorsPalette.current.selectedRowAndColname
+                    else Color(MaterialTheme.colorScheme.surface.value)
         ){
         CellView(uiState = uiState)
     }
