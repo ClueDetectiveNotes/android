@@ -1,10 +1,12 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,9 +27,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,12 +42,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cheonjaeung.compose.grid.SimpleGridCells
 import com.cheonjaeung.compose.grid.VerticalGrid
-import com.jobseeker.cluedetectivenotes.ui.theme.ClueDetectiveNotesTheme
 import com.jobseeker.cluedetectivenotes.ui.theme.LocalCustomColorsPalette
 import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
 import java.util.UUID
+import kotlin.system.exitProcess
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -167,6 +172,7 @@ fun SheetView(
         }//Column End
         ControlBar(controlBarViewModel = controlBarViewModel, isDisplayControlBar)
     }
+    BackOnPressed()
 }
 
 @Composable

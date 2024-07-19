@@ -14,9 +14,10 @@ import com.jobseeker.cluedetectivenotes.ui.Routes
 @Composable
 fun HomeView(navController: NavHostController) {
     Box(modifier = Modifier.size(50F.dp), contentAlignment = Alignment.Center){
-        Button(content = { Text(text = "button") },
+        Button(content = { Text(text = "시작") },
                 onClick = {
                     navController.navigate(Routes.PlayerSetting.route)
                 })
     }
+    BackOnPressed()
 }
