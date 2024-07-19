@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 
@@ -21,73 +23,12 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
     ConstraintLayout() {
         val (controlBar, markerControlbar) = createRefs()
 
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.DarkGray)
-            .constrainAs(controlBar) {
-                if(isDisplayControlBar){
-                    bottom.linkTo(markerControlbar.top)
-                }else{
-                    bottom.linkTo(parent.bottom)
-                }
-
-            }
-            .clickable(enabled = false) {})
-        {
-            Column {
-                Row {
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = { controlBarViewModel.intent.undo() },
-                        modifier = Modifier.weight(1F)
-                    ) {
-                        Text(text = "Undo", fontWeight = FontWeight.Bold)
-                    }
-
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = { controlBarViewModel.intent.redo() },
-                        modifier = Modifier.weight(1F)
-                    ) {
-                        Text(text = "Redo", fontWeight = FontWeight.Bold)
-                    }
-
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = { controlBarViewModel.intent.clearClickedCells() },
-                        modifier = Modifier.weight(1F)
-                    ) {
-                        Text(text = "Clear", fontWeight = FontWeight.Bold)
-                    }
-
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.DarkGray,
-                            contentColor = Color.White
-                        ),
-                        onClick = { controlBarViewModel.intent.cancelClickedCells() },
-                        modifier = Modifier.weight(1F)
-                    ) {
-                        Text(text = "Cancel", fontWeight = FontWeight.Bold)
-                    }
-                }
-            }
-        }//Row End
         if(isDisplayControlBar){
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .background(color = Color.DarkGray)
                 .constrainAs(markerControlbar) {
-                    bottom.linkTo(parent.bottom)
+                    bottom.linkTo(controlBar.top)
                 }
                 .clickable(enabled = false) {})
             {
@@ -142,5 +83,62 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                 }
             }
         }
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .background(color = Color.DarkGray)
+            .constrainAs(controlBar) {
+                bottom.linkTo(parent.bottom)
+            }
+            .clickable(enabled = false) {})
+        {
+            Column {
+                Row {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.undo() },
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(text = "Undo", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.redo() },
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(text = "Redo", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.clearClickedCells() },
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(text = "Clear", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.cancelClickedCells() },
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Text(text = "Cancel", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }//Row End
     }
 }

@@ -156,13 +156,13 @@ fun SheetView(
                 }
             }
             //}//Row End
-            Row {
-                Spacer(modifier = Modifier.height(50.dp))
-            }
             if(isDisplayControlBar){
                 Row {
                     Spacer(modifier = Modifier.height(50.dp))
                 }
+            }
+            Row {
+                Spacer(modifier = Modifier.height(60.dp))
             }
         }//Column End
         ControlBar(controlBarViewModel = controlBarViewModel, isDisplayControlBar)
