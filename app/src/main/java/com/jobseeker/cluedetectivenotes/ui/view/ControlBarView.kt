@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.jobseeker.cluedetectivenotes.R
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 
 @Composable
@@ -102,7 +106,11 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                         onClick = { controlBarViewModel.intent.undo() },
                         modifier = Modifier.weight(1F)
                     ) {
-                        Text(text = "Undo", fontWeight = FontWeight.Bold)
+                        Image(
+                            painterResource(R.drawable.ic_controlbar_undo_button),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
                     }
 
                     Button(
@@ -113,7 +121,11 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                         onClick = { controlBarViewModel.intent.redo() },
                         modifier = Modifier.weight(1F)
                     ) {
-                        Text(text = "Redo", fontWeight = FontWeight.Bold)
+                        Image(
+                            painterResource(R.drawable.ic_controlbar_redo_button),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
                     }
 
                     Button(
@@ -124,7 +136,11 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                         onClick = { controlBarViewModel.intent.clearClickedCells() },
                         modifier = Modifier.weight(1F)
                     ) {
-                        Text(text = "Clear", fontWeight = FontWeight.Bold)
+                        Image(
+                            painterResource(R.drawable.ic_controlbar_clear_button),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
                     }
 
                     Button(
@@ -135,7 +151,11 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                         onClick = { controlBarViewModel.intent.cancelClickedCells() },
                         modifier = Modifier.weight(1F)
                     ) {
-                        Text(text = "Cancel", fontWeight = FontWeight.Bold)
+                        Image(
+                            painterResource(R.drawable.ic_controlbar_close_button),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
                     }
                 }
             }

@@ -19,7 +19,7 @@ public class CancelClickedCellUseCase<V> extends UseCase<V> {
     private final Sheet sheet = GameSetter.getSheetInstance();
     @Override
     public <T> V execute(T param) throws JSONException, InferenceModeException, CellNotFindException {
-        if(sheet.isEqualSelectionMode(SelectionMode.INFERENCE)){
+        if(sheet.isEqualSelectionMode(SelectionMode.PRE_INFERENCE) || sheet.isEqualSelectionMode(SelectionMode.INFERENCE)){
             sheet.unselectRowname();
             sheet.unselectColname();
         }else{

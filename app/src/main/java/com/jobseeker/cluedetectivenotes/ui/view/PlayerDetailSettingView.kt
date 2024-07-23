@@ -2,6 +2,7 @@ package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,13 +36,17 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jobseeker.cluedetectivenotes.R
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.ReorderableItem
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.detectReorderAfterLongPress
+import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.detectReorderAfterPress
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.rememberReorderableLazyListState
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.reorderable
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
@@ -138,12 +143,25 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
                                 )
                             }
                             Box (modifier = Modifier
-                                .fillMaxWidth()
+                                /*.fillMaxWidth()*/
+                                .width(220.dp)
                                 .fillMaxHeight()
                                 .bottomBorder(1.dp, Color.LightGray)) {
                                 Text(
                                     text = uiState.value.playerNameMap[item]!!,
                                     modifier = Modifier.align(Alignment.CenterStart)
+                                )
+                            }
+                            Box (modifier = Modifier
+                                .width(50.dp)
+                                .fillMaxHeight()
+                                .bottomBorder(1.dp, Color.LightGray)
+                                .detectReorderAfterPress(state)){
+                                Image(
+                                    painterResource(R.drawable.ic_setting_reorder_hotspot),
+                                    contentDescription = "",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.align(Alignment.Center)
                                 )
                             }
                         }

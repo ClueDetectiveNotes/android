@@ -10,6 +10,7 @@ import com.jobseeker.cluedetectivenotes.application.useCase.sheet.LoadCellUseCas
 import com.jobseeker.cluedetectivenotes.application.useCase.sheet.LoadSheetUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.sheet.LongClickCellUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.SnapshotDecorator
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.InferenceModeException
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.cell.CellActionStore
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.sheet.SheetActionStore
@@ -66,8 +67,7 @@ class SheetIntent(private val store: SheetActionStore, private val cellStore: Ce
             store.parseIsMultiMode(isMultiSelectionMode)
         }catch (e : InferenceModeException){
             store.parseOpenConfirmToDefaultModeDialog(true);
-        }
-
+        }catch (_: CanNotSelectAlreadySelectedCellException){}
     }
 
     fun onClickRowname(rowname: String){
