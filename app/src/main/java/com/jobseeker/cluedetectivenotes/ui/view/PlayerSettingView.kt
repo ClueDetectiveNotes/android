@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,13 +32,16 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.jobseeker.cluedetectivenotes.R
 import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
 import java.util.UUID
@@ -139,7 +143,11 @@ fun Stepper(gameSettingViewModel: GameSettingViewModel){
                     onClick = { gameSettingViewModel.intent.removeLastPlayer() },
                     enabled = uiState.value.minusButtonEnabled
                 ) {
-                    Text(text = "-")
+                    Image(
+                        painterResource(R.drawable.ic_setting_remove_player),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
             Column {
@@ -154,7 +162,11 @@ fun Stepper(gameSettingViewModel: GameSettingViewModel){
                     onClick = { gameSettingViewModel.intent.addPlayer() },
                     enabled = uiState.value.plusButtonEnabled
                 ) {
-                    Text(text = "+")
+                    Image(
+                        painterResource(R.drawable.ic_setting_add_player),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
         }
