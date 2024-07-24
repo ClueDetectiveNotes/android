@@ -106,7 +106,7 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
     val state = rememberReorderableLazyListState(onMove = { from, to ->
         gameSettingViewModel.intent.reorderPlayer(from.index,to.index)
     })
-    var selectedOption by remember { mutableStateOf(UUID.randomUUID()) }
+
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         LazyColumn(
             state = state.listState,
@@ -135,13 +135,12 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
                                 contentAlignment = Alignment.Center
                             ) {
                                 RadioButton(
-                                    selected = (selectedOption == item),
+                                    selected = (uiState.value.selectedOption == item),
                                     onClick = {
-                                        selectedOption = item
                                         gameSettingViewModel.intent.selectPlayer(item)
                                     }
                                 )
-                            }
+                            }//RadioButton Box End
                             Box (modifier = Modifier
                                 /*.fillMaxWidth()*/
                                 .width(220.dp)
@@ -151,7 +150,7 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
                                     text = uiState.value.playerNameMap[item]!!,
                                     modifier = Modifier.align(Alignment.CenterStart)
                                 )
-                            }
+                            }//Player Name Box End
                             Box (modifier = Modifier
                                 .width(50.dp)
                                 .fillMaxHeight()
@@ -163,13 +162,13 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.align(Alignment.Center)
                                 )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                            }//Drag Handle Box End
+                        }//Row End
+                    }//Column End
+                }//ReorderableItem End
+            }//items End
+        }//LazyColumn End
+    }//Box End
 }
 
 @Composable

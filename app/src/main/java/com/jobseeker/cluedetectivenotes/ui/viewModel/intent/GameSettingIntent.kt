@@ -80,6 +80,7 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
     }
 
     fun selectPlayer(id: UUID) {
+        store.parseSelectedOption(id)
         store.parsePlayerOrderSettingNextButtonEnabled(true)
     }
 }

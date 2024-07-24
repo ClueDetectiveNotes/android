@@ -10,6 +10,7 @@ interface GameSettingActionStore {
     fun parsePlayerId(playerIdList : List<UUID>)
     fun parsePlayerName(playerNameMap : Map<UUID,String>)
     fun parsePlayerNumber(playerNumber: Int)
+    fun parseSelectedOption(selectedOption: UUID)
     fun parsePlusButtonEnabled(plusButtonEnabled: Boolean)
     fun parseMinusButtonEnabled(minusButtonEnabled: Boolean)
     fun parsePlayerSettingNextButtonEnabled(playerSettingNextButtonEnabled: Boolean)

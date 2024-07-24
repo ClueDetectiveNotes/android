@@ -23,6 +23,10 @@ class GameSettingStore : GameSettingStateStore, GameSettingActionStore {
         _uiState.update { it.copy(playerNumber = playerNumber) }
     }
 
+    override fun parseSelectedOption(selectedOption: UUID) {
+        _uiState.update { it.copy(selectedOption = selectedOption) }
+    }
+
     override fun parsePlusButtonEnabled(plusButtonEnabled: Boolean) {
         _uiState.update { it.copy(plusButtonEnabled = plusButtonEnabled) }
     }

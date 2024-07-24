@@ -6,6 +6,7 @@ data class GameSettingUiState (
     val playerIdList : List<UUID> = emptyList(),
     val playerNameMap : Map<UUID,String> = emptyMap(),
     val playerNumber : Int = 0,
+    val selectedOption: UUID = UUID.randomUUID(),
     val minusButtonEnabled: Boolean = false,
     val plusButtonEnabled: Boolean = false,
     val playerSettingNextButtonEnabled: Boolean = false,
