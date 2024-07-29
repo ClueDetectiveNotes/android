@@ -1,25 +1,19 @@
 package com.jobseeker.cluedetectivenotes.domain.model.player;
 
-import java.util.UUID;
+public abstract class Player extends CardHolder{
 
-public class Player {
-    UUID id;
-    String name;
-
-    public Player(String name){
-        this.id = UUID.randomUUID();
-        this.name= name;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName(){
-        return name;
+    public Player() {
+        super("");
     }
 
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean isPlayer(){
+        return true;
+    }
+
+    public abstract Type getType();
 }

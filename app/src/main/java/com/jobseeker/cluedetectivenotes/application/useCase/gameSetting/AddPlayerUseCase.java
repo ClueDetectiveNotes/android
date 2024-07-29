@@ -1,6 +1,7 @@
 package com.jobseeker.cluedetectivenotes.application.useCase.gameSetting;
 
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
+import com.jobseeker.cluedetectivenotes.domain.model.player.Other;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
 
 import org.json.JSONException;
@@ -19,7 +20,7 @@ public class AddPlayerUseCase {
 
         List<Player> players = GameSetter.getPlayersInstance();
 
-        players.add(new Player(""));
+        players.add(new Other());
 
         for(Player player:players){
             playerIdList.add(player.getId());

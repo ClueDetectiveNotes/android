@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -61,7 +61,8 @@ fun SheetView(
     val sheet = sheetViewModel.intent.onInitSheet()
     val cells = sheet.get("cells") as Map<String, Map<String, UUID>>
     val rownames = sheet.get("rownames") as List<Map<String,String>>
-    val colnames = sheet.get("colnames") as List<String>
+    val colnames = sheet.get("colnames") as List<Map<UUID,String>>
+    val userId = sheet.get("userId") as UUID
 
     when{
         uiState.value.openConfirmToDefaultModeDialog -> {
@@ -98,8 +99,8 @@ fun SheetView(
                     .padding(5.dp)){
                     VerticalGrid(columns = SimpleGridCells.Fixed((colnames.size))){
                         for(column in colnames){
-                            ColnameCell(column) {
-                                sheetViewModel.intent.onClickColname(column)
+                            ColnameCell(column, userId) {
+                                sheetViewModel.intent.onClickColname(column[column.keys.last()]!!)
                             }
                         }
                     }
@@ -146,7 +147,7 @@ fun SheetView(
 
                             val rowCell = cells[row["name"]]
                             for(col in colnames){
-                                val cellId = rowCell?.get(col)!!
+                                val cellId = rowCell?.get(col[col.keys.last()])!!
 
                                 GridCell(
                                     uiState = controlBarViewModel.store.cells[cellId]!!.collectAsState(),
@@ -194,14 +195,16 @@ fun RowTypeCell(text: String, modifier: Modifier){
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ColnameCell(text: String, clickAction: () -> Unit){
+fun ColnameCell(column: Map<UUID,String>, userId: UUID, clickAction: () -> Unit){
     Surface(modifier = Modifier
         .height(40.dp)
         .padding(2.dp)
         .combinedClickable(onClick = { clickAction() })
+         ,color = if(userId == column.keys.last()) Color(android.graphics.Color.parseColor("#e8a809"))
+                    else Color(MaterialTheme.colorScheme.surface.value)
     ) {
         Text(
-            text = text,
+            text = column[column.keys.last()]!!,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()

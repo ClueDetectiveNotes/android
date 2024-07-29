@@ -2,6 +2,7 @@ package com.jobseeker.cluedetectivenotes.model.sheet;
 
 import static org.junit.Assert.*;
 
+import com.jobseeker.cluedetectivenotes.domain.model.player.CardHolder;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
@@ -24,14 +25,14 @@ import java.util.List;
 
 public class SheetTest {
     private Sheet sheet;
-    List<Player> players;
+    List<CardHolder> players;
 
     @Before
     public void create(){
-        players = new ArrayList<Player>();
-        players.add(new Player("다산"));
-        players.add(new Player("메리"));
-        players.add(new Player("코코"));
+        players = new ArrayList<CardHolder>();
+        players.add(new CardHolder("다산"));
+        players.add(new CardHolder("메리"));
+        players.add(new CardHolder("코코"));
         sheet = new Sheet(players);
     }
 

@@ -45,9 +45,15 @@ public class InitSheetStructUseCase {
             rownameList.add(rownameMap);
 
         }
-        List<String> colnameList = new ArrayList<>();
+        List<Map<UUID,String>> colnameList = new ArrayList<>();
         for(Colname colname : this.sheet.getColnames()){
-            colnameList.add(colname.getName());
+            Map<UUID,String> colnameMap = new HashMap<>();
+            colnameMap.put(colname.getId(), colname.getName());
+            colnameList.add(colnameMap);
+
+            if(colname.isUser()){
+                sheet.put("userId", colname.getId());
+            }
         }
 
         sheet.put("cells",cellsMap);

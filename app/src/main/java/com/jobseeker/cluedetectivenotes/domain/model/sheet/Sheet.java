@@ -1,6 +1,7 @@
 package com.jobseeker.cluedetectivenotes.domain.model.sheet;
 
 import com.jobseeker.cluedetectivenotes.domain.model.card.exceptions.CardNotFoundException;
+import com.jobseeker.cluedetectivenotes.domain.model.player.CardHolder;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
@@ -33,13 +34,13 @@ public class Sheet {
     private Rowname selectedRownameWeapon = null;
     private Rowname selectedRownameCrimeScene = null;
     private Colname selectedColname = null;
-    public Sheet(List<Player> players){
+    public Sheet(List<CardHolder> holders){
         selectedCells = new ArrayList<Cell>();
         cells = new HashMap<UUID,Cell>();
 
         colnames = new ArrayList<Colname>();
-        for(Player p:players){
-            colnames.add(new Colname(p));
+        for(CardHolder ch:holders){
+            colnames.add(new Colname(ch));
         }
 
         rownames = new ArrayList<Rowname>();
@@ -224,10 +225,10 @@ public class Sheet {
         return selectedColCells;
     }
 
-    public Colname findColname(String playerName) throws ColnameNotFoundException {
+    public Colname findColname(String holderName) throws ColnameNotFoundException {
         Colname foundColname = null;
         for(Colname colname:colnames){
-            if(playerName.equals(colname.player.getName())){
+            if(holderName.equals(colname.holder.getName())){
                 foundColname = colname;
                 break;
             }

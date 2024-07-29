@@ -4,6 +4,7 @@ import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.AddPlaye
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.InitPlayersUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.RemoveLastPlayerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.ReorderPlayerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SelectUserUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SetPlayerNameUseCase
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.gameSetting.GameSettingActionStore
 import org.json.JSONObject
@@ -15,6 +16,7 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
     val addPlayerUseCase: AddPlayerUseCase = AddPlayerUseCase()
     val setPlayerNameUseCase: SetPlayerNameUseCase = SetPlayerNameUseCase()
     val reorderPlayerUseCase: ReorderPlayerUseCase = ReorderPlayerUseCase()
+    val selectUserUseCase:SelectUserUseCase = SelectUserUseCase()
 
     fun initPlayers() {
         val playerState : JSONObject = initPlayersUseCase.execute()
@@ -38,6 +40,8 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parsePlayerNumber(playerIdList.size)
         store.parseMinusButtonEnabled(playerIdList.size>3)
         store.parsePlusButtonEnabled(playerIdList.size<6)
+
+        setPlayerSettingNextButtonEnable(playerNameMap)
     }
 
     fun addPlayer() {
@@ -50,12 +54,18 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parsePlayerNumber(playerIdList.size)
         store.parseMinusButtonEnabled(playerIdList.size>3)
         store.parsePlusButtonEnabled(playerIdList.size<6)
+
+        setPlayerSettingNextButtonEnable(playerNameMap)
     }
 
     fun setPlayerName(id: UUID, name: String) {
         val playerState : JSONObject = setPlayerNameUseCase.execute(id, name)
         val playerNameMap:Map<UUID,String> = playerState.get("playerNameMap") as Map<UUID, String>
 
+        setPlayerSettingNextButtonEnable(playerNameMap)
+    }
+
+    private fun setPlayerSettingNextButtonEnable(playerNameMap:Map<UUID,String>){
         var playerSettingNextButtonEnabled = true
         val playerNames : HashSet<String> = HashSet()
         for(key in playerNameMap.keys){
@@ -80,6 +90,8 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
     }
 
     fun selectPlayer(id: UUID) {
+        selectUserUseCase.execute(id)
+
         store.parseSelectedOption(id)
         store.parsePlayerOrderSettingNextButtonEnabled(true)
     }

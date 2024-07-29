@@ -45,8 +45,8 @@ private val OnLightCustomColorsPalette = CustomColorsPalette(
 )
 
 private val OnDarkCustomColorsPalette = CustomColorsPalette(
-    selectedCell = Color(android.graphics.Color.parseColor("#71715a")),
-    selectedRowAndColname = Color(android.graphics.Color.parseColor("#45635b"))
+    selectedCell = Color(android.graphics.Color.parseColor("#b7a903")),
+    selectedRowAndColname = Color(android.graphics.Color.parseColor("#3f907b"))
 )
 
 @Composable

@@ -3,6 +3,7 @@ package com.jobseeker.cluedetectivenotes.model.sheet;
 import static org.junit.Assert.*;
 
 import com.jobseeker.cluedetectivenotes.domain.model.card.Cards;
+import com.jobseeker.cluedetectivenotes.domain.model.player.CardHolder;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Colname;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Rowname;
@@ -20,7 +21,7 @@ public class CellTest {
 
     @Before
     public void create(){
-        cell = new Cell(UUID.randomUUID(), new Rowname(Cards.GREEN),new Colname(new Player("코코")));
+        cell = new Cell(UUID.randomUUID(), new Rowname(Cards.GREEN),new Colname(new CardHolder("코코")));
     }
 
     //mainMarker를 설정하면 해당 mainMarker가 추가된다.
