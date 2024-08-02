@@ -36,4 +36,8 @@ public class Game {
     public int getNumOfHands(){
         return (deck.getDeckSize() - getNumOfPublicCards()) / holders.getPlayers().size();
     }
+
+    public Player getUser(){
+        return holders.getUser();
+    }
 }

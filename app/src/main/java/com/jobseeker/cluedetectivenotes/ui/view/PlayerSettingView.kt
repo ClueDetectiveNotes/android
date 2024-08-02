@@ -110,7 +110,7 @@ fun PlayerSettingView(navController: NavHostController, gameSettingViewModel: Ga
                             }
                         }
                         Row {
-                            NextButton(navController, focusManger, gameSettingViewModel)
+                            NextToDetailButton(navController, focusManger, gameSettingViewModel)
                         }
                     }
                 }
@@ -220,7 +220,7 @@ fun PlayerListItem(gameSettingViewModel:GameSettingViewModel, id:UUID, name: Str
 }
 
 @Composable
-fun NextButton(navController: NavHostController, focusManager: FocusManager, gameSettingViewModel:GameSettingViewModel){
+fun NextToDetailButton(navController: NavHostController, focusManager: FocusManager, gameSettingViewModel:GameSettingViewModel){
     val uiState = gameSettingViewModel.store.uiState.collectAsState()
     Box (
             modifier = Modifier.fillMaxWidth(),

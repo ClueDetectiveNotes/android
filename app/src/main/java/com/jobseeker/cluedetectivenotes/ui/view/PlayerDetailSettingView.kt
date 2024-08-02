@@ -19,8 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -28,8 +26,6 @@ import com.jobseeker.cluedetectivenotes.ui.Routes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
@@ -50,7 +46,6 @@ import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.detectReorderAfterP
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.rememberReorderableLazyListState
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.reorderable
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
-import java.util.UUID
 
 @Composable
 fun PlayerDetailSettingView(navController: NavHostController, gameSettingViewModel: GameSettingViewModel = viewModel()){
@@ -92,7 +87,7 @@ fun PlayerDetailSettingView(navController: NavHostController, gameSettingViewMod
                     .constrainAs(button) {
                         bottom.linkTo(parent.bottom)
                     }){
-                    NextButton(navController, gameSettingViewModel)
+                    NextToCardSettingButton(navController, gameSettingViewModel)
                 }
             }
         }
@@ -172,17 +167,17 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
 }
 
 @Composable
-fun NextButton(navController: NavHostController, gameSettingViewModel:GameSettingViewModel){
+fun NextToCardSettingButton(navController: NavHostController, gameSettingViewModel:GameSettingViewModel){
     val uiState = gameSettingViewModel.store.uiState.collectAsState()
     Box (
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ){
         Button(
-            onClick = { navController.navigate(Routes.Sheet.route) },
+            onClick = { navController.navigate(Routes.PublicCardSetting.route) },
             enabled = uiState.value.playerOrderSettingNextButtonEnabled
         ) {
-            Text(text = "플레이")
+            Text(text = "다음")
         }
     }
 }

@@ -3,6 +3,8 @@ package com.jobseeker.cluedetectivenotes.domain.model.game;
 import com.jobseeker.cluedetectivenotes.domain.model.player.CardHolder;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Other;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
+import com.jobseeker.cluedetectivenotes.domain.model.player.Type;
+import com.jobseeker.cluedetectivenotes.domain.model.player.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +36,14 @@ public class CardHolders {
     }
     public CardHolder getUnknownOne(){
         return unknownOne;
+    }
+    public Player getUser(){
+        Player user = null;
+        for(Player player : players){
+            if(player.getType() == Type.USER){
+                user = player;
+            }
+        }
+        return user;
     }
 }

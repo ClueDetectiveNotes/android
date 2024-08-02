@@ -7,7 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import com.jobseeker.cluedetectivenotes.ui.view.HomeView
 import com.jobseeker.cluedetectivenotes.ui.view.PlayerDetailSettingView
 import com.jobseeker.cluedetectivenotes.ui.view.PlayerSettingView
+import com.jobseeker.cluedetectivenotes.ui.view.PublicCardSettingView
 import com.jobseeker.cluedetectivenotes.ui.view.SheetView
+import com.jobseeker.cluedetectivenotes.ui.view.UserCardSettingView
 
 @Composable
 fun Navigation(){
@@ -21,6 +23,12 @@ fun Navigation(){
         }
         composable(Routes.PlayerDetailSetting.route){
             PlayerDetailSettingView(navController = navController)
+        }
+        composable(Routes.PublicCardSetting.route){
+            PublicCardSettingView(navController = navController)
+        }
+        composable(Routes.UserCardSetting.route){
+            UserCardSettingView(navController = navController)
         }
         composable(Routes.Sheet.route){
             SheetView()
