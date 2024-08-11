@@ -11,9 +11,9 @@ public class Game {
     private final Deck deck;
     private final CardHolders holders;
     private Sheet sheet;
-    public Game(){
-        deck = new Deck();
-        holders = new CardHolders();
+    public Game(List<Player> players){
+        holders = new CardHolders(players);
+        deck = new Deck(holders.getUnknownOne());
     }
 
     public Sheet getSheet(){
@@ -30,14 +30,19 @@ public class Game {
     }
 
     public int getNumOfPublicCards(){
-        return deck.getDeckSize() % holders.getPlayers().size();
+        return (deck.getDeckSize() - 3) % holders.getPlayers().size();
     }
 
     public int getNumOfHands(){
-        return (deck.getDeckSize() - getNumOfPublicCards()) / holders.getPlayers().size();
+        return (deck.getDeckSize() - 3 - getNumOfPublicCards()) / holders.getPlayers().size();
     }
 
     public Player getUser(){
         return holders.getUser();
     }
+
+    public CardHolder getPublicOne() { return holders.getPublicOne(); }
+    public CardHolder getUnknownOne() { return holders.getUnknownOne(); }
+
+    public Deck getDeck(){ return deck; }
 }

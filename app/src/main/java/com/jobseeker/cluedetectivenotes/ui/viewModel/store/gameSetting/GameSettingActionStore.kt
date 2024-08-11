@@ -11,6 +11,16 @@ interface GameSettingActionStore {
     fun parsePlayerName(playerNameMap : Map<UUID,String>)
     fun parsePlayerNumber(playerNumber: Int)
     fun parseSelectedOption(selectedOption: UUID)
+    fun parseNumOfHands(numOfHands: Int)
+    fun parseNumOfPublicCards(numOfPublicCards: Int)
+
+    fun parseSuspectCardList(suspectCardList : List<String>)
+    fun parseWeaponCardList(weaponCardList : List<String>)
+    fun parseCrimeSceneCardList(crimeSceneCardList : List<String>)
+    fun parsePublicCardList(publicCardList : List<String>)
+    fun parseHandList(handList : List<String>)
+    fun parseOpenedCardList(openedCardList : List<String>)
+
     fun parsePlusButtonEnabled(plusButtonEnabled: Boolean)
     fun parseMinusButtonEnabled(minusButtonEnabled: Boolean)
     fun parsePlayerSettingNextButtonEnabled(playerSettingNextButtonEnabled: Boolean)

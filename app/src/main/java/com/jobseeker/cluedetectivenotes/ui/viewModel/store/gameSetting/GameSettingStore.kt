@@ -27,6 +27,38 @@ class GameSettingStore : GameSettingStateStore, GameSettingActionStore {
         _uiState.update { it.copy(selectedOption = selectedOption) }
     }
 
+    override fun parseNumOfHands(numOfHands: Int) {
+        _uiState.update { it.copy(numOfHands = numOfHands) }
+    }
+
+    override fun parseNumOfPublicCards(numOfPublicCards: Int) {
+        _uiState.update { it.copy(numOfPublicCards = numOfPublicCards) }
+    }
+
+    override fun parseSuspectCardList(suspectCardList: List<String>) {
+        _uiState.update { it.copy(suspectCardList = suspectCardList) }
+    }
+
+    override fun parseWeaponCardList(weaponCardList: List<String>) {
+        _uiState.update { it.copy(weaponCardList = weaponCardList) }
+    }
+
+    override fun parseCrimeSceneCardList(crimeSceneCardList: List<String>) {
+        _uiState.update { it.copy(crimeSceneCardList = crimeSceneCardList) }
+    }
+
+    override fun parsePublicCardList(publicCardList: List<String>) {
+        _uiState.update { it.copy(publicCardList = publicCardList) }
+    }
+
+    override fun parseHandList(handList: List<String>) {
+        _uiState.update { it.copy(handList = handList) }
+    }
+
+    override fun parseOpenedCardList(openedCardList: List<String>) {
+        _uiState.update { it.copy(openedCardList = openedCardList) }
+    }
+
     override fun parsePlusButtonEnabled(plusButtonEnabled: Boolean) {
         _uiState.update { it.copy(plusButtonEnabled = plusButtonEnabled) }
     }

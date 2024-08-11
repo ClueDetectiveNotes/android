@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.application.useCase.gameSetting;
 
+import com.jobseeker.cluedetectivenotes.domain.model.game.Game;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Other;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;

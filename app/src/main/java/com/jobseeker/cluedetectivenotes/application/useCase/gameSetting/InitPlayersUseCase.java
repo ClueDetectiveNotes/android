@@ -18,6 +18,7 @@ public class InitPlayersUseCase {
         Map<UUID,String> playerNameMap = new HashMap<>();
 
         List<Player> players = GameSetter.getPlayersInstance();
+
         for(Player player:players){
             playerIdList.add(player.getId());
             playerNameMap.put(player.getId(),player.getName());

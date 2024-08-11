@@ -174,7 +174,7 @@ fun NextToCardSettingButton(navController: NavHostController, gameSettingViewMod
         contentAlignment = Alignment.Center
     ){
         Button(
-            onClick = { navController.navigate(Routes.PublicCardSetting.route) },
+            onClick = { navController.navigate(Routes.HandSetting.route) },
             enabled = uiState.value.playerOrderSettingNextButtonEnabled
         ) {
             Text(text = "다음")

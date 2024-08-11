@@ -10,11 +10,16 @@ public class Card {
         this.card = card;
     }
 
+    public String getName() { return card.name(); }
+
     public Type getCardType(){
         return card.getType();
     }
 
     public void setHolder(CardHolder holder){
+        if(this.holder != null){
+            this.holder.removeCard(this);
+        }
         this.holder = holder;
     }
 
