@@ -1,9 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -27,12 +24,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,15 +39,16 @@ import com.cheonjaeung.compose.grid.VerticalGrid
 import com.jobseeker.cluedetectivenotes.ui.theme.LocalCustomColorsPalette
 import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
 import java.util.UUID
-import kotlin.system.exitProcess
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun SheetView(
     sheetViewModel:SheetViewModel = viewModel(),
-    controlBarViewModel: ControlBarViewModel = viewModel()
+    controlBarViewModel: ControlBarViewModel = viewModel(),
+    optionViewModel: OptionViewModel = viewModel()
 ) {
     val uiState = sheetViewModel.store.uiState.collectAsState()
     val isDisplayControlBar by mutableStateOf(uiState.value.selectedIds.isNotEmpty())
@@ -63,6 +58,8 @@ fun SheetView(
     val rownames = sheet.get("rownames") as List<Map<String,String>>
     val colnames = sheet.get("colnames") as List<Map<UUID,String>>
     val userId = sheet.get("userId") as UUID
+
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
     when{
         uiState.value.openConfirmToDefaultModeDialog -> {
@@ -123,9 +120,9 @@ fun SheetView(
                         for(row in rownames) {
                             if (rowType != row["type"]) {
                                 rowType = row["type"]!!
-                                RowTypeCell(text = rowType, modifier = Modifier)
+                                RowTypeCell(text = multiLang["CTYPE.$rowType"]!!, modifier = Modifier)
                             }
-                            RownameCell(text = row["name"]!!) {
+                            RownameCell(text = multiLang["CRD."+row["name"]]!!) {
                                 sheetViewModel.intent.onClickRowname(row["name"]!!)
                             }
                         }
@@ -185,10 +182,11 @@ fun RowTypeCell(text: String, modifier: Modifier){
             text = text,
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(align = Alignment.CenterVertically)
+                .padding(start = 10.dp)
         )
     }
 }
@@ -224,10 +222,11 @@ fun RownameCell(text: String, clickAction: () -> Unit){
         Text(
             text = text,
             fontSize = 12.sp,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(align = Alignment.CenterVertically)
+                .padding(start = 10.dp)
             )
     }
 }

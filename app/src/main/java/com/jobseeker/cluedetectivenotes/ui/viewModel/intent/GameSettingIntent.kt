@@ -110,7 +110,6 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parseCrimeSceneCardList(cardsState.get("crimeSceneCardList") as List<String>)
         store.parsePublicCardList(cardsState.get("publicCardList") as List<String>)
         store.parseHandList(cardsState.get("handList") as List<String>)
-        store.parseOpenedCardList(cardsState.get("openedCardList") as List<String>)
 
         store.parseNumOfHands(cardsState.getInt("numOfHands"))
         store.parseNumOfPublicCards(cardsState.getInt("numOfPublicCards"))

@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.jobseeker.cluedetectivenotes.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import com.jobseeker.cluedetectivenotes.ui.theme.ClueDetectiveNotesTheme
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 class MainActivity() : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +18,9 @@ class MainActivity() : ComponentActivity() {
         setContent {
             ClueDetectiveNotesTheme {
                 // A surface container using the 'background' color from the theme
+                val optionViewModel : OptionViewModel = viewModel()
+                optionViewModel.intent.loadOptions(this)
+
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation()
                 }

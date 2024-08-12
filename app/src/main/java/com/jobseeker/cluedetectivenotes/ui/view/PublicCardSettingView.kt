@@ -31,10 +31,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 @Composable
-fun PublicCardSettingView(navController: NavHostController, gameSettingViewModel: GameSettingViewModel = viewModel()) {
+fun PublicCardSettingView(
+    navController: NavHostController,
+    gameSettingViewModel: GameSettingViewModel = viewModel(),
+    optionViewModel: OptionViewModel = viewModel()
+) {
     gameSettingViewModel.intent.loadCardList()
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
     val uiState = gameSettingViewModel.store.uiState.collectAsState()
     val context = LocalContext.current
@@ -43,7 +49,6 @@ fun PublicCardSettingView(navController: NavHostController, gameSettingViewModel
     val weaponCardList = uiState.value.weaponCardList
     val crimeSceneCardList = uiState.value.crimeSceneCardList
 
-    val numOfHands = uiState.value.numOfHands
     val numOfPublicCards = uiState.value.numOfPublicCards
     val handList = uiState.value.handList
     val publicCardList = uiState.value.publicCardList
@@ -129,7 +134,7 @@ fun PublicCardSettingView(navController: NavHostController, gameSettingViewModel
                                         publicCardList = publicCardList,
                                         cardList = suspectCardList,
                                         cardType = "suspect",
-                                        listName = "용의자"
+                                        listName = multiLang["CTYPE.SUSPECT"]!!
                                     )
                                     CardListForPublicCards(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -138,7 +143,7 @@ fun PublicCardSettingView(navController: NavHostController, gameSettingViewModel
                                         publicCardList = publicCardList,
                                         cardList = weaponCardList,
                                         cardType = "weapon",
-                                        listName = "흉기"
+                                        listName = multiLang["CTYPE.WEAPON"]!!
                                     )
                                     CardListForPublicCards(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -147,8 +152,9 @@ fun PublicCardSettingView(navController: NavHostController, gameSettingViewModel
                                         publicCardList = publicCardList,
                                         cardList = crimeSceneCardList,
                                         cardType = "crime_scene",
-                                        listName = "범행장소"
+                                        listName = multiLang["CTYPE.CRIME_SCENE"]!!
                                     )
+                                    Spacer(modifier = Modifier.height(100.dp))
                                 }
                             }
                         }

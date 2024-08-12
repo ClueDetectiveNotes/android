@@ -1,11 +1,8 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.content.Context
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,10 +31,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 @Composable
-fun HandSettingView(navController: NavHostController, gameSettingViewModel: GameSettingViewModel = viewModel()){
+fun HandSettingView(
+    navController: NavHostController,
+    gameSettingViewModel: GameSettingViewModel = viewModel(),
+    optionViewModel: OptionViewModel = viewModel()
+){
     gameSettingViewModel.intent.loadCardList()
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
     val uiState = gameSettingViewModel.store.uiState.collectAsState()
     val context = LocalContext.current
@@ -104,17 +105,27 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
                                                 colorFilter = null
                                             )
                                         }else{
-                                            Card (
-                                                modifier = Modifier
-                                                    .width(120.dp)
-                                                    .height(120.dp)
-                                                    .padding(5.dp)
-                                                    .border(width = 1.dp, color = Color.Black),
-                                                shape = RoundedCornerShape(0.dp),
-                                                )
-                                            {
-                                                Text(text = "")
-                                            }   
+                                            Column {
+                                                Row{
+                                                    Card (
+                                                        modifier = Modifier
+                                                            .width(120.dp)
+                                                            .height(120.dp)
+                                                            .padding(5.dp)
+                                                            .border(
+                                                                width = 1.dp,
+                                                                color = Color.Black
+                                                            ),
+                                                        shape = RoundedCornerShape(0.dp),
+                                                    )
+                                                    {
+                                                        Text(text = "")
+                                                    }
+                                                }
+                                                Row{
+                                                    Text(text = "")
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -132,7 +143,7 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
                                         handList = handList,
                                         cardList = suspectCardList,
                                         cardType = "suspect",
-                                        listName = "용의자"
+                                        listName = multiLang["CTYPE.SUSPECT"]!!
                                     )
                                     CardList(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -140,7 +151,7 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
                                         handList = handList,
                                         cardList = weaponCardList,
                                         cardType = "weapon",
-                                        listName = "흉기"
+                                        listName = multiLang["CTYPE.WEAPON"]!!
                                     )
                                     CardList(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -148,8 +159,9 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
                                         handList = handList,
                                         cardList = crimeSceneCardList,
                                         cardType = "crime_scene",
-                                        listName = "범행장소"
+                                        listName = multiLang["CTYPE.CRIME_SCENE"]!!
                                     )
+                                    Spacer(modifier = Modifier.height(100.dp))
                                 }
                             }
                         }
