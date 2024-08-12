@@ -18,7 +18,7 @@ fun BackOnPressed() {
     var backPressedTime = 0L
 
     BackHandler(enabled = backPressedState) {
-        if(System.currentTimeMillis() - backPressedTime <= 400L) {
+        if(System.currentTimeMillis() - backPressedTime <= 800L) {
             (context as Activity).finishAffinity()
             System.runFinalization();
             exitProcess(0);

@@ -166,22 +166,6 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
     }//Box End
 }
 
-@Composable
-fun NextToCardSettingButton(navController: NavHostController, gameSettingViewModel:GameSettingViewModel){
-    val uiState = gameSettingViewModel.store.uiState.collectAsState()
-    Box (
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ){
-        Button(
-            onClick = { navController.navigate(Routes.HandSetting.route) },
-            enabled = uiState.value.playerOrderSettingNextButtonEnabled
-        ) {
-            Text(text = "다음")
-        }
-    }
-}
-
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
 fun Modifier.bottomBorder(strokeWidth: Dp, color: Color) = composed(
     factory = {

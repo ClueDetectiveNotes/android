@@ -15,7 +15,6 @@ data class GameSettingUiState (
     val crimeSceneCardList : List<String> = emptyList(),
     val publicCardList : List<String> = emptyList(),
     val handList : List<String> = emptyList(),
-    val openedCardList : List<String> = emptyList(),
 
     val minusButtonEnabled: Boolean = false,
     val plusButtonEnabled: Boolean = false,

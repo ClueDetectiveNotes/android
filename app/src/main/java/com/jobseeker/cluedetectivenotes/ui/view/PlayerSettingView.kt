@@ -218,21 +218,3 @@ fun PlayerListItem(gameSettingViewModel:GameSettingViewModel, id:UUID, name: Str
         )
     }
 }
-
-@Composable
-fun NextToDetailButton(navController: NavHostController, focusManager: FocusManager, gameSettingViewModel:GameSettingViewModel){
-    val uiState = gameSettingViewModel.store.uiState.collectAsState()
-    Box (
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-    ) {
-        Button(onClick = {
-            focusManager.clearFocus()
-            navController.navigate(Routes.PlayerDetailSetting.route)
-        },
-            enabled = uiState.value.playerSettingNextButtonEnabled,
-        ) {
-            Text(text = "다음")
-        }
-    }
-}

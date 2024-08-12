@@ -55,10 +55,6 @@ class GameSettingStore : GameSettingStateStore, GameSettingActionStore {
         _uiState.update { it.copy(handList = handList) }
     }
 
-    override fun parseOpenedCardList(openedCardList: List<String>) {
-        _uiState.update { it.copy(openedCardList = openedCardList) }
-    }
-
     override fun parsePlusButtonEnabled(plusButtonEnabled: Boolean) {
         _uiState.update { it.copy(plusButtonEnabled = plusButtonEnabled) }
     }

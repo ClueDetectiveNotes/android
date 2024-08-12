@@ -29,15 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
 
 @Composable
@@ -52,6 +49,7 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
     val crimeSceneCardList = uiState.value.crimeSceneCardList
 
     val numOfHands = uiState.value.numOfHands
+    val numOfPublicCards = uiState.value.numOfPublicCards
     val handList = uiState.value.handList
 
     Surface(modifier = Modifier.padding(10.dp)) {
@@ -79,7 +77,7 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
                         top.linkTo(desc.bottom)
                     })
                 {
-                    Column {
+                    Column (modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                         //선택한 카드
                         Row{
                             Column {
@@ -91,18 +89,19 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
                                             try { handList[idx] }
                                             catch (_:Exception) { null }
 
-                                        val type =
+                                        val cardType =
                                             if(suspectCardList.contains(hand)){ "suspect" }
                                             else if(weaponCardList.contains(hand)){ "weapon" }
                                             else if(crimeSceneCardList.contains(hand)){ "crimeScene" }
                                             else { null }
 
-                                        if(hand != null && type != null){
-                                            GameCard(
-                                                gameSettingViewModel = gameSettingViewModel,
+                                        if(hand != null && cardType != null){
+                                            GameCardView(
                                                 context = context,
-                                                type = type,
-                                                cardName = hand
+                                                type = cardType,
+                                                cardName = hand,
+                                                clickAction = { gameSettingViewModel.intent.selectHand(hand) },
+                                                colorFilter = null
                                             )
                                         }else{
                                             Card (
@@ -127,73 +126,47 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
                             Row {
                                 Column (modifier = Modifier.verticalScroll(rememberScrollState())){
                                     //선택 카드
-                                    Row {
-                                        Column {
-                                            Row {
-                                                Text(text = "용의자")
-                                            }
-                                            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                                                for (suspectCard in suspectCardList) {
-                                                    GameCard(
-                                                        gameSettingViewModel = gameSettingViewModel,
-                                                        context = context,
-                                                        cardList = handList,
-                                                        type = "suspect",
-                                                        cardName = suspectCard
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                    Row {
-                                        Column {
-                                            Row {
-                                                Text(text = "흉기")
-                                            }
-                                            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                                                for (weaponCard in weaponCardList) {
-                                                    GameCard(
-                                                        gameSettingViewModel = gameSettingViewModel,
-                                                        context = context,
-                                                        cardList = handList,
-                                                        type = "weapon",
-                                                        cardName = weaponCard
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                    Row{
-                                        Column {
-                                            Row {
-                                                Text(text = "범행장소")
-                                            }
-                                            Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
-                                                for (crimeSceneCard in crimeSceneCardList){
-                                                    GameCard(
-                                                        gameSettingViewModel = gameSettingViewModel,
-                                                        context = context,
-                                                        cardList = handList,
-                                                        type = "crime_scene",
-                                                        cardName = crimeSceneCard
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
+                                    CardList(
+                                        gameSettingViewModel = gameSettingViewModel,
+                                        context = context,
+                                        handList = handList,
+                                        cardList = suspectCardList,
+                                        cardType = "suspect",
+                                        listName = "용의자"
+                                    )
+                                    CardList(
+                                        gameSettingViewModel = gameSettingViewModel,
+                                        context = context,
+                                        handList = handList,
+                                        cardList = weaponCardList,
+                                        cardType = "weapon",
+                                        listName = "흉기"
+                                    )
+                                    CardList(
+                                        gameSettingViewModel = gameSettingViewModel,
+                                        context = context,
+                                        handList = handList,
+                                        cardList = crimeSceneCardList,
+                                        cardType = "crime_scene",
+                                        listName = "범행장소"
+                                    )
                                 }
                             }
                         }
                     }
                 }
-
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .constrainAs(button) {
-                        bottom.linkTo(parent.bottom)
-                    }){
-                    if(numOfHands == handList.size){
-                        NextToPublicCardSettingButton(navController, gameSettingViewModel)
+                if(numOfHands == handList.size){
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .constrainAs(button) {
+                            bottom.linkTo(parent.bottom)
+                        }
+                    ){
+                        if(numOfPublicCards > 0){
+                            NextToPublicCardSettingButton(navController = navController)
+                        }else{
+                            PlayGameButton(navController = navController)
+                        }
                     }
                 }
             }
@@ -202,54 +175,29 @@ fun HandSettingView(navController: NavHostController, gameSettingViewModel: Game
 }
 
 @Composable
-fun GameCard(gameSettingViewModel:GameSettingViewModel, context: Context, cardList:List<String> = emptyList(), type:String, cardName:String){
-    Card(
-        modifier = Modifier
-            .width(120.dp)
-            .height(120.dp)
-            .padding(5.dp),
-        shape = RoundedCornerShape(0.dp),
-        onClick = {gameSettingViewModel.intent.selectHand(cardName)}
-    ) {
-        val id = try{
-            context.resources.getIdentifier(
-                "img_" + type + "_" + cardName.lowercase(),
-                "drawable",
-                context.packageName)
-        } catch (_:Exception){
-            0x0
-        }
-        if(id != 0x0){
-            Image(
-                painterResource(id = id),
-                contentDescription = "",
-                contentScale = ContentScale.Fit,
-                colorFilter = if(cardList.contains(cardName)) ColorFilter.tint(color = Color.Gray, blendMode = BlendMode.Darken) else null,
-                //modifier = Modifier.align(Alignment.Center)
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .border(width = 1.dp, color = Color.Black)
-                    .background(color = Color(MaterialTheme.colorScheme.surface.value))
-            )
-        }else{
-            Text(text = cardName)
-        }
-    }
-}
+fun CardList(gameSettingViewModel:GameSettingViewModel, context: Context, handList:List<String>, cardList:List<String>, cardType:String, listName:String){
+    Row {
+        Column {
+            Row {
+                Text(text = listName)
+            }
+            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                for (card in cardList) {
 
-@Composable
-fun NextToPublicCardSettingButton(navController: NavHostController, gameSettingViewModel:GameSettingViewModel){
-    val uiState = gameSettingViewModel.store.uiState.collectAsState()
-    Box (
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ){
-        Button(
-            onClick = { navController.navigate(Routes.PublicCardSetting.route) },
-            enabled = uiState.value.playerOrderSettingNextButtonEnabled
-        ) {
-            Text(text = "다음")
+                    val colorFilter = if (handList.contains(card)) ColorFilter.tint(
+                        color = Color.Gray,
+                        blendMode = BlendMode.Darken
+                    ) else null
+
+                    GameCardView(
+                        context = context,
+                        type = cardType,
+                        cardName = card,
+                        clickAction = { gameSettingViewModel.intent.selectHand(card) },
+                        colorFilter = colorFilter
+                    )
+                }
+            }
         }
     }
 }

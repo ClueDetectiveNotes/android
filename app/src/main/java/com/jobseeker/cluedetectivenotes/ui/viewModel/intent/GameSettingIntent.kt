@@ -6,6 +6,7 @@ import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.LoadCard
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.RemoveLastPlayerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.ReorderPlayerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SelectHandUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SelectPublicCardUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SelectUserUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SetPlayerNameUseCase
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.gameSetting.GameSettingActionStore
@@ -13,14 +14,15 @@ import org.json.JSONObject
 import java.util.UUID
 
 class GameSettingIntent(private val store : GameSettingActionStore) {
-    val initPlayersUseCase: InitPlayersUseCase = InitPlayersUseCase()
-    val removeLastPlayerUseCase: RemoveLastPlayerUseCase = RemoveLastPlayerUseCase()
-    val addPlayerUseCase: AddPlayerUseCase = AddPlayerUseCase()
-    val setPlayerNameUseCase: SetPlayerNameUseCase = SetPlayerNameUseCase()
-    val reorderPlayerUseCase: ReorderPlayerUseCase = ReorderPlayerUseCase()
-    val selectUserUseCase:SelectUserUseCase = SelectUserUseCase()
-    val loadCardListUseCase:LoadCardListUseCase = LoadCardListUseCase()
-    val selectHandUseCase:SelectHandUseCase = SelectHandUseCase()
+    private val initPlayersUseCase: InitPlayersUseCase = InitPlayersUseCase()
+    private val removeLastPlayerUseCase: RemoveLastPlayerUseCase = RemoveLastPlayerUseCase()
+    private val addPlayerUseCase: AddPlayerUseCase = AddPlayerUseCase()
+    private val setPlayerNameUseCase: SetPlayerNameUseCase = SetPlayerNameUseCase()
+    private val reorderPlayerUseCase: ReorderPlayerUseCase = ReorderPlayerUseCase()
+    private val selectUserUseCase:SelectUserUseCase = SelectUserUseCase()
+    private val loadCardListUseCase:LoadCardListUseCase = LoadCardListUseCase()
+    private val selectHandUseCase:SelectHandUseCase = SelectHandUseCase()
+    private val selectPublicCardUseCase: SelectPublicCardUseCase = SelectPublicCardUseCase()
 
     fun initPlayers() {
         val playerState : JSONObject = initPlayersUseCase.execute()
@@ -114,11 +116,17 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parseNumOfPublicCards(cardsState.getInt("numOfPublicCards"))
     }
 
-    fun selectHand(card: String) {
-        val cardsState = selectHandUseCase.execute(card)
+    fun selectHand(cardName: String) {
+        val cardsState = selectHandUseCase.execute(cardName)
 
         store.parsePublicCardList(cardsState.get("publicCardList") as List<String>)
         store.parseHandList(cardsState.get("handList") as List<String>)
-        store.parseOpenedCardList(cardsState.get("openedCardList") as List<String>)
+    }
+
+    fun selectPublicCard(cardName: String) {
+        val cardsState = selectPublicCardUseCase.execute(cardName)
+
+        store.parsePublicCardList(cardsState.get("publicCardList") as List<String>)
+        store.parseHandList(cardsState.get("handList") as List<String>)
     }
 }

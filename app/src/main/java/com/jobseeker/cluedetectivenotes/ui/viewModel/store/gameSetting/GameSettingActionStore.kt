@@ -19,7 +19,6 @@ interface GameSettingActionStore {
     fun parseCrimeSceneCardList(crimeSceneCardList : List<String>)
     fun parsePublicCardList(publicCardList : List<String>)
     fun parseHandList(handList : List<String>)
-    fun parseOpenedCardList(openedCardList : List<String>)
 
     fun parsePlusButtonEnabled(plusButtonEnabled: Boolean)
     fun parseMinusButtonEnabled(minusButtonEnabled: Boolean)
