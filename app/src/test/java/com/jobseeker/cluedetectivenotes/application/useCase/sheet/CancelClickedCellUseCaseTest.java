@@ -7,6 +7,7 @@ import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.MarkerMismatchException;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class CancelClickedCellUseCaseTest {
     CancelClickedCellUseCase<JSONObject> cancelClickedCellUseCase = null;
 
     @Before
-    public void create(){
+    public void create() throws MarkerMismatchException {
         sheet = GameSetter.getSheetInstance();
         cancelClickedCellUseCase = new CancelClickedCellUseCase<>();
     }

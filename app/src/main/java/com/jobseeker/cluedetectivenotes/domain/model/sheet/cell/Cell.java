@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class Cell {
-    private UUID id;
-    private Rowname rowname;
-    private Colname colname;
-    private Marker mainMarker;
-    private SubMarker subMarker;
+    private final UUID id;
+    private final Rowname rowname;
+    private final Colname colname;
+    private final Marker mainMarker;
+    private final SubMarker subMarker;
+    private boolean isLock = false;
 
     public Cell(UUID id, Rowname rowname, Colname colname) {
         this.id = id;
@@ -23,6 +24,17 @@ public class Cell {
         this.colname = colname;
         this.mainMarker = new Marker();
         this.subMarker = new SubMarker();
+    }
+
+    public Cell(UUID id, Rowname rowname, Colname colname, Markers initMarker) throws MarkerMismatchException {
+        this.id = id;
+        this.rowname = rowname;
+        this.colname = colname;
+        this.mainMarker = new Marker();
+        this.subMarker = new SubMarker();
+
+        this.mainMarker.setMarker(initMarker);
+        isLock = true;
     }
 
     public Rowname getRowname() {
@@ -38,6 +50,9 @@ public class Cell {
     }
 
     public void setMainMarker(Markers marker) throws MarkerMismatchException {
+        if(isLock){
+            return;
+        }
         mainMarker.setMarker(marker);
     }
 
@@ -54,6 +69,9 @@ public class Cell {
     }
 
     public void removeMainMarker() {
+        if(isLock){
+            return;
+        }
         mainMarker.setEmpty();
     }
 
@@ -75,5 +93,9 @@ public class Cell {
 
     public Marker getMarker() {
         return mainMarker;
+    }
+
+    public boolean isLocked() {
+        return isLock;
     }
 }

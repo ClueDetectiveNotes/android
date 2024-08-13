@@ -2,7 +2,6 @@ package com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar;
 
 import com.jobseeker.cluedetectivenotes.application.useCase.UseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
-import com.jobseeker.cluedetectivenotes.domain.model.sheet.Colname;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;

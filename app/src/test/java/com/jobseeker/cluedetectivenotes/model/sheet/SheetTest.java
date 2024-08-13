@@ -28,12 +28,12 @@ public class SheetTest {
     List<CardHolder> players;
 
     @Before
-    public void create(){
-        players = new ArrayList<CardHolder>();
-        players.add(new CardHolder("다산"));
-        players.add(new CardHolder("메리"));
-        players.add(new CardHolder("코코"));
-        sheet = new Sheet(players);
+    public void create() throws MarkerMismatchException {
+//        players = new ArrayList<CardHolder>();
+//        players.add(new CardHolder("다산"));
+//        players.add(new CardHolder("메리"));
+//        players.add(new CardHolder("코코"));
+//        sheet = new Sheet(players);
     }
 
     //어떤 셀도 선택되지 않은 상태에서 셀을 선택하면 셀에 마커를 선택할 수 있다

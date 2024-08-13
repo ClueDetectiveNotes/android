@@ -4,7 +4,6 @@ import com.jobseeker.cluedetectivenotes.domain.model.player.CardHolder;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -16,11 +15,9 @@ public class Game {
         deck = new Deck(holders.getUnknownOne());
     }
 
-    public Sheet getSheet(){
+    public Sheet getSheet() {
         if(sheet == null){
-            List<CardHolder> columns = new ArrayList<>(holders.getPlayers());
-            columns.add(holders.getAnswer());
-            sheet = new Sheet(columns);
+            sheet = new Sheet(holders);
         }
         return sheet;
     }

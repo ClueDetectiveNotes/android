@@ -5,6 +5,7 @@ import com.jobseeker.cluedetectivenotes.domain.model.game.Deck;
 import com.jobseeker.cluedetectivenotes.domain.model.game.Game;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.MarkerMismatchException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class LoadCardListUseCase {
-    public JSONObject execute() throws JSONException {
+    public JSONObject execute() throws JSONException, MarkerMismatchException {
         Game game = GameSetter.getGameInstance();
         Deck deck = game.getDeck();
 

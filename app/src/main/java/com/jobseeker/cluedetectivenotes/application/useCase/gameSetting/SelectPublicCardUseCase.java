@@ -9,6 +9,7 @@ import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.game.exceptions.CardNotFoundException;
 import com.jobseeker.cluedetectivenotes.domain.model.player.CardHolder;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.MarkerMismatchException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectPublicCardUseCase {
-    public JSONObject execute(String cardName) throws JSONException, CardNotFoundException {
+    public JSONObject execute(String cardName) throws JSONException, CardNotFoundException, MarkerMismatchException {
         Game game = GameSetter.getGameInstance();
         Deck deck = game.getDeck();
         CardHolder publicOne = game.getPublicOne();

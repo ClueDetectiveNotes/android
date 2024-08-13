@@ -25,7 +25,7 @@ public class GameSetter {
         return game.getSheet();
     }
 
-    public static Game getGameInstance(){
+    public static Game getGameInstance() {
         if(game == null){
             game = GameFactory.createGame(players);
         }

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.MarkerMismatchException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFindException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.InferenceModeException;
@@ -24,7 +25,7 @@ public class ClickCellUseCaseTest {
     ClickCellUseCase<JSONObject> clickCellUseCase = null;
 
     @Before
-    public void create(){
+    public void create() throws MarkerMismatchException {
         sheet = GameSetter.getSheetInstance();
         clickCellUseCase = new ClickCellUseCase<JSONObject>();
     }

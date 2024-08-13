@@ -1,8 +1,13 @@
 package com.jobseeker.cluedetectivenotes.domain.model.sheet;
 
+import androidx.annotation.NonNull;
+
+import com.jobseeker.cluedetectivenotes.domain.model.card.Card;
 import com.jobseeker.cluedetectivenotes.domain.model.card.exceptions.CardNotFoundException;
+import com.jobseeker.cluedetectivenotes.domain.model.game.CardHolders;
 import com.jobseeker.cluedetectivenotes.domain.model.player.CardHolder;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.MarkerMismatchException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotUnselectNeverChosenCellException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Markers;
@@ -34,12 +39,15 @@ public class Sheet {
     private Rowname selectedRownameWeapon = null;
     private Rowname selectedRownameCrimeScene = null;
     private Colname selectedColname = null;
-    public Sheet(List<CardHolder> holders){
+    public Sheet(CardHolders holders) {
         selectedCells = new ArrayList<Cell>();
         cells = new HashMap<UUID,Cell>();
 
+        List<CardHolder> cardHolderList = new ArrayList<>(holders.getPlayers());
+        cardHolderList.add(holders.getAnswer());
+
         colnames = new ArrayList<Colname>();
-        for(CardHolder ch:holders){
+        for(CardHolder ch:cardHolderList){
             colnames.add(new Colname(ch));
         }
 
@@ -54,10 +62,34 @@ public class Sheet {
             rownames.add(new Rowname(card));
         }
 
+        List<String> hand = holders.getUser().getCardList().stream().map(Card::getName).collect(Collectors.toList());
+        List<String> publicCards = holders.getPublicOne().getCardList().stream().map(Card::getName).collect(Collectors.toList());
+
         for(Rowname rn : rownames){
             for(Colname cn : colnames){
                 UUID id = UUID.randomUUID();
-                Cell cell = new Cell(id, rn, cn);
+                Cell cell;
+                try{
+                    if(hand.contains(rn.getCard().name())){
+                        if(cn.isUser()){
+                            //유저의 손패는 체크
+                            cell = new Cell(id, rn, cn, Markers.CHECK);
+                        }else{
+                            //유저가 아닌 경우 크로스
+                            cell = new Cell(id, rn, cn, Markers.CROSS);
+                        }
+                    }else if(publicCards.contains(rn.getCard().name())){
+                        //공용 카드는 크로스
+                        cell = new Cell(id, rn, cn, Markers.CROSS);
+                    }else if(cn.isUser()){
+                        //손패가 아닌 셀은 크로스
+                        cell = new Cell(id, rn, cn, Markers.CROSS);
+                    }else {
+                        cell = new Cell(id, rn, cn);
+                    }
+                }catch (MarkerMismatchException e){
+                    cell = new Cell(id, rn, cn);
+                }
                 cells.put(id, cell);
             }
         }
@@ -375,7 +407,7 @@ public class Sheet {
     }
 
     public boolean isSameMarkerInEveryCell(Markers marker) {
-        List<Cell> markedCells = selectedCells.stream().filter(cell -> !cell.isEmptyMainMarker()).collect(Collectors.toList());
+        List<Cell> markedCells = selectedCells.stream().filter(cell -> !cell.isEmptyMainMarker() && !cell.isLocked()).collect(Collectors.toList());
 
         assert !markedCells.isEmpty();
         Cell firstCell = markedCells.get(0);
