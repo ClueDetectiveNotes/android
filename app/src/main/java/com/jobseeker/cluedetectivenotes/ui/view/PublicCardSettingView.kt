@@ -64,10 +64,10 @@ fun PublicCardSettingView(
                     }){
                     Column {
                         Row {
-                            Text(text = "공용 카드 설정", fontSize = 28.sp)
+                            Text(text = multiLang["MSG.PCS_TITLE"]!!, fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = "공용 카드를 설정해주세요.")
+                            Text(text = multiLang["MSG.PCS_DESC"]!!)
                         }
                     }
                 }
@@ -134,7 +134,7 @@ fun PublicCardSettingView(
                                         publicCardList = publicCardList,
                                         cardList = suspectCardList,
                                         cardType = "suspect",
-                                        listName = multiLang["CTYPE.SUSPECT"]!!
+                                        listName = multiLang["CRD_TP.SUSPECT"]!!
                                     )
                                     CardListForPublicCards(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -143,7 +143,7 @@ fun PublicCardSettingView(
                                         publicCardList = publicCardList,
                                         cardList = weaponCardList,
                                         cardType = "weapon",
-                                        listName = multiLang["CTYPE.WEAPON"]!!
+                                        listName = multiLang["CRD_TP.WEAPON"]!!
                                     )
                                     CardListForPublicCards(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -152,7 +152,7 @@ fun PublicCardSettingView(
                                         publicCardList = publicCardList,
                                         cardList = crimeSceneCardList,
                                         cardType = "crime_scene",
-                                        listName = multiLang["CTYPE.CRIME_SCENE"]!!
+                                        listName = multiLang["CRD_TP.CRIME_SCENE"]!!
                                     )
                                     Spacer(modifier = Modifier.height(100.dp))
                                 }

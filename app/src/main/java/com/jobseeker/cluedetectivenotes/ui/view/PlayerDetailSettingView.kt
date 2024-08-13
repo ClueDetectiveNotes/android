@@ -46,10 +46,15 @@ import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.detectReorderAfterP
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.rememberReorderableLazyListState
 import com.jobseeker.cluedetectivenotes.ui.utils.reorderable.reorderable
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 @Composable
-fun PlayerDetailSettingView(navController: NavHostController, gameSettingViewModel: GameSettingViewModel = viewModel()){
-
+fun PlayerDetailSettingView(
+    navController: NavHostController,
+    gameSettingViewModel: GameSettingViewModel = viewModel(),
+    optionViewModel: OptionViewModel = viewModel()
+){
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
     Surface(modifier = Modifier.padding(10.dp)){
         Column(modifier = Modifier.fillMaxHeight()){
             ConstraintLayout(modifier = Modifier.fillMaxHeight()){
@@ -61,10 +66,10 @@ fun PlayerDetailSettingView(navController: NavHostController, gameSettingViewMod
                     }){
                     Column {
                         Row {
-                            Text(text = "플레이어 설정", fontSize = 28.sp)
+                            Text(text = multiLang["MSG.PDS_TITLE"]!!, fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = "자신을 선택하고, 플레이 순서에 맞게 정렬해주세요.")
+                            Text(text = multiLang["MSG.PDS_DESC"]!!)
                         }
                     }
                 }

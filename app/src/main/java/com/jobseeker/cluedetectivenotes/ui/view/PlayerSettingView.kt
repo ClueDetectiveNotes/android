@@ -44,14 +44,22 @@ import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.R
 import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 import java.util.UUID
 
 @Composable
-fun PlayerSettingView(navController: NavHostController, gameSettingViewModel: GameSettingViewModel = viewModel()){
+fun PlayerSettingView(
+    navController: NavHostController,
+    gameSettingViewModel: GameSettingViewModel = viewModel(),
+    optionViewModel: OptionViewModel = viewModel()
+){
     val focusManger = LocalFocusManager.current
     val uiState = gameSettingViewModel.store.uiState.collectAsState()
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
-    Surface (modifier = Modifier.addFocusCleaner(focusManger).padding(10.dp)){
+    Surface (modifier = Modifier
+        .addFocusCleaner(focusManger)
+        .padding(10.dp)){
         Column (modifier = Modifier.fillMaxHeight()) {
             ConstraintLayout(modifier = Modifier.fillMaxHeight()){
                 val (desc, stepper, playerList, button) = createRefs()
@@ -62,10 +70,10 @@ fun PlayerSettingView(navController: NavHostController, gameSettingViewModel: Ga
                     }){
                     Column {
                         Row {
-                            Text(text = "플레이어 설정", fontSize = 28.sp)
+                            Text(text = multiLang["MSG.PS_TITLE"]!!, fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = "게임에 참여하는 인원 수와 이름을 설정해주세요.")
+                            Text(text = multiLang["MSG.PS_DESC"]!!)
                         }
                     }
                 }
@@ -103,7 +111,7 @@ fun PlayerSettingView(navController: NavHostController, gameSettingViewModel: Ga
                             Row (modifier = Modifier.fillMaxWidth()) {
                                 Box (modifier = Modifier.fillMaxWidth()) {
                                     Text(
-                                        text = "이름이 입력되지 않았거나, 중복된 이름이 있습니다.",
+                                        text = multiLang["MSG.PS_COND"]!!,
                                         modifier = Modifier.align(Alignment.Center)
                                     )
                                 }

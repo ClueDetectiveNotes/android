@@ -64,10 +64,10 @@ fun HandSettingView(
                     }){
                     Column {
                         Row {
-                            Text(text = "개인 카드 설정", fontSize = 28.sp)
+                            Text(text = multiLang["MSG.HDS_TITLE"]!!, fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = "개인 카드를 설정해주세요.")
+                            Text(text = multiLang["MSG.HDS_DESC"]!!)
                         }
                     }
                 }
@@ -143,7 +143,7 @@ fun HandSettingView(
                                         handList = handList,
                                         cardList = suspectCardList,
                                         cardType = "suspect",
-                                        listName = multiLang["CTYPE.SUSPECT"]!!
+                                        listName = multiLang["CRD_TP.SUSPECT"]!!
                                     )
                                     CardList(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -151,7 +151,7 @@ fun HandSettingView(
                                         handList = handList,
                                         cardList = weaponCardList,
                                         cardType = "weapon",
-                                        listName = multiLang["CTYPE.WEAPON"]!!
+                                        listName = multiLang["CRD_TP.WEAPON"]!!
                                     )
                                     CardList(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -159,7 +159,7 @@ fun HandSettingView(
                                         handList = handList,
                                         cardList = crimeSceneCardList,
                                         cardType = "crime_scene",
-                                        listName = multiLang["CTYPE.CRIME_SCENE"]!!
+                                        listName = multiLang["CRD_TP.CRIME_SCENE"]!!
                                     )
                                     Spacer(modifier = Modifier.height(100.dp))
                                 }

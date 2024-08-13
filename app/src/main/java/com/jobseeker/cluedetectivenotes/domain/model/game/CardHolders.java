@@ -8,6 +8,7 @@ import com.jobseeker.cluedetectivenotes.domain.model.player.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CardHolders {
     private final List<Player> players;
@@ -15,11 +16,11 @@ public class CardHolders {
     private final CardHolder publicOne;
     private final CardHolder unknownOne;
 
-    public CardHolders(List<Player> players){
+    public CardHolders(List<Player> players, Map<String,String> multiLang){
         this.players = players;
-        answer = new CardHolder("정답");
-        publicOne = new CardHolder("공유");
-        unknownOne = new CardHolder("비공개");
+        answer = new CardHolder(multiLang.get("CRD_HD.ANSWER"));
+        publicOne = new CardHolder(multiLang.get("CRD_HD.PUBLIC"));
+        unknownOne = new CardHolder(multiLang.get("CRD_HD.UNKNOWN"));
     }
 
     public List<Player> getPlayers() {

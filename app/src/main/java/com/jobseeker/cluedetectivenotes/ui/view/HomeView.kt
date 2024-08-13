@@ -5,16 +5,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.ui.Routes
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 @Composable
-fun HomeView(navController: NavHostController) {
+fun HomeView(
+    navController: NavHostController,
+    optionViewModel: OptionViewModel = viewModel()
+) {
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
     Box(modifier = Modifier.size(50F.dp), contentAlignment = Alignment.Center){
-        Button(content = { Text(text = "시작") },
+        Button(content = { Text(text = multiLang["BTN.START"]!!) },
                 onClick = {
                     navController.navigate(Routes.PlayerSetting.route)
                 })

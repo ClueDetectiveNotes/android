@@ -69,8 +69,8 @@ fun SheetView(
                     sheetViewModel.intent.closeConfirmToDefaultModeDialog()
                     sheetViewModel.intent.changeDefaultMode();
                 },
-                dialogTitle = "추리모드를 해제 하시겠습니까?",
-                dialogText = "확인 버튼을 누르면 추리모드가 해제되며 기본 선택 모드로 돌아갑니다."
+                dialogTitle = multiLang["MSG.SHT_IF_DL_TITLE"]!!,
+                dialogText = multiLang["MSG.SHT_IF_DL_DESC"]!!
             )
         }
     }
@@ -120,7 +120,7 @@ fun SheetView(
                         for(row in rownames) {
                             if (rowType != row["type"]) {
                                 rowType = row["type"]!!
-                                RowTypeCell(text = multiLang["CTYPE.$rowType"]!!, modifier = Modifier)
+                                RowTypeCell(text = multiLang["CRD_TP.$rowType"]!!, modifier = Modifier)
                             }
                             RownameCell(text = multiLang["CRD."+row["name"]]!!) {
                                 sheetViewModel.intent.onClickRowname(row["name"]!!)
@@ -252,18 +252,20 @@ fun ConfirmToDefaultModeDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: String,
-    dialogText: String
+    dialogText: String,
+    optionViewModel: OptionViewModel = viewModel()
 ){
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
     AlertDialog(
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
             TextButton(onClick = { onConfirmation() }) {
-                Text(text = "확인")
+                Text(text = multiLang["BTN.CONFIRM"]!!)
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismissRequest() }) {
-                Text(text = "취소")
+                Text(text = multiLang["BTN.CANCEL"]!!)
             }
         },
         title = {

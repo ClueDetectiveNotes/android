@@ -5,13 +5,14 @@ import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 
 import java.util.List;
+import java.util.Map;
 
 public class Game {
     private final Deck deck;
     private final CardHolders holders;
     private Sheet sheet;
-    public Game(List<Player> players){
-        holders = new CardHolders(players);
+    public Game(List<Player> players, Map<String,String> multiLang){
+        holders = new CardHolders(players, multiLang);
         deck = new Deck(holders.getUnknownOne());
     }
 
