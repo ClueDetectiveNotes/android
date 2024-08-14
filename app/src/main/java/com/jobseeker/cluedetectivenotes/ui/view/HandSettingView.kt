@@ -109,8 +109,8 @@ fun HandSettingView(
                                                 Row{
                                                     Card (
                                                         modifier = Modifier
-                                                            .width(120.dp)
-                                                            .height(120.dp)
+                                                            .width(90.dp)
+                                                            .height(90.dp)
                                                             .padding(5.dp)
                                                             .border(
                                                                 width = 1.dp,

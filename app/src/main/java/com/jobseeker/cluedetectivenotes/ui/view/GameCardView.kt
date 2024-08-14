@@ -36,8 +36,8 @@ fun GameCardView(context: Context, type:String, cardName:String, clickAction: ()
         Row {
             Card(
                 modifier = Modifier
-                    .width(120.dp)
-                    .height(120.dp)
+                    .width(90.dp)
+                    .height(90.dp)
                     .padding(5.dp),
                 shape = RoundedCornerShape(0.dp),
                 onClick = { clickAction() }
@@ -70,7 +70,7 @@ fun GameCardView(context: Context, type:String, cardName:String, clickAction: ()
             }
         }
         Row {
-            multiLang["CRD.$cardName"]?.let { Text(text = it, textAlign = TextAlign.Center, modifier = Modifier.width(120.dp)) }
+            multiLang["CRD.$cardName"]?.let { Text(text = it, textAlign = TextAlign.Center, modifier = Modifier.width(90.dp)) }
         }
     }
 }
