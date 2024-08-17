@@ -17,4 +17,8 @@ class OptionStore() : OptionStateStore, OptionActionStore{
     override fun parseMultiLang(multiLang: Map<String, String>) {
         _uiState.update { it.copy(multiLang = multiLang) }
     }
+
+    override fun parsCommonCode(commonCode: Map<String, List<Map<String, String>>>) {
+        _uiState.update { it.copy(commonCode = commonCode) }
+    }
 }

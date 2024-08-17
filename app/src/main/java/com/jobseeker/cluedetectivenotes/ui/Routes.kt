@@ -7,4 +7,5 @@ sealed class Routes (val route: String){
     object PublicCardSetting : Routes("PublicCardSettingView")
     object HandSetting : Routes("HandSettingView")
     object Sheet : Routes("SheetView")
+    object Option : Routes("OptionView")
 }

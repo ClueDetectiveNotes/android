@@ -19,7 +19,7 @@ class MainActivity() : ComponentActivity() {
             ClueDetectiveNotesTheme {
                 // A surface container using the 'background' color from the theme
                 val optionViewModel : OptionViewModel = viewModel()
-                optionViewModel.intent.loadOptions(this)
+                optionViewModel.intent.loadOptions()
 
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation()

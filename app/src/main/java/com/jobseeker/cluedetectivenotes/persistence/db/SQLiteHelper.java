@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
@@ -36,15 +38,50 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         if(db == null){
             db = this.getWritableDatabase();
         }
+        //옵션 생성
+        db.execSQL("DROP TABLE IF EXISTS OPTIONS");
+        db.execSQL("create table OPTIONS (CODE text, SEQ integer, TYPE text, VALUE text, primary key(CODE));");
+
+        insertOptions(db);
+
+        //공통 코드 생성
+        db.execSQL("DROP TABLE IF EXISTS COMMON_CODE");
+        db.execSQL("create table COMMON_CODE (CODE text, TYPE text, PART text, SEQ integer, primary key(CODE,TYPE));");
+
+        insertCommonCode(db);
+
+        //다국어 생성
         db.execSQL("DROP TABLE IF EXISTS MULTI_LANG");
         db.execSQL("create table MULTI_LANG (CODE text, TYPE text, LANG text, VALUE text, primary key(CODE, TYPE, LANG));");
 
-        insertCardInfo(db);
-        insertMessageInfo(db);
-        insertButtonInfo(db);
+        insertOptionsMultiLang(db);
+        insertCardMultiLang(db);
+        insertMessageMultiLang(db);
+        insertButtonMultiLang(db);
     }
 
-    private void insertCardInfo(SQLiteDatabase db){
+    private void insertOptions(SQLiteDatabase db){
+        db.execSQL("INSERT INTO OPTIONS VALUES ('LANGUAGE',1,'SELECT_BOX','KR');");
+    }
+
+    private void insertCommonCode(SQLiteDatabase db){
+        db.execSQL("INSERT INTO COMMON_CODE VALUES ('KR','SELECT_BOX','LANGUAGE',1);");
+        db.execSQL("INSERT INTO COMMON_CODE VALUES ('EN','SELECT_BOX','LANGUAGE',2);");
+    }
+
+    private void insertOptionsMultiLang(SQLiteDatabase db){
+        //한국어
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('LANGUAGE','OPT','KR','언어');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('KR','CM_CD','KR','한국어');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('EN','CM_CD','KR','영어');");
+
+        //영어
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('LANGUAGE','OPT','EN','Language');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('KR','CM_CD','EN','Korean');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('EN','CM_CD','EN','English');");
+    }
+
+    private void insertCardMultiLang(SQLiteDatabase db){
         //한국어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('ANSWER','CRD_HD','KR','정답');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PUBLIC','CRD_HD','KR','공용');");
@@ -108,7 +145,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('DINING_ROOM','CRD','EN','Dining Room');");
     }
 
-    private void insertMessageInfo(SQLiteDatabase db) {
+    private void insertMessageMultiLang(SQLiteDatabase db) {
         //한국어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PS_TITLE','MSG','KR','플레이어 설정');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PS_DESC','MSG','KR','게임에 참여하는 인원 수와 이름을 설정해주세요.');");
@@ -148,9 +185,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CM_BOP','MSG','EN','If you press it again, the app will be shut down.');");
     }
 
-    private void insertButtonInfo(SQLiteDatabase db) {
+    private void insertButtonMultiLang(SQLiteDatabase db) {
         //한국어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('START','BTN','KR','시작');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('OPTION','BTN','KR','설정');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('NEXT','BTN','KR','다음');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PLAY','BTN','KR','플레이');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CONFIRM','BTN','KR','확인');");
@@ -158,10 +196,46 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         //영어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('START','BTN','EN','Start');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('OPTION','BTN','EN','Option');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('NEXT','BTN','EN','Next');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PLAY','BTN','EN','Play');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CONFIRM','BTN','EN','Confirm');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CANCEL','BTN','EN','Cancel');");
+    }
+
+    public List<Map<String, String>> getOptions (){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT CODE, TYPE, VALUE FROM OPTIONS ORDER BY SEQ",null);
+        List<Map<String,String>> result = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Map<String,String> row = new HashMap<>();
+            row.put("CODE",cursor.getString(0));
+            row.put("TYPE",cursor.getString(1));
+            row.put("VALUE",cursor.getString(2));
+            result.add(row);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public Map<String,List<Map<String,String>>> getCommonCode (){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT CODE, PART, TYPE FROM COMMON_CODE ORDER BY SEQ",null);
+        Map<String,List<Map<String,String>>> result = new HashMap<>();
+        String key = "";
+        List<Map<String,String>> pairList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            if(!key.equals(cursor.getString(1)+"."+cursor.getString(2))){
+                pairList = new ArrayList<>();
+                key = cursor.getString(1)+"."+cursor.getString(2);
+                result.put(key,pairList);
+            }
+            Map<String,String> row = new HashMap<>();
+            row.put("CODE",cursor.getString(0));
+            pairList.add(row);
+        }
+        cursor.close();
+        return result;
     }
 
     public Map<String, String> getMultiLang (String language){
