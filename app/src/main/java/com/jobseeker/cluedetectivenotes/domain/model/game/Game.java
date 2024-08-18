@@ -43,4 +43,8 @@ public class Game {
     public CardHolder getUnknownOne() { return holders.getUnknownOne(); }
 
     public Deck getDeck(){ return deck; }
+
+    public void renewMultiLang() {
+        holders.renewMultiLang();
+    }
 }

@@ -203,16 +203,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CANCEL','BTN','EN','Cancel');");
     }
 
-    public List<Map<String, String>> getOptions (){
+    public Map<String, Map<String, String>> getOptions (){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT CODE, TYPE, VALUE FROM OPTIONS ORDER BY SEQ",null);
-        List<Map<String,String>> result = new ArrayList<>();
+        Map<String,Map<String,String>> result = new HashMap<>();
         while (cursor.moveToNext()) {
             Map<String,String> row = new HashMap<>();
-            row.put("CODE",cursor.getString(0));
             row.put("TYPE",cursor.getString(1));
             row.put("VALUE",cursor.getString(2));
-            result.add(row);
+            result.put(cursor.getString(0),row);
         }
         cursor.close();
         return result;
@@ -248,5 +247,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return result;
+    }
+
+    public void updateOption(String code, String value){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] bindArgs = {value, code};
+        db.execSQL("UPDATE OPTIONS SET VALUE = ? WHERE CODE = ?",bindArgs);
     }
 }

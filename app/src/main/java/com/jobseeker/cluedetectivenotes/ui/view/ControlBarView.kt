@@ -1,6 +1,5 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,11 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.R
+import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 
 @Composable
-fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boolean){
+fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boolean,navController: NavHostController){
     ConstraintLayout() {
         val (controlBar, markerControlbar) = createRefs()
 
@@ -154,6 +155,21 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                     ) {
                         Image(
                             painterResource(R.drawable.ic_controlbar_close_button),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { navController.navigate(Routes.Option.route) },
+                        modifier = Modifier.weight(1F)
+                    ) {
+                        Image(
+                            painterResource(R.drawable.baseline_more_vert_24),
                             contentDescription = "",
                             contentScale = ContentScale.Crop
                         )

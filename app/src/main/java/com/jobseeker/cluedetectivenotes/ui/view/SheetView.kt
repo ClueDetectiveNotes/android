@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.cheonjaeung.compose.grid.SimpleGridCells
 import com.cheonjaeung.compose.grid.VerticalGrid
 import com.jobseeker.cluedetectivenotes.ui.theme.LocalCustomColorsPalette
@@ -48,7 +49,8 @@ import java.util.UUID
 fun SheetView(
     sheetViewModel:SheetViewModel = viewModel(),
     controlBarViewModel: ControlBarViewModel = viewModel(),
-    optionViewModel: OptionViewModel = viewModel()
+    optionViewModel: OptionViewModel = viewModel(),
+    navController: NavHostController,
 ) {
     val uiState = sheetViewModel.store.uiState.collectAsState()
     val isDisplayControlBar by mutableStateOf(uiState.value.selectedIds.isNotEmpty())
@@ -168,7 +170,7 @@ fun SheetView(
                 Spacer(modifier = Modifier.height(60.dp))
             }
         }//Column End
-        ControlBar(controlBarViewModel = controlBarViewModel, isDisplayControlBar)
+        ControlBar(controlBarViewModel = controlBarViewModel, isDisplayControlBar, navController)
     }
     BackOnPressed()
 }

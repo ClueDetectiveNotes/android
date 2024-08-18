@@ -6,10 +6,6 @@ public abstract class Player extends CardHolder{
         super("");
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public boolean isPlayer(){
         return true;

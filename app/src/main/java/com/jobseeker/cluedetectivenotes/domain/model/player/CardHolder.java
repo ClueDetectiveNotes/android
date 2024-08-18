@@ -24,6 +24,9 @@ public class CardHolder {
     public String getName(){
         return name;
     }
+    public void setName(String name){
+        this.name = name;
+    }
 
     public boolean isPlayer(){
         return false;

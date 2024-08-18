@@ -15,12 +15,14 @@ public class CardHolders {
     private final CardHolder answer;
     private final CardHolder publicOne;
     private final CardHolder unknownOne;
+    private final Map<String, String> multiLang;
 
     public CardHolders(List<Player> players, Map<String,String> multiLang){
         this.players = players;
-        answer = new CardHolder(multiLang.get("CRD_HD.ANSWER"));
-        publicOne = new CardHolder(multiLang.get("CRD_HD.PUBLIC"));
-        unknownOne = new CardHolder(multiLang.get("CRD_HD.UNKNOWN"));
+        this.multiLang = multiLang;
+        answer = new CardHolder(this.multiLang.get("CRD_HD.ANSWER"));
+        publicOne = new CardHolder(this.multiLang.get("CRD_HD.PUBLIC"));
+        unknownOne = new CardHolder(this.multiLang.get("CRD_HD.UNKNOWN"));
     }
 
     public List<Player> getPlayers() {
@@ -43,5 +45,11 @@ public class CardHolders {
             }
         }
         return user;
+    }
+
+    public void renewMultiLang() {
+        answer.setName(multiLang.get("CRD_HD.ANSWER"));
+        publicOne.setName(multiLang.get("CRD_HD.PUBLIC"));
+        unknownOne.setName(multiLang.get("CRD_HD.UNKNOWN"));
     }
 }

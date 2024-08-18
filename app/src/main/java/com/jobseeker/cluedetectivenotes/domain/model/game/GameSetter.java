@@ -36,6 +36,12 @@ public class GameSetter {
     }
 
     public static void setMultiLanguage(Map<String,String> multiLang){
-        GameSetter.multiLang.putAll(multiLang);
+        if(GameSetter.multiLang.isEmpty()){
+            GameSetter.multiLang.putAll(multiLang);
+        }else{
+            GameSetter.multiLang.clear();
+            GameSetter.multiLang.putAll(multiLang);
+            if(game != null) game.renewMultiLang();
+        }
     }
 }

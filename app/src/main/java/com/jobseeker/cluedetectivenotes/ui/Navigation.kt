@@ -32,7 +32,7 @@ fun Navigation(){
             HandSettingView(navController = navController)
         }
         composable(Routes.Sheet.route){
-            SheetView()
+            SheetView(navController = navController)
         }
         composable(Routes.Option.route){
             OptionView()

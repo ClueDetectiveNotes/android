@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,13 +26,13 @@ fun HomeView(
     Box(modifier = Modifier.size(50F.dp), contentAlignment = Alignment.Center){
         Column {
             Row {
-                Button(content = { Text(text = multiLang["BTN.START"]!!) },
+                Button(modifier = Modifier.width(150.dp), content = { Text(text = multiLang["BTN.START"]!!) },
                     onClick = {
                         navController.navigate(Routes.PlayerSetting.route)
                     })
             }
             Row {
-                Button(content = { Text(text = multiLang["BTN.OPTION"]!!) },
+                Button(modifier = Modifier.width(150.dp), content = { Text(text = multiLang["BTN.OPTION"]!!) },
                     onClick = {
                         navController.navigate(Routes.Option.route)
                     })

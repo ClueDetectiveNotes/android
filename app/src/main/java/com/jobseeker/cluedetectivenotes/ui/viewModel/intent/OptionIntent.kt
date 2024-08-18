@@ -10,8 +10,12 @@ class OptionIntent (context: Context, private val store:OptionActionStore) {
     private val multiLanguageSettingUseCase : MultiLanguageSettingUseCase = MultiLanguageSettingUseCase()
 
     fun loadOptions() {
-        sqLiteHelper.initDb()
-        val multiLang = sqLiteHelper.getMultiLang(store._uiState.value.language)
+        //sqLiteHelper.initDb()
+        val options = sqLiteHelper.getOptions()
+        val language = options["LANGUAGE"]!!["VALUE"]!!
+        store.parseLanguage(language)
+
+        val multiLang = sqLiteHelper.getMultiLang(language)
         val commonCode = sqLiteHelper.getCommonCode()
 
         multiLanguageSettingUseCase.execute(multiLang)
@@ -20,9 +24,10 @@ class OptionIntent (context: Context, private val store:OptionActionStore) {
     }
 
     fun setLanguage(language: String){
+        sqLiteHelper.updateOption("LANGUAGE", language)
         store.parseLanguage(language)
 
-        val multiLang = sqLiteHelper.getMultiLang(store._uiState.value.language)
+        val multiLang = sqLiteHelper.getMultiLang(language)
 
         multiLanguageSettingUseCase.execute(multiLang)
         store.parseMultiLang(multiLang)
