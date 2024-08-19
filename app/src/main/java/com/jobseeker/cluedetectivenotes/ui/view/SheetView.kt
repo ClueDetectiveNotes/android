@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import com.cheonjaeung.compose.grid.SimpleGridCells
 import com.cheonjaeung.compose.grid.VerticalGrid
 import com.jobseeker.cluedetectivenotes.ui.theme.LocalCustomColorsPalette
+import com.jobseeker.cluedetectivenotes.ui.viewModel.CellViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
@@ -48,12 +49,14 @@ import java.util.UUID
 @Composable
 fun SheetView(
     sheetViewModel:SheetViewModel = viewModel(),
+    cellViewModel: CellViewModel = viewModel(),
     controlBarViewModel: ControlBarViewModel = viewModel(),
     optionViewModel: OptionViewModel = viewModel(),
     navController: NavHostController,
 ) {
     val uiState = sheetViewModel.store.uiState.collectAsState()
     val isDisplayControlBar by mutableStateOf(uiState.value.selectedIds.isNotEmpty())
+    val isSubMarkerBarOpen = controlBarViewModel.store.uiState.collectAsState().value.isSubMarkerBarOpen
 
     val sheet = sheetViewModel.intent.onInitSheet()
     val cells = sheet.get("cells") as Map<String, Map<String, UUID>>
@@ -149,7 +152,7 @@ fun SheetView(
                                 val cellId = rowCell?.get(col[col.keys.last()])!!
 
                                 GridCell(
-                                    uiState = controlBarViewModel.store.cells[cellId]!!.collectAsState(),
+                                    uiState = cellViewModel.store.cells[cellId]!!.collectAsState(),
                                     selected = uiState.value.selectedIds.contains(cellId),
                                     rowOrColSelected = uiState.value.selectedRownameIds.contains(cellId)||uiState.value.selectedColnameIds.contains(cellId),
                                     clickAction = { sheetViewModel.intent.onClickCell(cellId) },
@@ -163,7 +166,7 @@ fun SheetView(
             //}//Row End
             if(isDisplayControlBar){
                 Row {
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(if(isSubMarkerBarOpen) 100.dp else 50.dp))
                 }
             }
             Row {

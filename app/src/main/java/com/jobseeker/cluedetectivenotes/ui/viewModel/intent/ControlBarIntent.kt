@@ -8,17 +8,20 @@ import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseChe
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseExclamationMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSlashMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ClearClickedCellUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.LoadSubMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.RedoUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.SnapshotDecorator
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.UndoUseCase
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.cell.CellActionStore
+import com.jobseeker.cluedetectivenotes.ui.viewModel.store.controlBar.ControlBarActionStore
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.sheet.SheetActionStore
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
 
-class ControlBarIntent (private val cellStore: CellActionStore, private val sheetStore: SheetActionStore) {
+class ControlBarIntent (private val store: ControlBarActionStore, private val sheetStore: SheetActionStore, private val cellStore: CellActionStore) {
 
+    private val loadSubMarkerUseCase : LoadSubMarkerUseCase = LoadSubMarkerUseCase()
     private val chooseCrossMarkerUseCase : UseCase<JSONObject> = SnapshotDecorator(ChooseCrossMarkerUseCase())
     private val chooseQuestionMarkerUseCase : UseCase<JSONObject> = SnapshotDecorator(ChooseQuestionMarkerUseCase())
     private val chooseCheckMarkerUseCase : UseCase<JSONObject> = SnapshotDecorator(ChooseCheckMarkerUseCase())
@@ -28,6 +31,12 @@ class ControlBarIntent (private val cellStore: CellActionStore, private val shee
     private val clearClickedCellUseCase : UseCase<JSONObject> = SnapshotDecorator(ClearClickedCellUseCase())
     private val undoUseCase : UndoUseCase = UndoUseCase()
     private val redoUseCase : RedoUseCase = RedoUseCase()
+
+    init{
+        val controlBarState = loadSubMarkerUseCase.execute()
+        val subMarkerItems = controlBarState.get("subMarkerItems") as List<String>
+        store.parseSubMarkerItems(subMarkerItems)
+    }
 
     fun onClickCrossMaker(){
         val sheetState : JSONObject = chooseCrossMarkerUseCase.execute()
@@ -104,6 +113,7 @@ class ControlBarIntent (private val cellStore: CellActionStore, private val shee
         sheetStore.parseIsMultiMode(isMultiSelectionMode)
         sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
+        store.parseIsSubMarkerBarOpen(false)
     }
 
     fun clearClickedCells() {
@@ -145,5 +155,9 @@ class ControlBarIntent (private val cellStore: CellActionStore, private val shee
         cellStore.parseCells(cells)
         sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
+    }
+
+    fun onClickSubMaker(isSubMarkerBarOpen:Boolean) {
+        store.parseIsSubMarkerBarOpen(isSubMarkerBarOpen)
     }
 }

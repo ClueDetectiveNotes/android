@@ -3,15 +3,22 @@ package com.jobseeker.cluedetectivenotes.ui.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -26,15 +33,18 @@ import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 
 @Composable
 fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boolean,navController: NavHostController){
+    val uiState = controlBarViewModel.store.uiState.collectAsState()
+    val isSubMarkerBarOpen = uiState.value.isSubMarkerBarOpen
+
     ConstraintLayout() {
-        val (controlBar, markerControlbar) = createRefs()
+        val (controlBar, markerControlBar, subMarkerControlBar) = createRefs()
 
         if(isDisplayControlBar){
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .background(color = Color.DarkGray)
-                .constrainAs(markerControlbar) {
-                    bottom.linkTo(controlBar.top)
+                .constrainAs(markerControlBar) {
+                    bottom.linkTo(if(isSubMarkerBarOpen) subMarkerControlBar.top else controlBar.top)
                 }
                 .clickable(enabled = false) {})
             {
@@ -84,6 +94,49 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                             onClick = { controlBarViewModel.intent.onClickExclamationMaker() }
                         ) {
                             Text(text = "!", fontWeight = FontWeight.Bold)
+                        }
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.DarkGray,
+                                contentColor = Color.White
+                            ),
+                            onClick = { controlBarViewModel.intent.onClickSubMaker(!isSubMarkerBarOpen) }
+                        ) {
+                            Text(text = "0~9", fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+            if(isSubMarkerBarOpen){
+                Row (modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.DarkGray)
+                    .constrainAs(subMarkerControlBar) {
+                        bottom.linkTo(controlBar.top)
+                    }
+                    .clickable(enabled = false) {})
+                {
+                    Column {
+                        Row (
+                            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(start = 10.dp),
+                            horizontalArrangement = Arrangement.Start,
+                        ){
+                            val subMarkerItems = uiState.value.subMarkerItems
+
+                            for(subMarkerItem in subMarkerItems){
+                                Button(
+                                    modifier = Modifier.width(30.dp),
+                                    contentPadding = PaddingValues(10.dp),
+                                    shape = RoundedCornerShape(0.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color.DarkGray,
+                                        contentColor = Color.White
+                                    ),
+                                    onClick = { }
+                                ) {
+                                    Text(text = subMarkerItem)
+                                }
+                            }
                         }
                     }
                 }
