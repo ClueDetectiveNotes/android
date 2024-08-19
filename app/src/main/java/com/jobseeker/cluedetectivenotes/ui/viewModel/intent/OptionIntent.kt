@@ -10,7 +10,7 @@ class OptionIntent (context: Context, private val store:OptionActionStore) {
     private val multiLanguageSettingUseCase : MultiLanguageSettingUseCase = MultiLanguageSettingUseCase()
 
     fun loadOptions() {
-        //sqLiteHelper.initDb()
+        sqLiteHelper.initDb()
         val options = sqLiteHelper.getOptions()
         val language = options["LANGUAGE"]!!["VALUE"]!!
         store.parseLanguage(language)

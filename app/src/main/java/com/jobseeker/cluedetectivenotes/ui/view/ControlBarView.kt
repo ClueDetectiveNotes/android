@@ -133,13 +133,16 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.DarkGray,
-                            contentColor = Color.White
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.DarkGray
                         ),
                         onClick = { controlBarViewModel.intent.clearClickedCells() },
-                        modifier = Modifier.weight(1F)
+                        modifier = Modifier.weight(1F),
+                        enabled = isDisplayControlBar
                     ) {
+                        val id = if(isDisplayControlBar) R.drawable.ic_controlbar_clear_button else R.drawable.ic_controlbar_clear_button_off
                         Image(
-                            painterResource(R.drawable.ic_controlbar_clear_button),
+                            painterResource(id),
                             contentDescription = "",
                             contentScale = ContentScale.Crop
                         )

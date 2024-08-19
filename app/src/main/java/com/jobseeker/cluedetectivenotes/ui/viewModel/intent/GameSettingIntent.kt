@@ -126,6 +126,6 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         val cardsState = selectPublicCardUseCase.execute(cardName)
 
         store.parsePublicCardList(cardsState.get("publicCardList") as List<String>)
-        store.parseHandList(cardsState.get("handList") as List<String>)
+        //store.parseHandList(cardsState.get("handList") as List<String>)
     }
 }
