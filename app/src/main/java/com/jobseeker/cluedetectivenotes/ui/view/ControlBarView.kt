@@ -132,7 +132,7 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                                         containerColor = Color.DarkGray,
                                         contentColor = Color.White
                                     ),
-                                    onClick = { }
+                                    onClick = { controlBarViewModel.intent.onClickSubMarkerItem(subMarkerItem) }
                                 ) {
                                     Text(text = subMarkerItem)
                                 }

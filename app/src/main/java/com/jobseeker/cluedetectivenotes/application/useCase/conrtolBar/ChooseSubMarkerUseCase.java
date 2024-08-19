@@ -2,11 +2,9 @@ package com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar;
 
 import com.jobseeker.cluedetectivenotes.application.useCase.UseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
-import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
-import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Markers;
-import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.MarkerMismatchException;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.AlreadyContainsSubMarkerItemException;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CellNotFindException;
 
 import org.json.JSONArray;
@@ -17,48 +15,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class ChooseMainMarkerUseCase<V> extends UseCase<V> {
-    private final Markers mainMarker;
-    private final Sheet sheet;
-    public ChooseMainMarkerUseCase(Markers mainMarker){
-        this.mainMarker = mainMarker;
-        this.sheet = GameSetter.getSheetInstance();
-    }
+public class ChooseSubMarkerUseCase <V> extends UseCase<V>  {
+    private final Sheet sheet = GameSetter.getSheetInstance();
     @Override
-    public <T> V execute(T param) throws JSONException, MarkerMismatchException, CellNotFindException {
-
+    public <T> V execute(T param) throws Exception {
         if(sheet.isMultiSelectionMode()){
-            if(sheet.isEveryCellMarked() && sheet.isSameMarkerInEveryCell(mainMarker)){
-                sheet.getSelectedCells().forEach(Cell::removeMainMarker);
-            }else{
-                sheet.getSelectedCells().forEach(cell->{
-                    try {
-                        cell.setMainMarker(mainMarker);
-                    } catch (MarkerMismatchException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-        }else if(sheet.isEqualSelectionMode(SelectionMode.INFERENCE)){
-            sheet.getSelectedCells().forEach(cell->{
-                try {
-                    cell.setMainMarker(mainMarker);
-                } catch (MarkerMismatchException e) {
-                    throw new RuntimeException(e);
+            if(sheet.isSameSubMarkerInEveryCell((String)param)){
+                for(Cell cell : sheet.getSelectedCells()){
+                    cell.removeSubMarkerItem((String)param);
                 }
-            });
-            List<Cell> selectedCells = sheet.getSelectedCells();
-            sheet.selectNextColname();
-            return (V) createState(selectedCells);
-        }else{
-            Cell cell = sheet.getSelectedCells().get(0);
-            if(cell.equalsMainMarker(mainMarker)){
-                cell.removeMainMarker();
             }else{
-                cell.setMainMarker(mainMarker);
+                for(Cell cell : sheet.getSelectedCells()){
+                    try{
+                        cell.setSubMarkerItem((String)param);
+                    }catch (AlreadyContainsSubMarkerItemException ignored){
+                    }
+                }
+            }
+        }else{
+            for(Cell cell : sheet.getSelectedCells()){
+                try{
+                    cell.setSubMarkerItem((String)param);
+                }catch (AlreadyContainsSubMarkerItemException e){
+                    cell.removeSubMarkerItem((String)param);
+                }
             }
         }
-        return (V) createState(sheet.getSelectedCells());
+        return (V)createState(sheet.getSelectedCells());
     }
     private JSONObject createState(List<Cell> selectedCells) throws JSONException, CellNotFindException {
         JSONArray cellsArr = new JSONArray();

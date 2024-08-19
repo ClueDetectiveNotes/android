@@ -7,6 +7,7 @@ import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.CancelCli
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseCheckMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseExclamationMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSlashMarkerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSubMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ClearClickedCellUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.LoadSubMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.RedoUseCase
@@ -31,6 +32,7 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     private val clearClickedCellUseCase : UseCase<JSONObject> = SnapshotDecorator(ClearClickedCellUseCase())
     private val undoUseCase : UndoUseCase = UndoUseCase()
     private val redoUseCase : RedoUseCase = RedoUseCase()
+    private val chooseSubMarkerUseCase : UseCase<JSONObject> = SnapshotDecorator(ChooseSubMarkerUseCase())
 
     init{
         val controlBarState = loadSubMarkerUseCase.execute()
@@ -159,5 +161,11 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
 
     fun onClickSubMaker(isSubMarkerBarOpen:Boolean) {
         store.parseIsSubMarkerBarOpen(isSubMarkerBarOpen)
+    }
+
+    fun onClickSubMarkerItem(subMarkerItem:String){
+        val sheetState : JSONObject = chooseSubMarkerUseCase.execute(subMarkerItem)
+        val cells : JSONArray = sheetState.get("cells") as JSONArray
+        cellStore.parseCells(cells)
     }
 }

@@ -29,6 +29,7 @@ public abstract class SnapshotUseCase {
         boolean isMultiMode = snapshot.getIsMultiMode();
         List<UUID> selectedCellIds = snapshot.getSelectedCellIds();
         Map<UUID, String> cellsMainMarkers = snapshot.getCellsMainMarkers();
+        Map<UUID, List<String>> cellsSubMarkerItems = snapshot.getCellsSubMarkerItems();
         List<String> selectedRownames = snapshot.getSelectedRownames();
         List<String> selectedColnames = snapshot.getSelectedColnames();
 
@@ -60,6 +61,14 @@ public abstract class SnapshotUseCase {
             cell.removeMainMarker();
             if(cellsMainMarkers.get(cellId) != null){
                 cell.setMainMarker(Markers.findMainMarker(cellsMainMarkers.get(cellId)));
+            }
+
+            cell.clearSubMarkerItems();
+            List<String> subMarkerItems = cellsSubMarkerItems.get(cellId);
+            if(subMarkerItems != null){
+                for(String subMarkerItem : subMarkerItems){
+                    cell.setSubMarkerItem(subMarkerItem);
+                }
             }
         }
 
@@ -109,6 +118,7 @@ public abstract class SnapshotUseCase {
             assert cell != null;
             cellObj.put("id", cell.getId());
             cellObj.put("mainMarker", cell.getMarker().getNotation());
+            cellObj.put("subMarkerItems", cell.getSubMarkerItems());
             cellsArr.put(cellObj);
         }
 

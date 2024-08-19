@@ -79,6 +79,10 @@ public class Cell {
         return subMarker.remove(subMarkerItem);
     }
 
+    public void clearSubMarkerItems(){
+        subMarker.clear();
+    }
+
     public boolean containsSubMarkerItem(String subMarkerItem) {
         return subMarker.contains(subMarkerItem);
     }

@@ -19,6 +19,7 @@ public class ClearClickedCellUseCase<V> extends UseCase<V> {
     @Override
     public <T> V execute(T param) throws JSONException, InferenceModeException {
         sheet.getSelectedCells().forEach(Cell::removeMainMarker);
+        sheet.getSelectedCells().forEach(Cell::clearSubMarkerItems);
         return (V) createState(sheet.isMultiSelectionMode(), sheet.getSelectedCells());
     }
 
@@ -34,6 +35,7 @@ public class ClearClickedCellUseCase<V> extends UseCase<V> {
             JSONObject cellObj = new JSONObject();
             cellObj.put("id", cell.getId());
             cellObj.put("mainMarker", cell.getMarker().getNotation());
+            cellObj.put("subMarkerItems", cell.getSubMarkerItems());
             cellsArr.put(cellObj);
         }
 

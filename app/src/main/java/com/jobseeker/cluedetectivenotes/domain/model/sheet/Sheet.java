@@ -421,6 +421,27 @@ public class Sheet {
         return markedCells.size() == markedCount.get() && sameMarker;
     }
 
+    public boolean isSameSubMarkerInEveryCell(String subMarkerItem){
+        List<Cell> markedCells = selectedCells.stream().filter(cell -> !cell.isEmptySubMarkers()).collect(Collectors.toList());
+
+        //마킹된 셀이 없는 경우
+        if(markedCells.isEmpty())
+            return false;
+        //마킹 된 셀이 선택한 셀과 같지 않은 경우
+        if(markedCells.size() != selectedCells.size()) {
+            return false;
+        }
+
+        Cell firstCell = markedCells.get(0);
+        boolean sameMarker = firstCell.containsSubMarkerItem(subMarkerItem);
+        AtomicInteger markedCount = new AtomicInteger();
+
+        markedCells.forEach(cell->{
+            if(cell.containsSubMarkerItem(subMarkerItem)) markedCount.incrementAndGet();
+        });
+        return markedCells.size() == markedCount.get() && sameMarker;
+    }
+
     public List<Cell> getSelectedRownameCells() throws CellNotFindException {
         List<Cell> selectedRownameCells = new ArrayList<>();
         if(selectedRownameSuspect != null) selectedRownameCells.addAll(selectRowname(selectedRownameSuspect));

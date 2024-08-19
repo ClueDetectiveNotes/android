@@ -18,6 +18,7 @@ public class Snapshot {
     List<UUID> selectedCellIds;
     boolean isMultiMode = false;
     Map<UUID,String> cellsMainMarkers;
+    Map<UUID, List<String>> cellsSubMarkerItems;
     List<String> selectedRownames;// = sheet.getSelectedRownameCells();
     List<String> selectedColnames;//= sheet.getSelectedColnameCells();
     int debugIndex;
@@ -26,6 +27,7 @@ public class Snapshot {
         this.debugIndex = debugIndex;
         selectedCellIds = new ArrayList<>();
         cellsMainMarkers = new HashMap<>();
+        cellsSubMarkerItems = new HashMap<>();
         selectedRownames = new ArrayList<>();
         selectedColnames = new ArrayList<>();
 
@@ -48,6 +50,7 @@ public class Snapshot {
             }else{
                 cellsMainMarkers.put(cellId, cell.getMarker().getNotation());
             }
+            cellsSubMarkerItems.put(cellId, cell.getSubMarkerItems());
         }
     }
 
@@ -70,4 +73,6 @@ public class Snapshot {
     public List<String> getSelectedRownames() { return selectedRownames; }
 
     public List<String> getSelectedColnames() { return selectedColnames; }
+
+    public Map<UUID, List<String>> getCellsSubMarkerItems(){ return cellsSubMarkerItems; }
 }

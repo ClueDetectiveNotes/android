@@ -37,4 +37,8 @@ public class SubMarker{
     public List<String> getItems() {
         return new ArrayList<String>(subMarkerItems);
     }
+
+    public void clear() {
+        subMarkerItems.clear();
+    }
 }

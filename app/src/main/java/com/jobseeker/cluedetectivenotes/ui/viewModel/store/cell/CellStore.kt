@@ -24,6 +24,7 @@ class CellStore : CellActionStore, CellStateStore {
         for(idx in 0 until cells.length()){
             val cellObj = cells.getJSONObject(idx)
             _cells[cellObj.get("id") as UUID]!!.update { it.copy(mainMarker = cellObj.get("mainMarker") as String) }
+            _cells[cellObj.get("id") as UUID]!!.update { it.copy(subMarkerItems = cellObj.get("subMarkerItems") as List<String>) }
         }
     }
 }
