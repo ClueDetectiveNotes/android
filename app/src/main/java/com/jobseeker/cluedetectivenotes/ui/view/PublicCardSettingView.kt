@@ -93,7 +93,7 @@ fun PublicCardSettingView(
                                         val cardType =
                                             if(suspectCardList.contains(publicCard)){ "suspect" }
                                             else if(weaponCardList.contains(publicCard)){ "weapon" }
-                                            else if(crimeSceneCardList.contains(publicCard)){ "crimeScene" }
+                                            else if(crimeSceneCardList.contains(publicCard)){ "crime_scene" }
                                             else { null }
 
                                         if(publicCard != null && cardType != null){

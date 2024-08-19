@@ -93,7 +93,7 @@ fun HandSettingView(
                                         val cardType =
                                             if(suspectCardList.contains(hand)){ "suspect" }
                                             else if(weaponCardList.contains(hand)){ "weapon" }
-                                            else if(crimeSceneCardList.contains(hand)){ "crimeScene" }
+                                            else if(crimeSceneCardList.contains(hand)){ "crime_scene" }
                                             else { null }
 
                                         if(hand != null && cardType != null){
