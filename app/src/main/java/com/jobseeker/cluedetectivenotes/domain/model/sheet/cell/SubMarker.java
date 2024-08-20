@@ -17,7 +17,7 @@ public class SubMarker{
     }
 
     public void push(String subMarkerItem) throws NotSubMarkerItemMemberException, NotSubMarkerException, AlreadyContainsSubMarkerItemException {
-        if(!marker.getSubMarkerItems().contains(subMarkerItem)) throw new NotSubMarkerItemMemberException();
+        if(!marker.getSubMarkerItems().contains(subMarkerItem) && !marker.getAddedSubMarkerItems().contains(subMarkerItem)) throw new NotSubMarkerItemMemberException();
         if(subMarkerItems.contains(subMarkerItem)) throw new AlreadyContainsSubMarkerItemException();
         subMarkerItems.add(subMarkerItem);
     }

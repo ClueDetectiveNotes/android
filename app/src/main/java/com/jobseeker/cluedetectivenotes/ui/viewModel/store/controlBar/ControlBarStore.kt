@@ -17,4 +17,8 @@ class ControlBarStore : ControlBarStateStore, ControlBarActionStore {
     override fun parseSubMarkerItems(subMarkerItems: List<String>) {
         _uiState.update { it.copy(subMarkerItems = subMarkerItems) }
     }
+
+    override fun parseAddedSubMarkerItems(addedSubMarkerItems: List<String>) {
+        _uiState.update { it.copy(addedSubMarkerItems = addedSubMarkerItems) }
+    }
 }

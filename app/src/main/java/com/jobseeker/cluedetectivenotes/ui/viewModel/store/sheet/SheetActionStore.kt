@@ -12,4 +12,5 @@ interface SheetActionStore {
     fun parseSelectedRownameCellIds(selectedRownameCellsIdList: List<UUID>)
     fun parseSelectedColnameCellIds(selectedRownameCellsIdList: List<UUID>)
     fun parseOpenConfirmToDefaultModeDialog(openConfirmToDefaultModeDialog: Boolean)
+    fun parseOpenAddSubMarkerDialog(openAddSubMarkerDialog: Boolean)
 }

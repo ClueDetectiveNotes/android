@@ -15,6 +15,7 @@ public enum Markers {
     private final String notation;
     private final boolean isDefault;
     private final List<String> subMarkerItems;
+    private final List<String> addedSubMarkerItems;
     private static final List<Markers> allMarkers = new ArrayList<Markers>();
     private static final List<Markers> defaultMarkers = new ArrayList<Markers>();
     static{
@@ -30,12 +31,14 @@ public enum Markers {
         this.notation = notation;
         this.isDefault = isDefault;
         this.subMarkerItems = null;
+        this.addedSubMarkerItems = null;
     }
 
     Markers(String notation, boolean isDefault, List<String> subMarkerItems) {
         this.notation = notation;
         this.isDefault = isDefault;
         this.subMarkerItems = subMarkerItems;
+        this.addedSubMarkerItems = new ArrayList<>();
     }
 
     public String getNotation(){
@@ -46,11 +49,17 @@ public enum Markers {
         if(subMarkerItems == null) throw new NotSubMarkerException();
         return new ArrayList<String>(subMarkerItems);
     }
+    public List<String> getAddedSubMarkerItems() throws NotSubMarkerException {
+        if(addedSubMarkerItems == null) throw new NotSubMarkerException();
+        return new ArrayList<String>(addedSubMarkerItems);
+    }
 
     public void addSubMarkerItem(String subMarkerItem) throws NotSubMarkerException, AlreadyContainsSubMarkerItemException {
         if(subMarkerItems == null) throw new NotSubMarkerException();
+        if(addedSubMarkerItems == null) throw new NotSubMarkerException();
         if(subMarkerItems.contains(subMarkerItem)) throw new AlreadyContainsSubMarkerItemException();
-        subMarkerItems.add(subMarkerItem);
+        if(addedSubMarkerItems.contains(subMarkerItem)) throw new AlreadyContainsSubMarkerItemException();
+        addedSubMarkerItems.add(subMarkerItem);
     }
 
     public static List<Markers> getAllMarkers(){

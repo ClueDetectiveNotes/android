@@ -1,11 +1,12 @@
 package com.jobseeker.cluedetectivenotes.ui.viewModel.intent
 
 import com.jobseeker.cluedetectivenotes.application.useCase.UseCase
-import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseCrossMarkerUseCase
-import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseQuestionMarkerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.AddSubMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.CancelClickedCellUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseCheckMarkerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseCrossMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseExclamationMarkerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseQuestionMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSlashMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSubMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ClearClickedCellUseCase
@@ -13,6 +14,7 @@ import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.LoadSubMa
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.RedoUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.SnapshotDecorator
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.UndoUseCase
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.exceptions.AlreadyContainsSubMarkerItemException
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.cell.CellActionStore
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.controlBar.ControlBarActionStore
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.sheet.SheetActionStore
@@ -33,11 +35,14 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     private val undoUseCase : UndoUseCase = UndoUseCase()
     private val redoUseCase : RedoUseCase = RedoUseCase()
     private val chooseSubMarkerUseCase : UseCase<JSONObject> = SnapshotDecorator(ChooseSubMarkerUseCase())
+    private val addSubMarkerUseCase : AddSubMarkerUseCase = AddSubMarkerUseCase()
 
     init{
         val controlBarState = loadSubMarkerUseCase.execute()
         val subMarkerItems = controlBarState.get("subMarkerItems") as List<String>
+        val addedSubMarkerItems = controlBarState.get("addedSubMarkerItems") as List<String>
         store.parseSubMarkerItems(subMarkerItems)
+        store.parseAddedSubMarkerItems(addedSubMarkerItems)
     }
 
     fun onClickCrossMaker(){
@@ -167,5 +172,28 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
         val sheetState : JSONObject = chooseSubMarkerUseCase.execute(subMarkerItem)
         val cells : JSONArray = sheetState.get("cells") as JSONArray
         cellStore.parseCells(cells)
+    }
+
+    fun closeAddSubMarkerDialog() {
+        sheetStore.parseOpenAddSubMarkerDialog(false)
+    }
+
+    fun openAddSubMarkerDialog() {
+        sheetStore.parseOpenAddSubMarkerDialog(true)
+    }
+
+    fun addSubMarker(text: String) {
+        try {
+            addSubMarkerUseCase.execute(text)
+            val controlBarState = loadSubMarkerUseCase.execute()
+
+            val subMarkerItems = controlBarState.get("subMarkerItems") as List<String>
+            val addedSubMarkerItems = controlBarState.get("addedSubMarkerItems") as List<String>
+
+            store.parseSubMarkerItems(subMarkerItems)
+            store.parseAddedSubMarkerItems(addedSubMarkerItems)
+        }catch (_: AlreadyContainsSubMarkerItemException){
+            //알림을 띄우는 것이 좋을 것 같은데
+        }
     }
 }

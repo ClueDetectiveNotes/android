@@ -1,6 +1,7 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -27,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -76,6 +78,17 @@ fun SheetView(
                 },
                 dialogTitle = multiLang["MSG.SHT_IF_DL_TITLE"]!!,
                 dialogText = multiLang["MSG.SHT_IF_DL_DESC"]!!
+            )
+        }
+
+        uiState.value.openAddSubMarkerDialog -> {
+            CustomTextFieldDialog(
+                initialText = "",
+                onClickCancel = { controlBarViewModel.intent.closeAddSubMarkerDialog() },
+                onClickConfirm = {text: String ->
+                    controlBarViewModel.intent.closeAddSubMarkerDialog()
+                    controlBarViewModel.intent.addSubMarker(text)
+                }
             )
         }
     }

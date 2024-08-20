@@ -30,4 +30,8 @@ class SheetStore(
     override fun parseOpenConfirmToDefaultModeDialog(openConfirmToDefaultModeDialog: Boolean) {
         _uiState.update { it.copy( openConfirmToDefaultModeDialog = openConfirmToDefaultModeDialog ) }
     }
+
+    override fun parseOpenAddSubMarkerDialog(openAddSubMarkerDialog: Boolean) {
+        _uiState.update { it.copy( openAddSubMarkerDialog = openAddSubMarkerDialog ) }
+    }
 }

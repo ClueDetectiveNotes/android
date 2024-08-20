@@ -11,6 +11,7 @@ public class LoadSubMarkerUseCase {
         JSONObject controlBarState = new JSONObject();
 
         controlBarState.put("subMarkerItems",Markers.SUB_MARKER.getSubMarkerItems());
+        controlBarState.put("addedSubMarkerItems", Markers.SUB_MARKER.getAddedSubMarkerItems());
 
         return controlBarState;
     }

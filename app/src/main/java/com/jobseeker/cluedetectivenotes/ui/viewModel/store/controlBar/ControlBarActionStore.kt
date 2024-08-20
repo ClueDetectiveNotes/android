@@ -8,4 +8,5 @@ interface ControlBarActionStore {
 
     fun parseIsSubMarkerBarOpen(isSubMarkerBarOpen : Boolean)
     fun parseSubMarkerItems(subMarkerItems: List<String>)
+    fun parseAddedSubMarkerItems(addedSubMarkerItems: List<String>)
 }
