@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public enum Markers {
     CHECK("O",true),CROSS("X",true),QUESTION("?",true),SLASH("/",false),EXCLAMATION("!",false)
-    ,SUB_MARKER("0~9",false, Arrays.asList("0","1","2","3","4","5","6","7","8","9"));
+    ,SUB_MARKER("0~9",false, Arrays.asList("1","2","3","4","5","6","7","8","9","0"));
 
     private final String notation;
     private final boolean isDefault;

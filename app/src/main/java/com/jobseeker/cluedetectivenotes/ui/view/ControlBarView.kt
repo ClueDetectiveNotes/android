@@ -1,5 +1,7 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,12 +16,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -36,6 +46,11 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
     val uiState = controlBarViewModel.store.uiState.collectAsState()
     val isSubMarkerBarOpen = uiState.value.isSubMarkerBarOpen
 
+    var expandedDefault by remember { mutableStateOf(true) }
+    val rotateStateDefault = animateFloatAsState( targetValue = if (expandedDefault) 90F else 270F, label = "", )
+    var expandedLast by remember { mutableStateOf(false) }
+    val rotateStateLast = animateFloatAsState( targetValue = if (expandedLast) 90F else 270F, label = "", )
+
     ConstraintLayout() {
         val (controlBar, markerControlBar, subMarkerControlBar) = createRefs()
 
@@ -44,7 +59,7 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                 .fillMaxWidth()
                 .background(color = Color.DarkGray)
                 .constrainAs(markerControlBar) {
-                    bottom.linkTo(if(isSubMarkerBarOpen) subMarkerControlBar.top else controlBar.top)
+                    bottom.linkTo(if (isSubMarkerBarOpen) subMarkerControlBar.top else controlBar.top)
                 }
                 .clickable(enabled = false) {})
             {
@@ -106,7 +121,7 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                         }
                     }
                 }
-            }
+            }//Row End - 메인 마커 컨트롤 바
             if(isSubMarkerBarOpen){
                 Row (modifier = Modifier
                     .fillMaxWidth()
@@ -118,30 +133,97 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                 {
                     Column {
                         Row (
-                            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(start = 10.dp),
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .padding(start = 10.dp),
                             horizontalArrangement = Arrangement.Start,
                         ){
-                            val subMarkerItems = uiState.value.subMarkerItems
-
-                            for(subMarkerItem in subMarkerItems){
-                                Button(
-                                    modifier = Modifier.width(30.dp),
-                                    contentPadding = PaddingValues(10.dp),
-                                    shape = RoundedCornerShape(0.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.DarkGray,
-                                        contentColor = Color.White
-                                    ),
-                                    onClick = { controlBarViewModel.intent.onClickSubMarkerItem(subMarkerItem) }
-                                ) {
-                                    Text(text = subMarkerItem)
+                            Button(
+                                modifier = Modifier.width(30.dp),
+                                contentPadding = PaddingValues(0.dp),
+                                shape = RoundedCornerShape(0.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.DarkGray,
+                                    contentColor = Color.White
+                                ),
+                                onClick = { expandedDefault = !expandedDefault }
+                            ) {
+                                Icon(
+                                    Icons.Default.ArrowDropDown, "",
+                                    modifier = Modifier.rotate(rotateStateDefault.value)
+                                )
+                            }
+                            AnimatedVisibility(
+                                visible = expandedDefault,
+                            ) {
+                                Row (modifier = Modifier.fillMaxWidth()){
+                                    val subMarkerItems = uiState.value.subMarkerItems
+                                    for (idx in 0 until 4) {
+                                        val subMarkerItem = subMarkerItems[idx]
+                                        Button(
+                                            modifier = Modifier.width(30.dp),
+                                            contentPadding = PaddingValues(10.dp),
+                                            shape = RoundedCornerShape(0.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color.DarkGray,
+                                                contentColor = Color.White
+                                            ),
+                                            onClick = {
+                                                controlBarViewModel.intent.onClickSubMarkerItem(
+                                                    subMarkerItem
+                                                )
+                                            }
+                                        ) {
+                                            Text(text = subMarkerItem)
+                                        }
+                                    }
+                                    AnimatedVisibility(
+                                        visible = expandedLast,
+                                    ){
+                                        Row (modifier = Modifier.fillMaxWidth()){
+                                            for (idx in 4 until subMarkerItems.size) {
+                                                val subMarkerItem = subMarkerItems[idx]
+                                                Button(
+                                                    modifier = Modifier.width(30.dp),
+                                                    contentPadding = PaddingValues(10.dp),
+                                                    shape = RoundedCornerShape(0.dp),
+                                                    colors = ButtonDefaults.buttonColors(
+                                                        containerColor = Color.DarkGray,
+                                                        contentColor = Color.White
+                                                    ),
+                                                    onClick = {
+                                                        controlBarViewModel.intent.onClickSubMarkerItem(
+                                                            subMarkerItem
+                                                        )
+                                                    }
+                                                ) {
+                                                    Text(text = subMarkerItem)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Button(
+                                        modifier = Modifier.width(30.dp),
+                                        contentPadding = PaddingValues(0.dp),
+                                        shape = RoundedCornerShape(0.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color.DarkGray,
+                                            contentColor = Color.White
+                                        ),
+                                        onClick = { expandedLast = !expandedLast }
+                                    ) {
+                                        Icon(
+                                            Icons.Default.ArrowDropDown, "",
+                                            modifier = Modifier.rotate(rotateStateLast.value)
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
+        }//Row End - 서브 마커 컨트롤 바
         Row (modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
@@ -232,6 +314,6 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                     }
                 }
             }
-        }//Row End
+        }//Row End - 컨트롤 바
     }
 }
