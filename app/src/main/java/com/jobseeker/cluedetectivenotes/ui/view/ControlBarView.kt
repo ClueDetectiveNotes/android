@@ -27,6 +27,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,10 +46,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.R
 import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 @Composable
 fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boolean,navController: NavHostController){
@@ -72,9 +75,13 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                 }
                 .clickable(enabled = false) {})
             {
-                Column {
+                Column (modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(5F)){
                     Row (horizontalArrangement = Arrangement.Start){
                         Button(
+                            modifier = Modifier.weight(1F),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.DarkGray,
                                 contentColor = Color.White
@@ -84,6 +91,8 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                             Text(text = "O", fontWeight = FontWeight.Bold)
                         }
                         Button(
+                            modifier = Modifier.weight(1F),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.DarkGray,
                                 contentColor = Color.White
@@ -93,6 +102,8 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                             Text(text = "X", fontWeight = FontWeight.Bold)
                         }
                         Button(
+                            modifier = Modifier.weight(1F),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.DarkGray,
                                 contentColor = Color.White
@@ -102,6 +113,8 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                             Text(text = "/", fontWeight = FontWeight.Bold)
                         }
                         Button(
+                            modifier = Modifier.weight(1F),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.DarkGray,
                                 contentColor = Color.White
@@ -111,6 +124,8 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                             Text(text = "?", fontWeight = FontWeight.Bold)
                         }
                         Button(
+                            modifier = Modifier.weight(1F),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.DarkGray,
                                 contentColor = Color.White
@@ -120,14 +135,37 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                             Text(text = "!", fontWeight = FontWeight.Bold)
                         }
                         Button(
+                            modifier = Modifier.weight(1F),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(0.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.DarkGray,
+                                containerColor = if(isSubMarkerBarOpen) Color.Gray else Color.DarkGray,
                                 contentColor = Color.White
                             ),
                             onClick = { controlBarViewModel.intent.onClickSubMaker(!isSubMarkerBarOpen) }
                         ) {
-                            Text(text = "0~9", fontWeight = FontWeight.Bold)
+                            Text(text = "0~9", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
+                    }
+                }
+                Column (modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1F)){
+                    Button(
+                        modifier = Modifier.width(50.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(0.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.cancelClickedCells() },
+                    ) {
+                        Image(
+                            painterResource(R.drawable.ic_conrolbar_shutdown_markerbar_button),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
                     }
                 }
             }//Row End - 메인 마커 컨트롤 바
@@ -367,7 +405,7 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                     onClick = { navController.navigate(Routes.Option.route) },
                 ) {
                     Image(
-                        painterResource(R.drawable.baseline_more_vert_24),
+                        painterResource(R.drawable.baseline_more_horiz_24),
                         contentDescription = "",
                         contentScale = ContentScale.Crop
                     )
@@ -382,8 +420,10 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
 fun CustomTextFieldDialog(
     initialText: String?,
     onClickCancel: () -> Unit,
-    onClickConfirm: (text: String) -> Unit
+    onClickConfirm: (text: String) -> Unit,
+    optionViewModel: OptionViewModel = viewModel()
 ) {
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
     val text = remember { mutableStateOf(initialText ?: "") }
 
@@ -404,7 +444,7 @@ fun CustomTextFieldDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                Text(text = "사용할 서브 마커를 입력해주세요.")
+                Text(text = multiLang["MSG.SHT_CB_ADSBMK_DESC"]!!)
 
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -444,20 +484,20 @@ fun CustomTextFieldDialog(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.End,
                 ) {
-                    Button(onClick = {
+                    TextButton(onClick = {
                         onClickCancel()
                     }) {
-                        Text(text = "취소")
+                        Text(text = multiLang["BTN.CANCEL"]!!)
                     }
 
                     Spacer(modifier = Modifier.width(5.dp))
 
-                    Button(onClick = {
+                    TextButton(onClick = {
                         onClickConfirm(text.value)
                     }) {
-                        Text(text = "확인")
+                        Text(text = multiLang["BTN.CONFIRM"]!!)
                     }
                 }
             }

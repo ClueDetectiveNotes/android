@@ -162,9 +162,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('SHT_IF_DL_TITLE','MSG','KR','추리모드를 해제 하시겠습니까?');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('SHT_IF_DL_DESC','MSG','KR','확인 버튼을 누르면 추리모드가 해제되며 기본 선택 모드로 돌아갑니다.');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SHT_CB_ADSBMK_DESC','MSG','KR','사용할 서브 마커를 입력해주세요.');");
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CM_BOP','MSG','KR','한 번 더 누르시면 앱이 종료됩니다.');");
-        
+
+
         //영어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PS_TITLE','MSG','EN','Player Setting');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PS_DESC','MSG','EN','Please set the number of the players and name of the players who join in the game.');");
@@ -181,8 +183,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('SHT_IF_DL_TITLE','MSG','EN','Do you want to turn off the inference mode?');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('SHT_IF_DL_DESC','MSG','EN','Press the Confirm button to release the inference mode and return to the default selection mode.');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SHT_CB_ADSBMK_DESC','MSG','EN','Please enter the sub-marker to use.');");
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CM_BOP','MSG','EN','If you press it again, the app will be shut down.');");
+
     }
 
     private void insertButtonMultiLang(SQLiteDatabase db) {

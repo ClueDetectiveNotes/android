@@ -120,7 +120,6 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
         sheetStore.parseIsMultiMode(isMultiSelectionMode)
         sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
-        store.parseIsSubMarkerBarOpen(false)
     }
 
     fun clearClickedCells() {
