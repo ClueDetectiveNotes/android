@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,9 +23,14 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -51,10 +57,17 @@ import androidx.navigation.NavHostController
 import com.jobseeker.cluedetectivenotes.R
 import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 @Composable
-fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boolean,navController: NavHostController){
+fun ControlBar(
+    controlBarViewModel:ControlBarViewModel,
+    isDisplayControlBar:Boolean,
+    navController: NavHostController,
+    gameSettingViewModel: GameSettingViewModel = viewModel(),
+    optionViewModel : OptionViewModel = viewModel()
+){
     val uiState = controlBarViewModel.store.uiState.collectAsState()
     val isSubMarkerBarOpen = uiState.value.isSubMarkerBarOpen
 
@@ -63,8 +76,11 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
     var expandedLast by remember { mutableStateOf(false) }
     val rotateStateLast = animateFloatAsState( targetValue = if (expandedLast) 90F else 270F, label = "", )
 
+    var isDropDownMenuExpanded by remember { mutableStateOf(false) }
+    val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
+
     ConstraintLayout() {
-        val (controlBar, markerControlBar, subMarkerControlBar) = createRefs()
+        val (controlBar, markerControlBar, subMarkerControlBar, menu) = createRefs()
 
         if(isDisplayControlBar){
             Row (modifier = Modifier
@@ -402,7 +418,7 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                         containerColor = Color.DarkGray,
                         contentColor = Color.White
                     ),
-                    onClick = { navController.navigate(Routes.Option.route) },
+                    onClick = { isDropDownMenuExpanded = true },
                 ) {
                     Image(
                         painterResource(R.drawable.baseline_more_horiz_24),
@@ -412,6 +428,65 @@ fun ControlBar(controlBarViewModel:ControlBarViewModel,isDisplayControlBar:Boole
                 }
             }
         }//Row End - 컨트롤 바
+
+        Row(modifier = Modifier
+            .constrainAs(menu) {
+                bottom.linkTo(controlBar.top)
+            }){
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End,
+            ){
+                Row{
+                    DropdownMenu(
+                        expanded = isDropDownMenuExpanded,
+                        onDismissRequest = { isDropDownMenuExpanded = false },
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(150.dp)
+                    ){
+                        DropdownMenuItem(
+                            text = { Text(text = multiLang["BTN.HOME"]!!) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Home,
+                                    contentDescription = "",
+                                )
+                            },
+                            onClick = {
+                                //전체 초기화
+                                gameSettingViewModel.intent.initAll()
+                                navController.navigate(Routes.Home.route)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = multiLang["BTN.SETTING"]!!) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "",
+                                )
+                            },
+                            onClick = {
+                                //게임 초기화
+                                gameSettingViewModel.intent.initGame()
+                                navController.navigate(Routes.PlayerSetting.route)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = multiLang["BTN.OPTION"]!!) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = "",
+                                )
+                            },
+                            onClick = { navController.navigate(Routes.Option.route) }
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 

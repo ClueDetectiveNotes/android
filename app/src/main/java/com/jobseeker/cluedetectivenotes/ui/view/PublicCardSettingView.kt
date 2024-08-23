@@ -105,16 +105,26 @@ fun PublicCardSettingView(
                                                 colorFilter = null
                                             )
                                         }else{
-                                            Card (
-                                                modifier = Modifier
-                                                    .width(90.dp)
-                                                    .height(90.dp)
-                                                    .padding(5.dp)
-                                                    .border(width = 1.dp, color = Color.Black),
-                                                shape = RoundedCornerShape(0.dp),
-                                            )
-                                            {
-                                                Text(text = "")
+                                            Column {
+                                                Row{
+                                                    Card (
+                                                        modifier = Modifier
+                                                            .width(90.dp)
+                                                            .height(90.dp)
+                                                            .padding(5.dp)
+                                                            .border(
+                                                                width = 1.dp,
+                                                                color = Color.Black
+                                                            ),
+                                                        shape = RoundedCornerShape(0.dp),
+                                                    )
+                                                    {
+                                                        Text(text = "")
+                                                    }
+                                                }
+                                                Row{
+                                                    Text(text = "")
+                                                }
                                             }
                                         }
                                     }
@@ -173,6 +183,7 @@ fun PublicCardSettingView(
             }
         }
     }
+    BackOnPressedBackToHandSetting(navController = navController)
 }
 
 @Composable

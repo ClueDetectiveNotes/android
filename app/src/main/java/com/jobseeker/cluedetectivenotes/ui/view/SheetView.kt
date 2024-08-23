@@ -1,7 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -28,7 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -186,9 +184,9 @@ fun SheetView(
                 Spacer(modifier = Modifier.height(60.dp))
             }
         }//Column End
-        ControlBar(controlBarViewModel = controlBarViewModel, isDisplayControlBar, navController)
+        ControlBar(controlBarViewModel, isDisplayControlBar, navController)
     }
-    BackOnPressed()
+    BackOnPressedShuttingDown()
 }
 
 @Composable

@@ -41,6 +41,8 @@ public class CardHolder {
         cards.remove(card);
     }
 
+    public void clearCards(){ cards.clear(); }
+
     public boolean hasCard(String cardName){
         for(Card card : cards){
             if(card.getName().equals(cardName)){

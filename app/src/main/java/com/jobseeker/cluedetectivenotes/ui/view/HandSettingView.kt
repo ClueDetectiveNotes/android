@@ -184,6 +184,7 @@ fun HandSettingView(
             }
         }
     }
+    BackOnPressedBackToPlayerSetting(navController = navController)
 }
 
 @Composable

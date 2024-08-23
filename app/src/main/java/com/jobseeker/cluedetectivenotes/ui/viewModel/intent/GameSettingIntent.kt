@@ -1,7 +1,10 @@
 package com.jobseeker.cluedetectivenotes.ui.viewModel.intent
 
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.AddPlayerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.InitAllUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.InitGameUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.InitPlayersUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.InitPublicCardsUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.LoadCardListUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.RemoveLastPlayerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.ReorderPlayerUseCase
@@ -23,6 +26,9 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
     private val loadCardListUseCase:LoadCardListUseCase = LoadCardListUseCase()
     private val selectHandUseCase:SelectHandUseCase = SelectHandUseCase()
     private val selectPublicCardUseCase: SelectPublicCardUseCase = SelectPublicCardUseCase()
+    private val initAllUseCase: InitAllUseCase = InitAllUseCase()
+    private val initGameUseCase: InitGameUseCase = InitGameUseCase()
+    private val initPublicCardsUseCase : InitPublicCardsUseCase = InitPublicCardsUseCase()
 
     fun initPlayers() {
         val playerState : JSONObject = initPlayersUseCase.execute()
@@ -127,5 +133,17 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
 
         store.parsePublicCardList(cardsState.get("publicCardList") as List<String>)
         //store.parseHandList(cardsState.get("handList") as List<String>)
+    }
+
+    fun initAll() {
+        initAllUseCase.execute()
+    }
+
+    fun initGame() {
+        initGameUseCase.execute()
+    }
+
+    fun initPublicCards() {
+        initPublicCardsUseCase.execute()
     }
 }

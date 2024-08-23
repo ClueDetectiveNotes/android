@@ -44,4 +44,15 @@ public class GameSetter {
             if(game != null) game.renewMultiLang();
         }
     }
+
+    public static void destroyPlayers() {
+        players = null;
+    }
+
+    public static void destroyGame() {
+        game = null;
+        for(Player player : players){
+            player.clearCards();
+        }
+    }
 }

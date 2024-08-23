@@ -39,5 +39,5 @@ fun HomeView(
             }
         }
     }
-    BackOnPressed()
+    BackOnPressedShuttingDown()
 }

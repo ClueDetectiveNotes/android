@@ -197,6 +197,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PLAY','BTN','KR','플레이');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CONFIRM','BTN','KR','확인');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CANCEL','BTN','KR','취소');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('HOME','BTN','KR','홈');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SETTING','BTN','KR','세팅');");
 
         //영어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('START','BTN','EN','Start');");
@@ -205,6 +207,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PLAY','BTN','EN','Play');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CONFIRM','BTN','EN','Confirm');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CANCEL','BTN','EN','Cancel');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('HOME','BTN','EN','Home');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SETTING','BTN','EN','Setting');");
     }
 
     public Map<String, Map<String, String>> getOptions (){
