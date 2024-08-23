@@ -125,6 +125,7 @@ fun PlayerSettingView(
             }
         }
     }
+    BackOnPressedBackToHome(navController = navController)
 }
 
 fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit = {}) : Modifier{

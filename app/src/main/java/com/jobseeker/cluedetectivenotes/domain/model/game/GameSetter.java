@@ -51,8 +51,10 @@ public class GameSetter {
 
     public static void destroyGame() {
         game = null;
-        for(Player player : players){
-            player.clearCards();
+        if(players != null){
+            for(Player player : players){
+                player.clearCards();
+            }
         }
     }
 }

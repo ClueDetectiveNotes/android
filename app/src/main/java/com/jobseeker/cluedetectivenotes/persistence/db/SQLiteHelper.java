@@ -192,13 +192,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private void insertButtonMultiLang(SQLiteDatabase db) {
         //한국어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('START','BTN','KR','시작');");
-        db.execSQL("INSERT INTO MULTI_LANG VALUES ('OPTION','BTN','KR','설정');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('OPTION','BTN','KR','옵션');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('NEXT','BTN','KR','다음');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PLAY','BTN','KR','플레이');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CONFIRM','BTN','KR','확인');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('CANCEL','BTN','KR','취소');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('HOME','BTN','KR','홈');");
-        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SETTING','BTN','KR','세팅');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SETTING','BTN','KR','설정');");
 
         //영어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('START','BTN','EN','Start');");
