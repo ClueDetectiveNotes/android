@@ -84,46 +84,54 @@ fun HandSettingView(
                             Column {
                                 Spacer(modifier = Modifier.height(50.dp))
                                 Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
-                                    for(idx in 0 until numOfHands){
+                                    Column {
+                                        val fixColSize = 3 //고정 열 크기
+                                        val rowSize = numOfHands/fixColSize //행 크기 계산(소수점 버림)
+                                        for(rIdx in 0 until rowSize){
+                                            Row {
+                                                val correctionValue = rIdx*fixColSize //보정값
+                                                for(cIdx in correctionValue until (if(numOfHands==6) numOfHands/rowSize else numOfHands)+correctionValue){
+                                                    val hand =
+                                                        try { handList[cIdx] }
+                                                        catch (_:Exception) { null }
 
-                                        val hand =
-                                            try { handList[idx] }
-                                            catch (_:Exception) { null }
+                                                    val cardType =
+                                                        if(suspectCardList.contains(hand)){ "suspect" }
+                                                        else if(weaponCardList.contains(hand)){ "weapon" }
+                                                        else if(crimeSceneCardList.contains(hand)){ "crime_scene" }
+                                                        else { null }
 
-                                        val cardType =
-                                            if(suspectCardList.contains(hand)){ "suspect" }
-                                            else if(weaponCardList.contains(hand)){ "weapon" }
-                                            else if(crimeSceneCardList.contains(hand)){ "crime_scene" }
-                                            else { null }
-
-                                        if(hand != null && cardType != null){
-                                            GameCardView(
-                                                context = context,
-                                                type = cardType,
-                                                cardName = hand,
-                                                clickAction = { gameSettingViewModel.intent.selectHand(hand) },
-                                                colorFilter = null
-                                            )
-                                        }else{
-                                            Column {
-                                                Row{
-                                                    Card (
-                                                        modifier = Modifier
-                                                            .width(90.dp)
-                                                            .height(90.dp)
-                                                            .padding(5.dp)
-                                                            .border(
-                                                                width = 1.dp,
-                                                                color = Color.Black
-                                                            ),
-                                                        shape = RoundedCornerShape(0.dp),
-                                                    )
-                                                    {
-                                                        Text(text = "")
+                                                    if(hand != null && cardType != null){
+                                                        GameCardView(
+                                                            context = context,
+                                                            type = cardType,
+                                                            cardName = hand,
+                                                            clickAction = { gameSettingViewModel.intent.selectHand(hand) },
+                                                            colorFilter = null
+                                                        )
+                                                    }else{
+                                                        Column {
+                                                            Row{
+                                                                Card (
+                                                                    modifier = Modifier
+                                                                        .width(90.dp)
+                                                                        .height(90.dp)
+                                                                        .padding(5.dp)
+                                                                        .border(
+                                                                            width = 1.dp,
+                                                                            color = Color.Black
+                                                                        ),
+                                                                    shape = RoundedCornerShape(0.dp),
+                                                                )
+                                                                {
+                                                                    Text(text = "")
+                                                                }
+                                                            }
+                                                            Row{
+                                                                Text(text = "")
+                                                            }
+                                                        }
                                                     }
-                                                }
-                                                Row{
-                                                    Text(text = "")
                                                 }
                                             }
                                         }
