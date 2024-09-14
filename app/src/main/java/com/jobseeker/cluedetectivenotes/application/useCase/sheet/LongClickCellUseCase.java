@@ -20,7 +20,10 @@ public class LongClickCellUseCase<V> extends UseCase<V>{
     private final Sheet sheet = GameSetter.getSheetInstance();
     @Override
     public <T> V execute(T param) throws InferenceModeException, CellNotFindException, NotMultiSelectionModeException, CanNotSelectAlreadySelectedCellException, JSONException {
-        if(!sheet.isMultiSelectionMode()) sheet.switchSelectionMode();
+        if(!sheet.isMultiSelectionMode()) {
+            sheet.switchSelectionMode();
+            sheet.unselectCell();
+        }
         return (V) createState(sheet.isMultiSelectionMode(), sheet.multiSelectCell((UUID) param));
     }
 
