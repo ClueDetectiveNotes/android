@@ -3,6 +3,7 @@ package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 import com.jobseeker.cluedetectivenotes.application.useCase.UseCase;
 import com.jobseeker.cluedetectivenotes.domain.model.card.exceptions.CardNotFoundException;
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.exceptions.CanNotSelectAlreadySelectedCellException;
@@ -31,6 +32,7 @@ public class ChangeDefaultModeUseCase<V> extends UseCase<V>{
 
     private JSONObject createState(List<Cell> selectedCells) throws JSONException {
         Boolean isMultiSelectionMode = sheet.isMultiSelectionMode();
+        Boolean isInferenceMode = sheet.isEqualSelectionMode(SelectionMode.INFERENCE);
 
         JSONObject sheetState = new JSONObject();
 
@@ -40,6 +42,7 @@ public class ChangeDefaultModeUseCase<V> extends UseCase<V>{
         }
 
         sheetState.put("isMultiSelectionMode", isMultiSelectionMode);
+        sheetState.put("isInferenceMode", isInferenceMode);
         sheetState.put("selectedCellsIdList",selectedCellsIdList );
         sheetState.put("selectedRownameCellsIdList",new ArrayList<>() );
         sheetState.put("selectedColnameCellsIdList",new ArrayList<>() );

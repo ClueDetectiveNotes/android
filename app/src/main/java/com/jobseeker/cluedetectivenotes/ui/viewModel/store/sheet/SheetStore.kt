@@ -18,6 +18,9 @@ class SheetStore(
     override fun parseIsMultiMode(isMultiMode: Boolean) {
         _uiState.update { it.copy( isMultiMode = isMultiMode ) }
     }
+    override fun parseIsInferenceMode(isInferenceMode: Boolean) {
+        _uiState.update { it.copy( isInferenceMode = isInferenceMode ) }
+    }
 
     override fun parseSelectedRownameCellIds(selectedRownameCellsIdList: List<UUID>) {
         _uiState.update { it.copy( selectedRownameIds = selectedRownameCellsIdList ) }

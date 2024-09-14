@@ -39,10 +39,12 @@ class SheetIntent(private val store: SheetActionStore, private val cellStore: Ce
     fun loadSheetState(){
         val sheetState : JSONObject = loadSheetUseCase.execute()
         val isMultiSelectionMode : Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val isInferenceMode : Boolean = sheetState.get("isInferenceMode") as Boolean
         val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
 
         store.parseSelectedIds(selectedCellsIdList)
         store.parseIsMultiMode(isMultiSelectionMode)
+        store.parseIsInferenceMode(isInferenceMode)
     }
 
     fun onClickCell(cellId: UUID){
@@ -73,23 +75,27 @@ class SheetIntent(private val store: SheetActionStore, private val cellStore: Ce
     fun onClickRowname(rowname: String){
         val sheetState: JSONObject = clickRownameUseCase.execute(rowname)
         val isMultiSelectionMode: Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val isInferenceMode : Boolean = sheetState.get("isInferenceMode") as Boolean
         val selectedCellsIdList: List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
         val selectedRownameCellsIdList: List<UUID> = sheetState.get("selectedRownameCellsIdList") as List<UUID>
 
         store.parseSelectedIds(selectedCellsIdList)
         store.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         store.parseIsMultiMode(isMultiSelectionMode)
+        store.parseIsInferenceMode(isInferenceMode)
     }
 
     fun onClickColname(colname: String){
         val sheetState: JSONObject = clickColnameUseCase.execute(colname)
         val isMultiSelectionMode: Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val isInferenceMode : Boolean = sheetState.get("isInferenceMode") as Boolean
         val selectedCellsIdList: List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
         val selectedColnameCellsIdList: List<UUID> = sheetState.get("selectedColnameCellsIdList") as List<UUID>
 
         store.parseSelectedIds(selectedCellsIdList)
         store.parseSelectedColnameCellIds(selectedColnameCellsIdList)
         store.parseIsMultiMode(isMultiSelectionMode)
+        store.parseIsInferenceMode(isInferenceMode)
     }
 
     fun closeConfirmToDefaultModeDialog(){
@@ -99,12 +105,14 @@ class SheetIntent(private val store: SheetActionStore, private val cellStore: Ce
     fun changeDefaultMode() {
         val sheetState: JSONObject = changeDefaultModeUseCase.execute()
         val isMultiSelectionMode: Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val isInferenceMode : Boolean = sheetState.get("isInferenceMode") as Boolean
         val selectedCellsIdList: List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
         val selectedRownameCellsIdList: List<UUID> = sheetState.get("selectedRownameCellsIdList") as List<UUID>
         val selectedColnameCellsIdList: List<UUID> = sheetState.get("selectedColnameCellsIdList") as List<UUID>
 
         store.parseSelectedIds(selectedCellsIdList)
         store.parseIsMultiMode(isMultiSelectionMode)
+        store.parseIsInferenceMode(isInferenceMode)
         store.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         store.parseSelectedColnameCellIds(selectedColnameCellsIdList)
     }

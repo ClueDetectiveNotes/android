@@ -88,6 +88,7 @@ public abstract class SnapshotUseCase {
 
     protected JSONObject createState() throws JSONException, CellNotFindException {
         Boolean isMultiSelectionMode = sheet.isMultiSelectionMode();
+        Boolean isInferenceMode = sheet.isEqualSelectionMode(SelectionMode.INFERENCE);
         List<Cell> selectedCells = sheet.getSelectedCells();
         Map<UUID, Cell> cells = sheet.getCells();
         List<Cell> selectedRownameCells = sheet.getSelectedRownameCells();
@@ -123,6 +124,7 @@ public abstract class SnapshotUseCase {
         }
 
         sheetState.put("isMultiSelectionMode", isMultiSelectionMode);
+        sheetState.put("isInferenceMode", isInferenceMode);
         sheetState.put("selectedCellsIdList",selectedCellsIdList );
         sheetState.put("selectedRownameCellsIdList",selectedRownameCellsIdList );
         sheetState.put("selectedColnameCellsIdList",selectedColnameCellsIdList );

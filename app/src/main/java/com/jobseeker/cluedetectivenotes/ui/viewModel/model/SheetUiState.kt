@@ -7,6 +7,7 @@ data class SheetUiState (
     val selectedRownameIds:List<UUID> = emptyList(),
     val selectedColnameIds:List<UUID> = emptyList(),
     var isMultiMode: Boolean = false,
+    val isInferenceMode : Boolean = false,
     var openConfirmToDefaultModeDialog : Boolean = false,
     var openAddSubMarkerDialog : Boolean = false,
 )

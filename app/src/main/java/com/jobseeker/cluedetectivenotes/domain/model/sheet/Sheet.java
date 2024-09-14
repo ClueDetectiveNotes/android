@@ -471,11 +471,19 @@ public class Sheet {
     }
 
     public void selectNextColname() {
+        moveColname(1);
+    }
+
+    public void selectPreviousColname() {
+        moveColname(colnames.size()-2);
+    }
+
+    private void moveColname(int gap){
         int currentIndex = colnames.indexOf(selectedColname);
         if(currentIndex == colnames.size()-1){
             selectedColname = colnames.get(0);
         }else{
-            selectedColname = colnames.get((currentIndex+1)%(colnames.size()-1));
+            selectedColname = colnames.get((currentIndex+gap)%(colnames.size()-1));
         }
     }
 }

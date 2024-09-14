@@ -1,6 +1,7 @@
 package com.jobseeker.cluedetectivenotes.application.useCase.sheet;
 
 import com.jobseeker.cluedetectivenotes.domain.model.game.GameSetter;
+import com.jobseeker.cluedetectivenotes.domain.model.sheet.SelectionMode;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.cell.Cell;
 
@@ -15,10 +16,14 @@ public class LoadSheetUseCase {
     private Sheet sheet = GameSetter.getSheetInstance();
 
     public JSONObject execute() throws JSONException {
-        return createState(sheet.isMultiSelectionMode(), sheet.getSelectedCells());
+        return createState();
     }
 
-    private JSONObject createState(Boolean isMultiSelectionMode, List<Cell> selectedCells) throws JSONException {
+    private JSONObject createState() throws JSONException {
+        List<Cell> selectedCells = sheet.getSelectedCells();
+        Boolean isMultiSelectionMode = sheet.isMultiSelectionMode();
+        Boolean isInferenceMode = sheet.isEqualSelectionMode(SelectionMode.INFERENCE);
+
         JSONObject sheetState = new JSONObject();
 
         List<UUID> selectedCellsIdList = new ArrayList<>();
@@ -27,6 +32,7 @@ public class LoadSheetUseCase {
         }
 
         sheetState.put("isMultiSelectionMode", isMultiSelectionMode);
+        sheetState.put("isInferenceMode", isInferenceMode);
         sheetState.put("selectedCellsIdList",selectedCellsIdList );
 
         return sheetState;

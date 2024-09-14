@@ -59,6 +59,7 @@ import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
+import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
 
 @Composable
 fun ControlBar(
@@ -66,7 +67,8 @@ fun ControlBar(
     isDisplayControlBar:Boolean,
     navController: NavHostController,
     gameSettingViewModel: GameSettingViewModel = viewModel(),
-    optionViewModel : OptionViewModel = viewModel()
+    optionViewModel : OptionViewModel = viewModel(),
+    sheetViewModel : SheetViewModel = viewModel()
 ){
     val uiState = controlBarViewModel.store.uiState.collectAsState()
     val isSubMarkerBarOpen = uiState.value.isSubMarkerBarOpen
@@ -78,6 +80,8 @@ fun ControlBar(
 
     var isDropDownMenuExpanded by remember { mutableStateOf(false) }
     val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
+
+    val isInferenceMode = sheetViewModel.store.uiState.collectAsState().value.isInferenceMode
 
     ConstraintLayout() {
         val (controlBar, markerControlBar, subMarkerControlBar, menu) = createRefs()
@@ -348,8 +352,25 @@ fun ControlBar(
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
+                        onClick = {},
+                        modifier = Modifier.weight(1F),
+                        contentPadding = PaddingValues(10.dp),
+                    ) {
+                        Image(
+                            painterResource(R.drawable.ic_controlbar_lock_open_button),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
                         onClick = { controlBarViewModel.intent.undo() },
-                        modifier = Modifier.weight(1F)
+                        modifier = Modifier.weight(1F),
+                        contentPadding = PaddingValues(10.dp),
                     ) {
                         Image(
                             painterResource(R.drawable.ic_controlbar_undo_button),
@@ -364,7 +385,8 @@ fun ControlBar(
                             contentColor = Color.White
                         ),
                         onClick = { controlBarViewModel.intent.redo() },
-                        modifier = Modifier.weight(1F)
+                        modifier = Modifier.weight(1F),
+                        contentPadding = PaddingValues(10.dp),
                     ) {
                         Image(
                             painterResource(R.drawable.ic_controlbar_redo_button),
@@ -374,6 +396,43 @@ fun ControlBar(
                     }
 
                     Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.skipPrevious() },
+                        modifier = Modifier.weight(1F),
+                        enabled = isInferenceMode,
+                        contentPadding = PaddingValues(10.dp),
+                    ) {
+                        val id = if(isInferenceMode) R.drawable.ic_controlbar_skip_previous_button else R.drawable.ic_controlbar_skip_previous_button_off
+                        Image(
+                            painterResource(id),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
+                        onClick = { controlBarViewModel.intent.skipNext() },
+                        modifier = Modifier.weight(1F),
+                        enabled = isInferenceMode,
+                        contentPadding = PaddingValues(10.dp),
+
+                    ) {
+                        val id = if(isInferenceMode) R.drawable.ic_controlbar_skip_next_button else R.drawable.ic_controlbar_skip_next_button_off
+                        Image(
+                            painterResource(id),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    /*Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.DarkGray,
                             contentColor = Color.White,
@@ -389,7 +448,7 @@ fun ControlBar(
                             contentDescription = "",
                             contentScale = ContentScale.Crop
                         )
-                    }
+                    }*/
 
                     Button(
                         colors = ButtonDefaults.buttonColors(
@@ -397,7 +456,8 @@ fun ControlBar(
                             contentColor = Color.White
                         ),
                         onClick = { controlBarViewModel.intent.cancelClickedCells() },
-                        modifier = Modifier.weight(1F)
+                        modifier = Modifier.weight(1F),
+                        contentPadding = PaddingValues(10.dp),
                     ) {
                         Image(
                             painterResource(R.drawable.ic_controlbar_close_button),

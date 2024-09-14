@@ -11,6 +11,7 @@ import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSla
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSubMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ClearClickedCellUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.LoadSubMarkerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.SkipColnameUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.RedoUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.SnapshotDecorator
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.UndoUseCase
@@ -36,6 +37,7 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     private val redoUseCase : RedoUseCase = RedoUseCase()
     private val chooseSubMarkerUseCase : UseCase<JSONObject> = SnapshotDecorator(ChooseSubMarkerUseCase())
     private val addSubMarkerUseCase : AddSubMarkerUseCase = AddSubMarkerUseCase()
+    private val skipColnameUseCase : UseCase<JSONObject> = SnapshotDecorator(SkipColnameUseCase())
 
     init{
         val controlBarState = loadSubMarkerUseCase.execute()
@@ -136,6 +138,7 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     fun undo(){
         val sheetState : JSONObject = undoUseCase.execute()
         val isMultiSelectionMode : Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val isInferenceMode : Boolean = sheetState.get("isInferenceMode") as Boolean
         val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
         val cells : JSONArray = sheetState.get("cells") as JSONArray
         val selectedRownameCellsIdList: List<UUID> = sheetState.get("selectedRownameCellsIdList") as List<UUID>
@@ -143,6 +146,7 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
 
         sheetStore.parseSelectedIds(selectedCellsIdList)
         sheetStore.parseIsMultiMode(isMultiSelectionMode)
+        sheetStore.parseIsInferenceMode(isInferenceMode)
         cellStore.parseCells(cells)
         sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
@@ -151,6 +155,7 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     fun redo(){
         val sheetState : JSONObject = redoUseCase.execute()
         val isMultiSelectionMode : Boolean = sheetState.get("isMultiSelectionMode") as Boolean
+        val isInferenceMode : Boolean = sheetState.get("isInferenceMode") as Boolean
         val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
         val cells : JSONArray = sheetState.get("cells") as JSONArray
         val selectedRownameCellsIdList: List<UUID> = sheetState.get("selectedRownameCellsIdList") as List<UUID>
@@ -158,6 +163,7 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
 
         sheetStore.parseSelectedIds(selectedCellsIdList)
         sheetStore.parseIsMultiMode(isMultiSelectionMode)
+        sheetStore.parseIsInferenceMode(isInferenceMode)
         cellStore.parseCells(cells)
         sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
@@ -194,5 +200,27 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
         }catch (_: AlreadyContainsSubMarkerItemException){
             //알림을 띄우는 것이 좋을 것 같은데
         }
+    }
+
+    fun skipNext(){
+        val sheetState : JSONObject = skipColnameUseCase.execute(1)
+        val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
+        val selectedRownameCellsIdList: List<UUID> = sheetState.get("selectedRownameCellsIdList") as List<UUID>
+        val selectedColnameCellsIdList: List<UUID> = sheetState.get("selectedColnameCellsIdList") as List<UUID>
+
+        sheetStore.parseSelectedIds(selectedCellsIdList)
+        sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
+        sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
+    }
+
+    fun skipPrevious(){
+        val sheetState : JSONObject = skipColnameUseCase.execute(-1)
+        val selectedCellsIdList : List<UUID> = sheetState.get("selectedCellsIdList") as List<UUID>
+        val selectedRownameCellsIdList: List<UUID> = sheetState.get("selectedRownameCellsIdList") as List<UUID>
+        val selectedColnameCellsIdList: List<UUID> = sheetState.get("selectedColnameCellsIdList") as List<UUID>
+
+        sheetStore.parseSelectedIds(selectedCellsIdList)
+        sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
+        sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
     }
 }
