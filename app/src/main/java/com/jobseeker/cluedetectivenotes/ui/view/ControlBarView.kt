@@ -6,6 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +37,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +48,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +65,8 @@ import com.jobseeker.cluedetectivenotes.ui.viewModel.ControlBarViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.GameSettingViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ControlBar(
@@ -81,7 +88,9 @@ fun ControlBar(
     var isDropDownMenuExpanded by remember { mutableStateOf(false) }
     val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
-    val isInferenceMode = sheetViewModel.store.uiState.collectAsState().value.isInferenceMode
+    val sheetUiState = sheetViewModel.store.uiState.collectAsState()
+    val isInferenceMode = sheetUiState.value.isInferenceMode
+    val isCellsLocked = sheetUiState.value.isCellsLocked
 
     ConstraintLayout() {
         val (controlBar, markerControlBar, subMarkerControlBar, menu) = createRefs()
@@ -347,17 +356,46 @@ fun ControlBar(
                 .fillMaxWidth()
                 .weight(5F)){
                 Row {
+
+
+                    val interactionSource = remember { MutableInteractionSource() }
+                    val viewConfiguration = LocalViewConfiguration.current
+                    LaunchedEffect(interactionSource) {
+                        var isLongClick = false
+
+                        interactionSource.interactions.collectLatest { interaction ->
+                            when (interaction) {
+                                is PressInteraction.Press -> {
+                                    isLongClick = false
+                                    delay(viewConfiguration.longPressTimeoutMillis)
+                                    isLongClick = true
+                                    controlBarViewModel.intent.unlock()
+                                }
+
+                                is PressInteraction.Release -> {
+                                    if (isLongClick.not()) {
+                                        controlBarViewModel.intent.lock()
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.DarkGray,
                             contentColor = Color.White
                         ),
                         onClick = {},
+                        interactionSource = interactionSource,
                         modifier = Modifier.weight(1F),
                         contentPadding = PaddingValues(10.dp),
                     ) {
+                        val id = if(isCellsLocked) R.drawable.ic_controlbar_lock_button else R.drawable.ic_controlbar_lock_open_button
                         Image(
-                            painterResource(R.drawable.ic_controlbar_lock_open_button),
+                            painterResource(id),
                             contentDescription = "",
                             contentScale = ContentScale.Crop
                         )

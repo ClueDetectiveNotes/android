@@ -21,6 +21,9 @@ class SheetStore(
     override fun parseIsInferenceMode(isInferenceMode: Boolean) {
         _uiState.update { it.copy( isInferenceMode = isInferenceMode ) }
     }
+    override fun parseIsCellsLocked(isCellsLocked: Boolean) {
+        _uiState.update { it.copy( isCellsLocked = isCellsLocked ) }
+    }
 
     override fun parseSelectedRownameCellIds(selectedRownameCellsIdList: List<UUID>) {
         _uiState.update { it.copy( selectedRownameIds = selectedRownameCellsIdList ) }

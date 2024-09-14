@@ -11,7 +11,9 @@ import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSla
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ChooseSubMarkerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.ClearClickedCellUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.LoadSubMarkerUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.LockCellsUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.SkipColnameUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.conrtolBar.UnlockCellsUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.RedoUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.SnapshotDecorator
 import com.jobseeker.cluedetectivenotes.application.useCase.snapshot.UndoUseCase
@@ -38,6 +40,8 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     private val chooseSubMarkerUseCase : UseCase<JSONObject> = SnapshotDecorator(ChooseSubMarkerUseCase())
     private val addSubMarkerUseCase : AddSubMarkerUseCase = AddSubMarkerUseCase()
     private val skipColnameUseCase : UseCase<JSONObject> = SnapshotDecorator(SkipColnameUseCase())
+    private val lockCellsUseCase : LockCellsUseCase = LockCellsUseCase()
+    private val unlockCellsUseCase : UnlockCellsUseCase = UnlockCellsUseCase()
 
     init{
         val controlBarState = loadSubMarkerUseCase.execute()
@@ -222,5 +226,17 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
         sheetStore.parseSelectedIds(selectedCellsIdList)
         sheetStore.parseSelectedRownameCellIds(selectedRownameCellsIdList)
         sheetStore.parseSelectedColnameCellIds(selectedColnameCellsIdList)
+    }
+
+    fun lock(){
+        val sheetState : JSONObject = lockCellsUseCase.execute()
+        val isCellsLocked : Boolean = sheetState.get("isCellsLocked") as Boolean
+        sheetStore.parseIsCellsLocked(isCellsLocked)
+    }
+
+    fun unlock(){
+        val sheetState : JSONObject = unlockCellsUseCase.execute()
+        val isCellsLocked : Boolean = sheetState.get("isCellsLocked") as Boolean
+        sheetStore.parseIsCellsLocked(isCellsLocked)
     }
 }

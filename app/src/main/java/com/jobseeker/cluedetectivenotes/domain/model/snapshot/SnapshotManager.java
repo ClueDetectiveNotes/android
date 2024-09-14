@@ -11,6 +11,7 @@ public class SnapshotManager {
     Snapshot tempSnapshot = new Snapshot(debugIndex++);
     Stack<Snapshot> snapshotUndoStack = new Stack<>();
     Stack<Snapshot> snapshotRedoStack = new Stack<>();
+    Stack<Snapshot> restoreUndoStack = new Stack<>();
 
     public SnapshotManager() throws CellNotFindException {
     }
@@ -38,5 +39,18 @@ public class SnapshotManager {
         snapshotUndoStack.push(tempSnapshot);
         tempSnapshot = snapshotRedoStack.pop();
         return tempSnapshot;
+    }
+
+    public void lockSnapshot() {
+        restoreUndoStack.addAll(snapshotUndoStack);
+        snapshotUndoStack.clear();
+        snapshotRedoStack.clear();
+    }
+
+    public void unlockSnapshot(){
+        restoreUndoStack.addAll(snapshotUndoStack);
+        snapshotUndoStack.clear();
+        snapshotUndoStack.addAll(restoreUndoStack);
+        restoreUndoStack.clear();
     }
 }

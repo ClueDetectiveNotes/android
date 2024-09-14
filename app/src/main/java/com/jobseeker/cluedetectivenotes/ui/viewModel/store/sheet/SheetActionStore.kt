@@ -13,5 +13,6 @@ interface SheetActionStore {
     fun parseSelectedColnameCellIds(selectedColnameCellsIdList: List<UUID>)
     fun parseOpenConfirmToDefaultModeDialog(openConfirmToDefaultModeDialog: Boolean)
     fun parseOpenAddSubMarkerDialog(openAddSubMarkerDialog: Boolean)
-    fun parseIsInferenceMode(inferenceMode: Boolean)
+    fun parseIsInferenceMode(isInferenceMode: Boolean)
+    fun parseIsCellsLocked(isCellsLocked: Boolean)
 }

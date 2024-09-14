@@ -16,6 +16,7 @@ public class Cell {
     private final Colname colname;
     private final Marker mainMarker;
     private final SubMarker subMarker;
+    private boolean isInit = false;
     private boolean isLock = false;
 
     public Cell(UUID id, Rowname rowname, Colname colname) {
@@ -34,7 +35,7 @@ public class Cell {
         this.subMarker = new SubMarker();
 
         this.mainMarker.setMarker(initMarker);
-        isLock = true;
+        isInit = true;
     }
 
     public Rowname getRowname() {
@@ -50,6 +51,9 @@ public class Cell {
     }
 
     public void setMainMarker(Markers marker) throws MarkerMismatchException {
+        if(isInit){
+            return;
+        }
         if(isLock){
             return;
         }
@@ -69,6 +73,9 @@ public class Cell {
     }
 
     public void removeMainMarker() {
+        if(isInit){
+            return;
+        }
         if(isLock){
             return;
         }
@@ -99,7 +106,19 @@ public class Cell {
         return mainMarker;
     }
 
-    public boolean isLocked() {
-        return isLock;
+    public boolean isInit() {
+        return isInit;
+    }
+
+    public boolean isLocked() { return isLock; }
+
+    public void lock(){
+        if(mainMarker.equals(Markers.CHECK) || mainMarker.equals(Markers.CROSS)){
+            isLock = true;
+        }
+    }
+
+    public void unlock(){
+        isLock = false;
     }
 }

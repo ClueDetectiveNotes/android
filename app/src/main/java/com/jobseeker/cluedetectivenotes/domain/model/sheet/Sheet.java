@@ -39,6 +39,7 @@ public class Sheet {
     private Rowname selectedRownameWeapon = null;
     private Rowname selectedRownameCrimeScene = null;
     private Colname selectedColname = null;
+    private boolean isCellsLocked = false;
     public Sheet(CardHolders holders) {
         selectedCells = new ArrayList<Cell>();
         cells = new HashMap<UUID,Cell>();
@@ -407,7 +408,7 @@ public class Sheet {
     }
 
     public boolean isSameMarkerInEveryCell(Markers marker) {
-        List<Cell> markedCells = selectedCells.stream().filter(cell -> !cell.isEmptyMainMarker() && !cell.isLocked()).collect(Collectors.toList());
+        List<Cell> markedCells = selectedCells.stream().filter(cell -> !cell.isEmptyMainMarker() && !cell.isInit() && !cell.isLocked()).collect(Collectors.toList());
 
         assert !markedCells.isEmpty();
         Cell firstCell = markedCells.get(0);
@@ -485,5 +486,19 @@ public class Sheet {
         }else{
             selectedColname = colnames.get((currentIndex+gap)%(colnames.size()-1));
         }
+    }
+
+    public boolean isCellsLocked(){
+        return isCellsLocked;
+    }
+
+    public void lockCells(){
+        cells.forEach((uuid, cell) -> cell.lock());
+        isCellsLocked = true;
+    }
+
+    public void unlockCells(){
+        cells.forEach((uuid, cell) -> cell.unlock());
+        isCellsLocked = false;
     }
 }
