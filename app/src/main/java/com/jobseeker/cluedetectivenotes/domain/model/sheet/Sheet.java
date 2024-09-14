@@ -410,7 +410,9 @@ public class Sheet {
     public boolean isSameMarkerInEveryCell(Markers marker) {
         List<Cell> markedCells = selectedCells.stream().filter(cell -> !cell.isEmptyMainMarker() && !cell.isInit() && !cell.isLocked()).collect(Collectors.toList());
 
-        assert !markedCells.isEmpty();
+        if(markedCells.isEmpty()){
+            return false;
+        }
         Cell firstCell = markedCells.get(0);
         boolean sameMarker = firstCell.equalsMainMarker(marker);
         AtomicInteger markedCount = new AtomicInteger();
