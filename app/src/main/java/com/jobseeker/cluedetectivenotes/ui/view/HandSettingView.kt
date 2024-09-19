@@ -1,6 +1,7 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
@@ -106,7 +107,7 @@ fun HandSettingView(
                                                             context = context,
                                                             type = cardType,
                                                             cardName = hand,
-                                                            clickAction = { gameSettingViewModel.intent.selectHand(hand) },
+                                                            clickAction = { gameSettingViewModel.intent.selectHand(hand) {} },
                                                             colorFilter = null
                                                         )
                                                     }else{
@@ -196,7 +197,9 @@ fun HandSettingView(
 }
 
 @Composable
-fun CardList(gameSettingViewModel:GameSettingViewModel, context: Context, handList:List<String>, cardList:List<String>, cardType:String, listName:String){
+fun CardList(gameSettingViewModel:GameSettingViewModel, context: Context, handList:List<String>, cardList:List<String>, cardType:String, listName:String, optionViewModel: OptionViewModel = viewModel()){
+    val uiState = optionViewModel.store.uiState.collectAsState()
+    val multiLang = uiState.value.multiLang
     Row {
         Column {
             Row {
@@ -214,7 +217,9 @@ fun CardList(gameSettingViewModel:GameSettingViewModel, context: Context, handLi
                         context = context,
                         type = cardType,
                         cardName = card,
-                        clickAction = { gameSettingViewModel.intent.selectHand(card) },
+                        clickAction = { gameSettingViewModel.intent.selectHand(card) {
+                            Toast.makeText( context, multiLang["MSG.HDS_ALERT_TOAST"]!!, Toast.LENGTH_SHORT ).show() }
+                        },
                         colorFilter = colorFilter
                     )
                 }
