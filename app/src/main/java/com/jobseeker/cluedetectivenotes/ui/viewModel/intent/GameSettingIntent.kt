@@ -152,4 +152,11 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
     fun initPublicCards() {
         initPublicCardsUseCase.execute()
     }
+
+    fun initPlayerType(){
+        val clear = UUID.randomUUID();
+        selectUserUseCase.execute(clear)
+        store.parseSelectedOption(clear)
+        store.parsePlayerOrderSettingNextButtonEnabled(false)
+    }
 }

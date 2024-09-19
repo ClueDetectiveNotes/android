@@ -193,7 +193,7 @@ fun HandSettingView(
             }
         }
     }
-    BackOnPressedBackToPlayerSetting(navController = navController)
+    BackOnPressedBackToPlayerSettingDetail(navController = navController)
 }
 
 @Composable
