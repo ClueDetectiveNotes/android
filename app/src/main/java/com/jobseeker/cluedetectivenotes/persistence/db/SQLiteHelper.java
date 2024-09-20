@@ -46,7 +46,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         //공통 코드 생성
         db.execSQL("DROP TABLE IF EXISTS COMMON_CODE");
-        db.execSQL("create table COMMON_CODE (CODE text, TYPE text, PART text, SEQ integer, primary key(CODE,TYPE));");
+        db.execSQL("create table COMMON_CODE (CODE text, TYPE text, PART text, SEQ integer, primary key(CODE,PART));");
 
         insertCommonCode(db);
 
@@ -62,11 +62,19 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     private void insertOptions(SQLiteDatabase db){
         db.execSQL("INSERT INTO OPTIONS VALUES ('LANGUAGE',1,'SELECT_BOX','KR');");
+        db.execSQL("INSERT INTO OPTIONS VALUES ('IS_USE_DARK_THEME',2,'TOGGLE','Y');");
+        db.execSQL("INSERT INTO OPTIONS VALUES ('DARK_THEME_TYPE',2,'SELECT_BOX','FOLLOW_SYSTEM');");
     }
 
     private void insertCommonCode(SQLiteDatabase db){
         db.execSQL("INSERT INTO COMMON_CODE VALUES ('KR','SELECT_BOX','LANGUAGE',1);");
         db.execSQL("INSERT INTO COMMON_CODE VALUES ('EN','SELECT_BOX','LANGUAGE',2);");
+
+        db.execSQL("INSERT INTO COMMON_CODE VALUES ('Y','TOGGLE','IS_USE_DARK_THEME',1);");
+        db.execSQL("INSERT INTO COMMON_CODE VALUES ('N','TOGGLE','IS_USE_DARK_THEME',2);");
+
+        db.execSQL("INSERT INTO COMMON_CODE VALUES ('FOLLOW_SYSTEM','SELECT_BOX','DARK_THEME_TYPE',1);");
+        db.execSQL("INSERT INTO COMMON_CODE VALUES ('APPLY_DARK_THEME','SELECT_BOX','DARK_THEME_TYPE',2);");
     }
 
     private void insertOptionsMultiLang(SQLiteDatabase db){
@@ -75,10 +83,22 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('KR','CM_CD','KR','한국어');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('EN','CM_CD','KR','영어');");
 
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('IS_USE_DARK_THEME','OPT','KR','다크 테마 사용 여부');");
+
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('DARK_THEME_TYPE','OPT','KR','다크 테마 적용 유형');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('FOLLOW_SYSTEM','CM_CD','KR','시스템 설정에 따름');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('APPLY_DARK_THEME','CM_CD','KR','다크 테마 적용');");
+
         //영어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('LANGUAGE','OPT','EN','Language');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('KR','CM_CD','EN','Korean');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('EN','CM_CD','EN','English');");
+
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('IS_USE_DARK_THEME','OPT','EN','Whether to use the dark theme');");
+
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('DARK_THEME_TYPE','OPT','EN','Dark Theme Application Types');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('FOLLOW_SYSTEM','CM_CD','EN','Depending on the system');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('APPLY_DARK_THEME','CM_CD','EN','Apply Dark Theme');");
     }
 
     private void insertCardMultiLang(SQLiteDatabase db){
@@ -229,7 +249,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public Map<String,List<Map<String,String>>> getCommonCode (){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT CODE, PART, TYPE FROM COMMON_CODE ORDER BY SEQ",null);
+        Cursor cursor = db.rawQuery("SELECT CODE, PART, TYPE FROM COMMON_CODE ORDER BY PART, SEQ",null);
         Map<String,List<Map<String,String>>> result = new HashMap<>();
         String key = "";
         List<Map<String,String>> pairList = new ArrayList<>();

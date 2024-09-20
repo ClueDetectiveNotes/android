@@ -10,4 +10,6 @@ interface OptionActionStore {
     fun parseLanguage(language:String)
     fun parseMultiLang(multiLang:Map<String,String>)
     fun parsCommonCode(commonCode:Map<String,List<Map<String,String>>>)
+    fun parseDarkThemeType(darkThemeType:String)
+    fun parseIsUseDarkTheme(isUseDarkTheme:Boolean)
 }

@@ -21,4 +21,12 @@ class OptionStore() : OptionStateStore, OptionActionStore{
     override fun parsCommonCode(commonCode: Map<String, List<Map<String, String>>>) {
         _uiState.update { it.copy(commonCode = commonCode) }
     }
+
+    override fun parseDarkThemeType(darkThemeType: String) {
+        _uiState.update { it.copy(darkThemeType = darkThemeType) }
+    }
+
+    override fun parseIsUseDarkTheme(isUseDarkTheme: Boolean) {
+        _uiState.update { it.copy(isUseDarkTheme = isUseDarkTheme) }
+    }
 }

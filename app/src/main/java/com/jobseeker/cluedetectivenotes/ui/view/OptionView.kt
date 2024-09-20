@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
+import android.widget.ToggleButton
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,59 +41,150 @@ fun OptionView(
     val commonCode = uiState.value.commonCode
 
 
-    var isDropDownMenuExpanded by remember { mutableStateOf(false) }
-    Surface (modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-        .padding(20.dp)){
-        //언어 설정
-        Row (modifier = Modifier.fillMaxWidth().fillMaxHeight()){
-            Column(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
-                    .weight(1f)
-                    .wrapContentHeight(align = Alignment.CenterVertically)
-            ){
-                Text(text = multiLang["OPT.LANGUAGE"]!!)
-            }
-            Column(
-                horizontalAlignment = Alignment.End,
-                modifier = Modifier.fillMaxWidth().weight(1f)
-            ){
-                Row {
-                    val language = uiState.value.language
-                    Button(
-                        onClick = { isDropDownMenuExpanded = true },
-                        shape = RoundedCornerShape(0.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(MaterialTheme.colorScheme.background.value),
-                            contentColor = Color(MaterialTheme.colorScheme.primary.value)
-                        ),
-                        border = BorderStroke(1.dp, Color(MaterialTheme.colorScheme.primary.value))
-                    ) {
-                        Text(text = multiLang["CM_CD.$language"]!!)
-                    }
+    var isDropDownMenuExpandedLanguage by remember { mutableStateOf(false) }
+    var isDropDownMenuExpandedDarkThemeType by remember { mutableStateOf(false) }
+    Surface {
+        Column (modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(20.dp)){
+            //언어 설정
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)){
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .weight(1f)
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                ){
+                    Text(text = multiLang["OPT.LANGUAGE"]!!)
                 }
-                Row {
-                    val languageSelectBoxList = commonCode["LANGUAGE.SELECT_BOX"]
-                    DropdownMenu(expanded = isDropDownMenuExpanded, onDismissRequest = { isDropDownMenuExpanded = false }) {
-                        if (languageSelectBoxList != null) {
-                            for(languageSelectBoxItem in languageSelectBoxList){
-                                val code = languageSelectBoxItem["CODE"];
-                                DropdownMenuItem(
-                                    text = { Text(text=multiLang["CM_CD.$code"]!!) },
-                                    onClick = {
-                                        optionViewModel.intent.setLanguage(code!!)
-                                        isDropDownMenuExpanded = false
-                                    }
-                                )
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ){
+                    Row {
+                        val language = uiState.value.language
+                        Button(
+                            onClick = { isDropDownMenuExpandedLanguage = true },
+                            shape = RoundedCornerShape(0.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(MaterialTheme.colorScheme.background.value),
+                                contentColor = Color(MaterialTheme.colorScheme.primary.value)
+                            ),
+                            border = BorderStroke(1.dp, Color(MaterialTheme.colorScheme.primary.value))
+                        ) {
+                            Text(text = multiLang["CM_CD.$language"]!!)
+                        }
+                    }
+                    Row {
+                        val languageSelectBoxList = commonCode["LANGUAGE.SELECT_BOX"]
+                        DropdownMenu(expanded = isDropDownMenuExpandedLanguage, onDismissRequest = { isDropDownMenuExpandedLanguage = false }) {
+                            if (languageSelectBoxList != null) {
+                                for(languageSelectBoxItem in languageSelectBoxList){
+                                    val code = languageSelectBoxItem["CODE"];
+                                    DropdownMenuItem(
+                                        text = { Text(text=multiLang["CM_CD.$code"]!!) },
+                                        onClick = {
+                                            optionViewModel.intent.setLanguage(code!!)
+                                            isDropDownMenuExpandedLanguage = false
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
+            }//언어 설정
+
+            //다크 테마 설정
+            val isUseDarkTheme = uiState.value.isUseDarkTheme
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)){
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .weight(1f)
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                ){
+                    Text(text = multiLang["OPT.IS_USE_DARK_THEME"]!!)
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ){
+                    Row {
+                        Switch(checked = isUseDarkTheme, onCheckedChange = {
+                            optionViewModel.intent.setUseDarkTheme(it)
+                        })
+                    }
+                }
+            }//다크 테마 사용 유무 설정
+
+            //다크 테마 설정
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)){
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .weight(1f)
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                ){
+                    Text(text = multiLang["OPT.DARK_THEME_TYPE"]!!)
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ){
+                    Row {
+                        val darkThemeType = uiState.value.darkThemeType
+                        Button(
+                            enabled = isUseDarkTheme,
+                            onClick = { isDropDownMenuExpandedDarkThemeType = true },
+                            shape = RoundedCornerShape(0.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(MaterialTheme.colorScheme.background.value),
+                                contentColor = Color(MaterialTheme.colorScheme.primary.value)
+                            ),
+                            border = BorderStroke(1.dp, Color(MaterialTheme.colorScheme.primary.value))
+                        ) {
+                            Text(text = multiLang["CM_CD.$darkThemeType"]!!)
+                        }
+                    }
+                    Row {
+                        val darkThemeTypeSelectBoxList = commonCode["DARK_THEME_TYPE.SELECT_BOX"]
+                        DropdownMenu(expanded = isDropDownMenuExpandedDarkThemeType, onDismissRequest = { isDropDownMenuExpandedDarkThemeType = false }) {
+                            if (darkThemeTypeSelectBoxList != null) {
+                                for(darkThemeTypeSelectBoxItem in darkThemeTypeSelectBoxList){
+                                    val code = darkThemeTypeSelectBoxItem["CODE"];
+                                    DropdownMenuItem(
+                                        text = { Text(text=multiLang["CM_CD.$code"]!!) },
+                                        onClick = {
+                                            optionViewModel.intent.setDarkThemeType(code!!)
+                                            isDropDownMenuExpandedDarkThemeType = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }//다크 테마 설정
         }
     }
 }

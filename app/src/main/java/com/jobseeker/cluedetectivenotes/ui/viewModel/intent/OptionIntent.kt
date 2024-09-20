@@ -13,7 +13,12 @@ class OptionIntent (context: Context, private val store:OptionActionStore) {
         sqLiteHelper.initDb()
         val options = sqLiteHelper.getOptions()
         val language = options["LANGUAGE"]!!["VALUE"]!!
+        val isUseDarkTheme = options["IS_USE_DARK_THEME"]!!["VALUE"]!! == "Y"
+        val darkThemeType = options["DARK_THEME_TYPE"]!!["VALUE"]!!
+
         store.parseLanguage(language)
+        store.parseIsUseDarkTheme(isUseDarkTheme)
+        store.parseDarkThemeType(darkThemeType)
 
         val multiLang = sqLiteHelper.getMultiLang(language)
         val commonCode = sqLiteHelper.getCommonCode()
@@ -31,5 +36,15 @@ class OptionIntent (context: Context, private val store:OptionActionStore) {
 
         multiLanguageSettingUseCase.execute(multiLang)
         store.parseMultiLang(multiLang)
+    }
+
+    fun setDarkThemeType(darkThemeType: String) {
+        sqLiteHelper.updateOption("DARK_THEME_TYPE", darkThemeType)
+        store.parseDarkThemeType(darkThemeType)
+    }
+
+    fun setUseDarkTheme(isUseDarkTheme: Boolean) {
+        sqLiteHelper.updateOption("IS_USE_DARK_THEME", if(isUseDarkTheme) "Y" else "N")
+        store.parseIsUseDarkTheme(isUseDarkTheme)
     }
 }
