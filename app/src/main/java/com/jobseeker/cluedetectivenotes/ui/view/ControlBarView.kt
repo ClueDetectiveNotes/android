@@ -436,7 +436,8 @@ fun ControlBar(
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.DarkGray,
-                            contentColor = Color.White
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.DarkGray
                         ),
                         onClick = { controlBarViewModel.intent.skipPrevious() },
                         modifier = Modifier.weight(1F),
@@ -454,7 +455,8 @@ fun ControlBar(
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.DarkGray,
-                            contentColor = Color.White
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.DarkGray
                         ),
                         onClick = { controlBarViewModel.intent.skipNext() },
                         modifier = Modifier.weight(1F),
