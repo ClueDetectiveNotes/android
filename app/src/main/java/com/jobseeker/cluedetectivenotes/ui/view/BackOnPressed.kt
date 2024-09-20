@@ -42,10 +42,20 @@ fun BackOnPressedBackToPlayerSetting(navController: NavController, gameSettingVi
     val backPressedState by remember { mutableStateOf(true) }
 
     BackHandler(enabled = backPressedState) {
+        gameSettingViewModel.intent.initPlayerType()
+        navController.popBackStack()
+    }
+}
+@Composable
+fun BackOnPressedBackToPlayerSettingDetail(navController: NavController, gameSettingViewModel: GameSettingViewModel = viewModel()) {
+    val backPressedState by remember { mutableStateOf(true) }
+
+    BackHandler(enabled = backPressedState) {
         gameSettingViewModel.intent.initGame()
         navController.popBackStack()
     }
-}@Composable
+}
+@Composable
 fun BackOnPressedBackToHandSetting(navController: NavController, gameSettingViewModel: GameSettingViewModel = viewModel()) {
     val backPressedState by remember { mutableStateOf(true) }
 

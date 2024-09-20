@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.viewModel.intent
 
+import android.util.Log
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.AddPlayerUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.InitAllUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.InitGameUseCase
@@ -12,6 +13,7 @@ import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SelectHa
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SelectPublicCardUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SelectUserUseCase
 import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.SetPlayerNameUseCase
+import com.jobseeker.cluedetectivenotes.application.useCase.gameSetting.exceptions.HaveAllOneKindOfCardException
 import com.jobseeker.cluedetectivenotes.ui.viewModel.store.gameSetting.GameSettingActionStore
 import org.json.JSONObject
 import java.util.UUID
@@ -121,11 +123,15 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
         store.parseNumOfPublicCards(cardsState.getInt("numOfPublicCards"))
     }
 
-    fun selectHand(cardName: String) {
-        val cardsState = selectHandUseCase.execute(cardName)
+    fun selectHand(cardName: String, sideEffectAction: ()->Unit) {
+        try{
+            val cardsState = selectHandUseCase.execute(cardName)
 
-        store.parsePublicCardList(cardsState.get("publicCardList") as List<String>)
-        store.parseHandList(cardsState.get("handList") as List<String>)
+            store.parsePublicCardList(cardsState.get("publicCardList") as List<String>)
+            store.parseHandList(cardsState.get("handList") as List<String>)
+        }catch (_:HaveAllOneKindOfCardException){
+            sideEffectAction()
+        }
     }
 
     fun selectPublicCard(cardName: String) {
@@ -145,5 +151,12 @@ class GameSettingIntent(private val store : GameSettingActionStore) {
 
     fun initPublicCards() {
         initPublicCardsUseCase.execute()
+    }
+
+    fun initPlayerType(){
+        val clear = UUID.randomUUID();
+        selectUserUseCase.execute(clear)
+        store.parseSelectedOption(clear)
+        store.parsePlayerOrderSettingNextButtonEnabled(false)
     }
 }

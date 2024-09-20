@@ -156,6 +156,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('HDS_TITLE','MSG','KR','개인 카드 설정');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('HDS_DESC','MSG','KR','개인 카드를 설정해주세요.');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('HDS_ALERT_TOAST','MSG','KR','한 종류의 카드를 모두 선택할 수 없습니다.');");
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PCS_TITLE','MSG','KR','공용 카드 설정');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PCS_DESC','MSG','KR','공용 카드를 설정해주세요.');");
@@ -177,6 +178,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('HDS_TITLE','MSG','EN','Hand Setting');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('HDS_DESC','MSG','EN','Please set the your hand.');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('HDS_ALERT_TOAST','MSG','EN','Can not select all one type of card.');");
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PCS_TITLE','MSG','EN','Public Card Setting');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('PCS_DESC','MSG','EN','Please set up public cards.');");

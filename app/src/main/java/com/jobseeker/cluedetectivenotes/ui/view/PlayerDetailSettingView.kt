@@ -97,6 +97,7 @@ fun PlayerDetailSettingView(
             }
         }
     }
+    BackOnPressedBackToPlayerSetting(navController = navController)
 }
 
 @Composable

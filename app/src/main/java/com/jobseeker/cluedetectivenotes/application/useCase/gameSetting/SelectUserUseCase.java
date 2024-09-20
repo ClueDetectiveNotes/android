@@ -23,7 +23,9 @@ public class SelectUserUseCase {
                 toOtherIdx = i;
             }
         }
-        players.add(toUserIdx,new User(players.remove(toUserIdx)));
+        if(toUserIdx>-1){
+            players.add(toUserIdx,new User(players.remove(toUserIdx)));
+        }
         if(toOtherIdx>-1)
             players.add(toOtherIdx, new Other(players.remove(toOtherIdx)));
     }
