@@ -70,10 +70,10 @@ fun PlayerSettingView(
                     }){
                     Column {
                         Row {
-                            Text(text = multiLang["MSG.PS_TITLE"]!!, fontSize = 28.sp)
+                            Text(text = multiLang.getString("MSG.PS_TITLE"), fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = multiLang["MSG.PS_DESC"]!!)
+                            Text(text = multiLang.getString("MSG.PS_DESC"))
                         }
                     }
                 }
@@ -111,7 +111,7 @@ fun PlayerSettingView(
                             Row (modifier = Modifier.fillMaxWidth()) {
                                 Box (modifier = Modifier.fillMaxWidth()) {
                                     Text(
-                                        text = multiLang["MSG.PS_COND"]!!,
+                                        text = multiLang.getString("MSG.PS_COND"),
                                         modifier = Modifier.align(Alignment.Center)
                                     )
                                 }

@@ -552,7 +552,7 @@ fun ControlBar(
                             .width(150.dp)
                     ){
                         DropdownMenuItem(
-                            text = { Text(text = multiLang["BTN.HOME"]!!) },
+                            text = { Text(text = multiLang.getString("BTN.HOME")) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Home,
@@ -566,7 +566,7 @@ fun ControlBar(
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text(text = multiLang["BTN.SETTING"]!!) },
+                            text = { Text(text = multiLang.getString("BTN.SETTING")) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
@@ -580,7 +580,7 @@ fun ControlBar(
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text(text = multiLang["BTN.OPTION"]!!) },
+                            text = { Text(text = multiLang.getString("BTN.OPTION")) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Settings,
@@ -645,7 +645,7 @@ fun CustomTextFieldDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                Text(text = multiLang["MSG.SHT_CB_ADSBMK_DESC"]!!)
+                Text(text = multiLang.getString("MSG.SHT_CB_ADSBMK_DESC"))
 
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -690,7 +690,7 @@ fun CustomTextFieldDialog(
                     TextButton(onClick = {
                         onClickCancel()
                     }) {
-                        Text(text = multiLang["BTN.CANCEL"]!!)
+                        Text(text = multiLang.getString("BTN.CANCEL"))
                     }
 
                     Spacer(modifier = Modifier.width(5.dp))
@@ -698,7 +698,7 @@ fun CustomTextFieldDialog(
                     TextButton(onClick = {
                         onClickConfirm(text.value)
                     }) {
-                        Text(text = multiLang["BTN.CONFIRM"]!!)
+                        Text(text = multiLang.getString("BTN.CONFIRM"))
                     }
                 }
             }

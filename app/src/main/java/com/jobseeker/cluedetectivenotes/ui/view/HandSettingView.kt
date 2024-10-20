@@ -65,10 +65,10 @@ fun HandSettingView(
                     }){
                     Column {
                         Row {
-                            Text(text = multiLang["MSG.HDS_TITLE"]!!, fontSize = 28.sp)
+                            Text(text = multiLang.getString("MSG.HDS_TITLE"), fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = multiLang["MSG.HDS_DESC"]!!)
+                            Text(text = multiLang.getString("MSG.HDS_DESC"))
                         }
                     }
                 }
@@ -152,7 +152,7 @@ fun HandSettingView(
                                         handList = handList,
                                         cardList = suspectCardList,
                                         cardType = "suspect",
-                                        listName = multiLang["CRD_TP.SUSPECT"]!!
+                                        listName = multiLang.getString("CRD_TP.SUSPECT")
                                     )
                                     CardList(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -160,7 +160,7 @@ fun HandSettingView(
                                         handList = handList,
                                         cardList = weaponCardList,
                                         cardType = "weapon",
-                                        listName = multiLang["CRD_TP.WEAPON"]!!
+                                        listName = multiLang.getString("CRD_TP.WEAPON")
                                     )
                                     CardList(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -168,7 +168,7 @@ fun HandSettingView(
                                         handList = handList,
                                         cardList = crimeSceneCardList,
                                         cardType = "crime_scene",
-                                        listName = multiLang["CRD_TP.CRIME_SCENE"]!!
+                                        listName = multiLang.getString("CRD_TP.CRIME_SCENE")
                                     )
                                     Spacer(modifier = Modifier.height(100.dp))
                                 }
@@ -218,7 +218,7 @@ fun CardList(gameSettingViewModel:GameSettingViewModel, context: Context, handLi
                         type = cardType,
                         cardName = card,
                         clickAction = { gameSettingViewModel.intent.selectHand(card) {
-                            Toast.makeText( context, multiLang["MSG.HDS_ALERT_TOAST"]!!, Toast.LENGTH_SHORT ).show() }
+                            Toast.makeText( context, multiLang.getString("MSG.HDS_ALERT_TOAST"), Toast.LENGTH_SHORT ).show() }
                         },
                         colorFilter = colorFilter
                     )

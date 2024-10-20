@@ -1,6 +1,7 @@
 package com.jobseeker.cluedetectivenotes.ui.viewModel.store.option
 
 import com.jobseeker.cluedetectivenotes.ui.viewModel.model.OptionUiState
+import com.jobseeker.cluedetectivenotes.utils.DataMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,7 @@ class OptionStore() : OptionStateStore, OptionActionStore{
         _uiState.update { it.copy(language = language) }
     }
 
-    override fun parseMultiLang(multiLang: Map<String, String>) {
+    override fun parseMultiLang(multiLang: DataMap) {
         _uiState.update { it.copy(multiLang = multiLang) }
     }
 

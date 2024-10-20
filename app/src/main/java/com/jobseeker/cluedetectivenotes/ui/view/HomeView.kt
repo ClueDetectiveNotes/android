@@ -26,13 +26,13 @@ fun HomeView(
     Box(modifier = Modifier.size(50F.dp), contentAlignment = Alignment.Center){
         Column {
             Row {
-                Button(modifier = Modifier.width(150.dp), content = { Text(text = multiLang["BTN.START"]!!) },
+                Button(modifier = Modifier.width(150.dp), content = { Text(text = multiLang.getString("BTN.START")) },
                     onClick = {
                         navController.navigate(Routes.PlayerSetting.route)
                     })
             }
             Row {
-                Button(modifier = Modifier.width(150.dp), content = { Text(text = multiLang["BTN.OPTION"]!!) },
+                Button(modifier = Modifier.width(150.dp), content = { Text(text = multiLang.getString("BTN.OPTION")) },
                     onClick = {
                         navController.navigate(Routes.Option.route)
                     })

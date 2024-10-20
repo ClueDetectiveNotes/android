@@ -74,8 +74,8 @@ fun SheetView(
                     sheetViewModel.intent.closeConfirmToDefaultModeDialog()
                     sheetViewModel.intent.changeDefaultMode();
                 },
-                dialogTitle = multiLang["MSG.SHT_IF_DL_TITLE"]!!,
-                dialogText = multiLang["MSG.SHT_IF_DL_DESC"]!!
+                dialogTitle = multiLang.getString("MSG.SHT_IF_DL_TITLE"),
+                dialogText = multiLang.getString("MSG.SHT_IF_DL_DESC")
             )
         }
 
@@ -136,9 +136,9 @@ fun SheetView(
                         for(row in rownames) {
                             if (rowType != row["type"]) {
                                 rowType = row["type"]!!
-                                RowTypeCell(text = multiLang["CRD_TP.$rowType"]!!, modifier = Modifier)
+                                RowTypeCell(text = multiLang.getString("CRD_TP.$rowType"), modifier = Modifier)
                             }
-                            RownameCell(text = multiLang["CRD."+row["name"]]!!) {
+                            RownameCell(text = multiLang.getString("CRD."+row["name"])) {
                                 sheetViewModel.intent.onClickRowname(row["name"]!!)
                             }
                         }
@@ -276,12 +276,12 @@ fun ConfirmToDefaultModeDialog(
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
             TextButton(onClick = { onConfirmation() }) {
-                Text(text = multiLang["BTN.CONFIRM"]!!)
+                Text(text = multiLang.getString("BTN.CONFIRM"))
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismissRequest() }) {
-                Text(text = multiLang["BTN.CANCEL"]!!)
+                Text(text = multiLang.getString("BTN.CANCEL"))
             }
         },
         title = {

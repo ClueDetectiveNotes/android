@@ -32,7 +32,7 @@ fun BackOnPressedShuttingDown(optionViewModel: OptionViewModel = viewModel()) {
             exitProcess(0);
         } else {
             backPressedState = true
-            Toast.makeText(context, multiLang["MSG.CM_BOP"]!!, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, multiLang.getString("MSG.CM_BOP"), Toast.LENGTH_SHORT).show()
         }
         backPressedTime = System.currentTimeMillis()
     }

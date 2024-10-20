@@ -70,7 +70,7 @@ fun GameCardView(context: Context, type:String, cardName:String, clickAction: ()
             }
         }
         Row {
-            multiLang["CRD.$cardName"]?.let { Text(text = it, textAlign = TextAlign.Center, modifier = Modifier.width(90.dp)) }
+            multiLang.getString("CRD.$cardName")?.let { Text(text = it, textAlign = TextAlign.Center, modifier = Modifier.width(90.dp)) }
         }
     }
 }

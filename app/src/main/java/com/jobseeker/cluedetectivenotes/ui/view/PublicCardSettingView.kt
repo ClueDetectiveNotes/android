@@ -64,10 +64,10 @@ fun PublicCardSettingView(
                     }){
                     Column {
                         Row {
-                            Text(text = multiLang["MSG.PCS_TITLE"]!!, fontSize = 28.sp)
+                            Text(text = multiLang.getString("MSG.PCS_TITLE"), fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = multiLang["MSG.PCS_DESC"]!!)
+                            Text(text = multiLang.getString("MSG.PCS_DESC"))
                         }
                     }
                 }
@@ -144,7 +144,7 @@ fun PublicCardSettingView(
                                         publicCardList = publicCardList,
                                         cardList = suspectCardList,
                                         cardType = "suspect",
-                                        listName = multiLang["CRD_TP.SUSPECT"]!!
+                                        listName = multiLang.getString("CRD_TP.SUSPECT")
                                     )
                                     CardListForPublicCards(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -153,7 +153,7 @@ fun PublicCardSettingView(
                                         publicCardList = publicCardList,
                                         cardList = weaponCardList,
                                         cardType = "weapon",
-                                        listName = multiLang["CRD_TP.WEAPON"]!!
+                                        listName = multiLang.getString("CRD_TP.WEAPON")
                                     )
                                     CardListForPublicCards(
                                         gameSettingViewModel = gameSettingViewModel,
@@ -162,7 +162,7 @@ fun PublicCardSettingView(
                                         publicCardList = publicCardList,
                                         cardList = crimeSceneCardList,
                                         cardType = "crime_scene",
-                                        listName = multiLang["CRD_TP.CRIME_SCENE"]!!
+                                        listName = multiLang.getString("CRD_TP.CRIME_SCENE")
                                     )
                                     Spacer(modifier = Modifier.height(100.dp))
                                 }

@@ -66,10 +66,10 @@ fun PlayerDetailSettingView(
                     }){
                     Column {
                         Row {
-                            Text(text = multiLang["MSG.PDS_TITLE"]!!, fontSize = 28.sp)
+                            Text(text = multiLang.getString("MSG.PDS_TITLE"), fontSize = 28.sp)
                         }
                         Row {
-                            Text(text = multiLang["MSG.PDS_DESC"]!!)
+                            Text(text = multiLang.getString("MSG.PDS_DESC"))
                         }
                     }
                 }

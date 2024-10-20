@@ -60,7 +60,7 @@ fun OptionView(
                         .weight(1f)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                 ){
-                    Text(text = multiLang["OPT.LANGUAGE"]!!)
+                    Text(text = multiLang.getString("OPT.LANGUAGE"))
                 }
                 Column(
                     horizontalAlignment = Alignment.End,
@@ -79,7 +79,7 @@ fun OptionView(
                             ),
                             border = BorderStroke(1.dp, Color(MaterialTheme.colorScheme.primary.value))
                         ) {
-                            Text(text = multiLang["CM_CD.$language"]!!)
+                            Text(text = multiLang.getString("CM_CD.$language"))
                         }
                     }
                     Row {
@@ -89,7 +89,7 @@ fun OptionView(
                                 for(languageSelectBoxItem in languageSelectBoxList){
                                     val code = languageSelectBoxItem["CODE"];
                                     DropdownMenuItem(
-                                        text = { Text(text=multiLang["CM_CD.$code"]!!) },
+                                        text = { Text(text=multiLang.getString("CM_CD.$code")) },
                                         onClick = {
                                             optionViewModel.intent.setLanguage(code!!)
                                             isDropDownMenuExpandedLanguage = false
@@ -115,7 +115,7 @@ fun OptionView(
                         .weight(1f)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                 ){
-                    Text(text = multiLang["OPT.IS_USE_DARK_THEME"]!!)
+                    Text(text = multiLang.getString("OPT.IS_USE_DARK_THEME"))
                 }
                 Column(
                     horizontalAlignment = Alignment.End,
@@ -143,7 +143,7 @@ fun OptionView(
                         .weight(1f)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                 ){
-                    Text(text = multiLang["OPT.DARK_THEME_TYPE"]!!)
+                    Text(text = multiLang.getString("OPT.DARK_THEME_TYPE"))
                 }
                 Column(
                     horizontalAlignment = Alignment.End,
@@ -163,7 +163,7 @@ fun OptionView(
                             ),
                             border = BorderStroke(1.dp, Color(MaterialTheme.colorScheme.primary.value))
                         ) {
-                            Text(text = multiLang["CM_CD.$darkThemeType"]!!)
+                            Text(text = multiLang.getString("CM_CD.$darkThemeType"))
                         }
                     }
                     Row {
@@ -173,7 +173,7 @@ fun OptionView(
                                 for(darkThemeTypeSelectBoxItem in darkThemeTypeSelectBoxList){
                                     val code = darkThemeTypeSelectBoxItem["CODE"];
                                     DropdownMenuItem(
-                                        text = { Text(text=multiLang["CM_CD.$code"]!!) },
+                                        text = { Text(text=multiLang.getString("CM_CD.$code")) },
                                         onClick = {
                                             optionViewModel.intent.setDarkThemeType(code!!)
                                             isDropDownMenuExpandedDarkThemeType = false

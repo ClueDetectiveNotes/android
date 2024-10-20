@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.jobseeker.cluedetectivenotes.utils.DataMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -267,13 +269,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public Map<String, String> getMultiLang (String language){
+    public DataMap getMultiLang (String language){
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {language};
         Cursor cursor = db.rawQuery("SELECT CODE, TYPE, VALUE FROM MULTI_LANG WHERE LANG = ?",selectionArgs);
-        Map<String,String> result = new HashMap<>();
+        DataMap result = new DataMap();
         while (cursor.moveToNext()) {
-            result.put(cursor.getString(1)+"."+cursor.getString(0),cursor.getString(2));
+            result.putString(cursor.getString(1)+"."+cursor.getString(0),cursor.getString(2));
         }
         cursor.close();
         return result;

@@ -34,7 +34,7 @@ fun NextToDetailButton(
         },
             enabled = uiState.value.playerSettingNextButtonEnabled,
         ) {
-            Text(text = multiLang["BTN.NEXT"]!!)
+            Text(text = multiLang.getString("BTN.NEXT"))
         }
     }
 }
@@ -55,7 +55,7 @@ fun NextToCardSettingButton(
             onClick = { navController.navigate(Routes.HandSetting.route) },
             enabled = uiState.value.playerOrderSettingNextButtonEnabled
         ) {
-            Text(text = multiLang["BTN.NEXT"]!!)
+            Text(text = multiLang.getString("BTN.NEXT"))
         }
     }
 }
@@ -73,7 +73,7 @@ fun NextToPublicCardSettingButton(
         Button(
             onClick = { navController.navigate(Routes.PublicCardSetting.route) },
         ) {
-            Text(text = multiLang["BTN.NEXT"]!!)
+            Text(text = multiLang.getString("BTN.NEXT"))
         }
     }
 }
@@ -91,7 +91,7 @@ fun PlayGameButton(
         Button(
             onClick = { navController.navigate(Routes.Sheet.route) },
         ) {
-            Text(text = multiLang["BTN.PLAY"]!!)
+            Text(text = multiLang.getString("BTN.PLAY"))
         }
     }
 }

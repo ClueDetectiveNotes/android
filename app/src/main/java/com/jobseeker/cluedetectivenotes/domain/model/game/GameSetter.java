@@ -3,6 +3,7 @@ package com.jobseeker.cluedetectivenotes.domain.model.game;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Other;
 import com.jobseeker.cluedetectivenotes.domain.model.player.Player;
 import com.jobseeker.cluedetectivenotes.domain.model.sheet.Sheet;
+import com.jobseeker.cluedetectivenotes.utils.DataMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,12 +36,12 @@ public class GameSetter {
         return game;
     }
 
-    public static void setMultiLanguage(Map<String,String> multiLang){
+    public static void setMultiLanguage(DataMap multiLang){
         if(GameSetter.multiLang.isEmpty()){
-            GameSetter.multiLang.putAll(multiLang);
+            GameSetter.multiLang.putAll(multiLang.getMap());
         }else{
             GameSetter.multiLang.clear();
-            GameSetter.multiLang.putAll(multiLang);
+            GameSetter.multiLang.putAll(multiLang.getMap());
             if(game != null) game.renewMultiLang();
         }
     }
