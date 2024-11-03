@@ -13,4 +13,5 @@ interface OptionActionStore {
     fun parsCommonCode(commonCode:Map<String,List<Map<String,String>>>)
     fun parseDarkThemeType(darkThemeType:String)
     fun parseIsUseDarkTheme(isUseDarkTheme:Boolean)
+    fun parseBlindTransparency(blindTransparency:Float)
 }

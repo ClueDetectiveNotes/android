@@ -1,6 +1,5 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
-import android.widget.ToggleButton
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -39,6 +39,7 @@ fun OptionView(
     val uiState = optionViewModel.store.uiState.collectAsState()
     val multiLang = uiState.value.multiLang
     val commonCode = uiState.value.commonCode
+
 
 
     var isDropDownMenuExpandedLanguage by remember { mutableStateOf(false) }
@@ -185,6 +186,31 @@ fun OptionView(
                     }
                 }
             }//다크 테마 설정
+
+            //블라인드 투명도 설정
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)){
+                Column {
+                    Text(text = multiLang.getString("OPT.BLIND_TRANSPARENCY"))
+                    Row(){
+                        var sliderPosition = uiState.value.blindTransparency
+                        Column {
+                            Slider(
+                                value = sliderPosition,
+                                onValueChange = {
+                                    sliderPosition = it
+                                    optionViewModel.intent.setBlindTransparency(sliderPosition)
+                                },
+                                steps = 2,
+                                valueRange = 40f..100f
+                            )
+                            Text(text = sliderPosition.toString())
+                        }
+                    }
+                }
+            }//블라인드 투명도 설정
+
         }
     }
 }

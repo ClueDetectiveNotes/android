@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -71,6 +72,7 @@ import com.jobseeker.cluedetectivenotes.ui.viewModel.SheetViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun ControlBar(
     controlBarViewModel:ControlBarViewModel,
@@ -600,7 +602,7 @@ fun ControlBar(
                 }
                 .clickable(enabled = false) {}
                 .fillMaxSize()
-                .background(color = Color.Black.copy(0.8F))
+                .background(color = Color.Black.copy(optionViewModel.store.uiState.value.blindTransparency * 0.01F))
                 ,verticalAlignment = Alignment.CenterVertically
                 ,horizontalArrangement = Arrangement.Center
             ) {

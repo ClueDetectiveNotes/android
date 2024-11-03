@@ -30,4 +30,8 @@ class OptionStore() : OptionStateStore, OptionActionStore{
     override fun parseIsUseDarkTheme(isUseDarkTheme: Boolean) {
         _uiState.update { it.copy(isUseDarkTheme = isUseDarkTheme) }
     }
+
+    override fun parseBlindTransparency(blindTransparency: Float) {
+        _uiState.update { it.copy(blindTransparency = blindTransparency) }
+    }
 }

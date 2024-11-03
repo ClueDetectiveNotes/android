@@ -66,6 +66,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO OPTIONS VALUES ('LANGUAGE',1,'SELECT_BOX','KR');");
         db.execSQL("INSERT INTO OPTIONS VALUES ('IS_USE_DARK_THEME',2,'TOGGLE','Y');");
         db.execSQL("INSERT INTO OPTIONS VALUES ('DARK_THEME_TYPE',2,'SELECT_BOX','FOLLOW_SYSTEM');");
+        db.execSQL("INSERT INTO OPTIONS VALUES ('BLIND_TRANSPARENCY',1,'SLIDER','60');");
     }
 
     private void insertCommonCode(SQLiteDatabase db){
@@ -91,6 +92,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('FOLLOW_SYSTEM','CM_CD','KR','시스템 설정에 따름');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('APPLY_DARK_THEME','CM_CD','KR','다크 테마 적용');");
 
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('BLIND_TRANSPARENCY','OPT','KR','블라인드 투명도');");
+
         //영어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('LANGUAGE','OPT','EN','Language');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('KR','CM_CD','EN','Korean');");
@@ -101,6 +104,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('DARK_THEME_TYPE','OPT','EN','Dark Theme Application Types');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('FOLLOW_SYSTEM','CM_CD','EN','Depending on the system');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('APPLY_DARK_THEME','CM_CD','EN','Apply Dark Theme');");
+
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('BLIND_TRANSPARENCY','OPT','EN','Blind Transparency');");
+
     }
 
     private void insertCardMultiLang(SQLiteDatabase db){
