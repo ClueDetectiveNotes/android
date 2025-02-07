@@ -105,6 +105,7 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
     val uiState = gameSettingViewModel.store.uiState.collectAsState()
     val data = uiState.value.playerIdList
     val state = rememberReorderableLazyListState(onMove = { from, to ->
+        //from, to를 intent를 통해서 모델로 전달. 모델이 수정될 때 ui도 정상 갱신됨
         gameSettingViewModel.intent.reorderPlayer(from.index,to.index)
     })
 
@@ -116,7 +117,7 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
                 .reorderable(state)
                 .detectReorderAfterLongPress(state)
         ) {
-            items(data, { it }) { item ->
+            items(data, { it } /*{ it }은 애니메이션 적용을 위해 필요*/) { item ->//item은 data(List)안에 있던 원소
                 ReorderableItem(state, key = item) { isDragging ->
                     val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp, label = "")
                     Column(
@@ -157,6 +158,7 @@ fun VerticalReorderList(gameSettingViewModel: GameSettingViewModel) {
                                 .fillMaxHeight()
                                 .bottomBorder(1.dp, Color.LightGray)
                                 .detectReorderAfterPress(state)){
+                                //composable func의 modifier에 detectReorderAfterPress(state)를 달아주면 reorder를 동작시켜줄 수 있다
                                 Image(
                                     painterResource(R.drawable.ic_setting_reorder_hotspot),
                                     contentDescription = "",

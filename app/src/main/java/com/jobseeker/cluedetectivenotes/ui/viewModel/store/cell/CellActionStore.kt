@@ -10,4 +10,5 @@ interface CellActionStore {
 
     fun initCells(cells : JSONArray)
     fun parseCells(cells : JSONArray)
+    fun parseLockedCells(cells: JSONArray)
 }

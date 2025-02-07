@@ -21,6 +21,7 @@ public class LoadCellUseCase {
             JSONObject cellObj = new JSONObject();
             cellObj.put("id", id);
             cellObj.put("mainMarker", Objects.requireNonNull(cells.get(id)).getMarker().getNotation());
+            cellObj.put("isInit", Objects.requireNonNull(cells.get(id)).isInit());
             cellsArr.put(cellObj);
         }
         return cellsArr;

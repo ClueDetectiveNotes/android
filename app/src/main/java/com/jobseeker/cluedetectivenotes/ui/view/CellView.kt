@@ -23,9 +23,32 @@ import com.jobseeker.cluedetectivenotes.ui.viewModel.model.CellUiState
 fun CellView(uiState: State<CellUiState>){
     val mainMarker = uiState.value.mainMarker
     val subMarkerItems = uiState.value.subMarkerItems
+    val isInit = uiState.value.isInit
+    val isLock = uiState.value.isLock
+
     Column {
+        if(isInit || isLock){
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .weight(1f)
+            ){
+                Text(
+                    text = if(isInit){"init"}else{"lock"},
+                    fontSize = 10.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .wrapContentHeight(align = Alignment.CenterVertically),
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
         Row (
-            modifier = Modifier.fillMaxHeight().weight(1f)
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
         ) {
             Text(text = mainMarker,
                 modifier = Modifier
@@ -37,11 +60,17 @@ fun CellView(uiState: State<CellUiState>){
         }
         if(subMarkerItems.isNotEmpty()){
             Row (
-                modifier = Modifier.fillMaxWidth().fillMaxHeight().weight(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .weight(1f)
             ){
                 for(subMarkerItem in subMarkerItems){
                     Column (
-                        modifier = Modifier.fillMaxWidth().fillMaxHeight().weight(1f)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .weight(1f)
                     ){
                         Text(
                             text = subMarkerItem,

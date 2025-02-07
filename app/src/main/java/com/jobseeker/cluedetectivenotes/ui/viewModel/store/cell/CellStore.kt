@@ -15,7 +15,10 @@ class CellStore : CellActionStore, CellStateStore {
     override fun initCells(cells: JSONArray) {
         for(idx in 0 until cells.length()){
             val cellObj = cells.getJSONObject(idx)
-            _cells[cellObj.get("id") as UUID] = MutableStateFlow(CellUiState(mainMarker = cellObj.get("mainMarker") as String))
+            _cells[cellObj.get("id") as UUID] = MutableStateFlow(CellUiState(
+                mainMarker = cellObj.get("mainMarker") as String,
+                isInit = cellObj.get("isInit") as Boolean
+            ))
             this.cells[cellObj.get("id") as UUID] = _cells[cellObj.get("id") as UUID]!!.asStateFlow()
         }
     }
@@ -23,8 +26,18 @@ class CellStore : CellActionStore, CellStateStore {
     override fun parseCells(cells: JSONArray) {
         for(idx in 0 until cells.length()){
             val cellObj = cells.getJSONObject(idx)
-            _cells[cellObj.get("id") as UUID]!!.update { it.copy(mainMarker = cellObj.get("mainMarker") as String) }
-            _cells[cellObj.get("id") as UUID]!!.update { it.copy(subMarkerItems = cellObj.get("subMarkerItems") as List<String>) }
+            _cells[cellObj.get("id") as UUID]!!.update { it.copy(
+                mainMarker = cellObj.get("mainMarker") as String,
+                subMarkerItems = cellObj.get("subMarkerItems") as List<String>
+            ) }
+        }
+    }
+    override fun parseLockedCells(cells: JSONArray) {
+        for(idx in 0 until cells.length()){
+            val cellObj = cells.getJSONObject(idx)
+            _cells[cellObj.get("id") as UUID]!!.update { it.copy(
+                isLock = cellObj.get("isLock") as Boolean
+            ) }
         }
     }
 }

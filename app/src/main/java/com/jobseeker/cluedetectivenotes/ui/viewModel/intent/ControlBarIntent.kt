@@ -231,12 +231,16 @@ class ControlBarIntent (private val store: ControlBarActionStore, private val sh
     fun lock(){
         val sheetState : JSONObject = lockCellsUseCase.execute()
         val isCellsLocked : Boolean = sheetState.get("isCellsLocked") as Boolean
+        val lockedCells : JSONArray = sheetState.get("lockedCells") as JSONArray
         sheetStore.parseIsCellsLocked(isCellsLocked)
+        cellStore.parseLockedCells(lockedCells)
     }
 
     fun unlock(){
         val sheetState : JSONObject = unlockCellsUseCase.execute()
         val isCellsLocked : Boolean = sheetState.get("isCellsLocked") as Boolean
+        val lockedCells : JSONArray = sheetState.get("lockedCells") as JSONArray
         sheetStore.parseIsCellsLocked(isCellsLocked)
+        cellStore.parseLockedCells(lockedCells)
     }
 }
