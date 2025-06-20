@@ -66,6 +66,13 @@ fun SheetView(
 
     val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
+    // 상수 정의로 높이 값 최적화
+    val cellHeight = 40.dp
+    val cellPadding = 2.dp
+    val topSpacerHeight = 50.dp
+    val bottomSpacerHeight = 60.dp
+    val controlBarSpacerHeight = if(isSubMarkerBarOpen) 100.dp else 50.dp
+
     when{
         uiState.value.openConfirmToDefaultModeDialog -> {
             ConfirmToDefaultModeDialog(
@@ -104,7 +111,7 @@ fun SheetView(
                     .width(110.dp)
                     .padding(5.dp)){
                     VerticalGrid(columns = SimpleGridCells.Fixed(1)){
-                        Spacer(modifier = Modifier.height(40.dp))
+                        Spacer(modifier = Modifier.height(cellHeight))
                     }
                 }
                 Column (modifier = Modifier
@@ -125,9 +132,7 @@ fun SheetView(
             .background(color = Color(android.graphics.Color.parseColor("#0c3ea1")))
             .padding(5.dp)
         ) {
-            Row {
-                Spacer(modifier = Modifier.height(50.dp))
-            }
+            Spacer(modifier = Modifier.height(topSpacerHeight))
             Row{
                 Column(modifier = Modifier.width(110.dp)) {
                     VerticalGrid(columns = SimpleGridCells.Fixed(1)){
@@ -154,7 +159,7 @@ fun SheetView(
                             if(rowType != row["type"]){
                                 rowType = row["type"]
                                 for(index in 1..colnames.size){
-                                    Spacer(modifier = Modifier.height(40.dp))
+                                    Spacer(modifier = Modifier.height(cellHeight))
                                 }
                             }
 
@@ -176,13 +181,9 @@ fun SheetView(
             }
             //}//Row End
             if(isDisplayControlBar){
-                Row {
-                    Spacer(modifier = Modifier.height(if(isSubMarkerBarOpen) 100.dp else 50.dp))
-                }
+                Spacer(modifier = Modifier.height(controlBarSpacerHeight))
             }
-            Row {
-                Spacer(modifier = Modifier.height(60.dp))
-            }
+            Spacer(modifier = Modifier.height(bottomSpacerHeight))
         }//Column End
         ControlBar(controlBarViewModel, isDisplayControlBar, navController)
     }
@@ -213,9 +214,9 @@ fun ColnameCell(column: Map<UUID,String>, userId: UUID, clickAction: () -> Unit)
     Surface(modifier = Modifier
         .height(40.dp)
         .padding(2.dp)
-        .combinedClickable(onClick = { clickAction() })
-         ,color = if(userId == column.keys.last()) Color(android.graphics.Color.parseColor("#e8a809"))
-                    else Color(MaterialTheme.colorScheme.surface.value)
+        .combinedClickable(onClick = { clickAction() }),
+        color = if(userId == column.keys.last()) Color(android.graphics.Color.parseColor("#e8a809"))
+                else Color(MaterialTheme.colorScheme.surface.value)
     ) {
         Text(
             text = column[column.keys.last()]!!,
@@ -223,7 +224,7 @@ fun ColnameCell(column: Map<UUID,String>, userId: UUID, clickAction: () -> Unit)
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(align = Alignment.CenterVertically)
-            )
+        )
     }
 }
 
@@ -243,7 +244,7 @@ fun RownameCell(text: String, clickAction: () -> Unit){
                 .fillMaxWidth()
                 .wrapContentHeight(align = Alignment.CenterVertically)
                 .padding(start = 10.dp)
-            )
+        )
     }
 }
 
@@ -254,11 +255,11 @@ fun GridCell(uiState: State<CellUiState>, selected: Boolean, rowOrColSelected: B
         modifier = Modifier
             .height(40.dp)
             .padding(2.dp)
-            .combinedClickable(onClick = { clickAction() }, onLongClick = { longClickAction() })
-        , color = if(selected) LocalCustomColorsPalette.current.selectedCell
-                    else if(rowOrColSelected) LocalCustomColorsPalette.current.selectedRowAndColname
-                    else Color(MaterialTheme.colorScheme.surface.value)
-        ){
+            .combinedClickable(onClick = { clickAction() }, onLongClick = { longClickAction() }),
+        color = if(selected) LocalCustomColorsPalette.current.selectedCell
+                else if(rowOrColSelected) LocalCustomColorsPalette.current.selectedRowAndColname
+                else Color(MaterialTheme.colorScheme.surface.value)
+    ){
         CellView(uiState = uiState)
     }
 }

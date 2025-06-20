@@ -1,13 +1,10 @@
 package com.jobseeker.cluedetectivenotes.ui.view
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -28,57 +25,51 @@ fun CellView(uiState: State<CellUiState>){
 
     Column {
         if(isInit || isLock){
-            Row (
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
                     .weight(1f)
-            ){
+                    .fillMaxWidth()
+            ) {
                 Text(
                     text = if(isInit){"init"}else{"lock"},
                     fontSize = 10.sp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
-                        .wrapContentHeight(align = Alignment.CenterVertically),
+                        .align(Alignment.Center),
                     textAlign = TextAlign.Center,
                 )
             }
         }
-        Row (
+        Box(
             modifier = Modifier
-                .fillMaxHeight()
                 .weight(1f)
+                .fillMaxWidth()
         ) {
             Text(text = mainMarker,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight()
-                    .wrapContentHeight(align = Alignment.CenterVertically),
+                    .align(Alignment.Center),
                 textAlign = TextAlign.Center,
             )
         }
         if(subMarkerItems.isNotEmpty()){
-            Row (
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
                     .weight(1f)
+                    .fillMaxWidth()
             ){
                 for(subMarkerItem in subMarkerItems){
-                    Column (
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
                             .weight(1f)
+                            .fillMaxWidth()
                     ){
                         Text(
                             text = subMarkerItem,
                             fontSize = 10.sp,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .fillMaxHeight()
-                                .wrapContentHeight(align = Alignment.CenterVertically),
+                                .align(Alignment.Center),
                             textAlign = TextAlign.Center,
                         )
                     }
