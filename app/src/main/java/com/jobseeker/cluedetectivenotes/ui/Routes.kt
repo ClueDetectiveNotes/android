@@ -8,4 +8,5 @@ sealed class Routes (val route: String){
     object HandSetting : Routes("HandSettingView")
     object Sheet : Routes("SheetView")
     object Option : Routes("OptionView")
+    object Help : Routes("HelpView")
 }
