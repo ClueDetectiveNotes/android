@@ -67,7 +67,7 @@ fun SheetView(
     val multiLang = optionViewModel.store.uiState.collectAsState().value.multiLang
 
     // 상수 정의로 높이 값 최적화
-    val cellHeight = 40.dp
+    val cellHeight = 50.dp
     val cellPadding = 2.dp
     val topSpacerHeight = 50.dp
     val bottomSpacerHeight = 60.dp
@@ -193,7 +193,7 @@ fun SheetView(
 @Composable
 fun RowTypeCell(text: String, modifier: Modifier){
     Surface(modifier = modifier
-        .height(40.dp)
+        .height(50.dp)
         .padding(2.dp)) {
         Text(
             text = text,
@@ -212,7 +212,7 @@ fun RowTypeCell(text: String, modifier: Modifier){
 @Composable
 fun ColnameCell(column: Map<UUID,String>, userId: UUID, clickAction: () -> Unit){
     Surface(modifier = Modifier
-        .height(40.dp)
+        .height(50.dp)
         .padding(2.dp)
         .combinedClickable(onClick = { clickAction() }),
         color = if(userId == column.keys.last()) Color(android.graphics.Color.parseColor("#e8a809"))
@@ -232,7 +232,7 @@ fun ColnameCell(column: Map<UUID,String>, userId: UUID, clickAction: () -> Unit)
 @Composable
 fun RownameCell(text: String, clickAction: () -> Unit){
     Surface(modifier = Modifier
-        .height(40.dp)
+        .height(50.dp)
         .padding(2.dp)
         .combinedClickable(onClick = { clickAction() })
     ) {
@@ -253,7 +253,7 @@ fun RownameCell(text: String, clickAction: () -> Unit){
 fun GridCell(uiState: State<CellUiState>, selected: Boolean, rowOrColSelected: Boolean, clickAction: () -> Unit, longClickAction: () -> Unit){
     Surface(
         modifier = Modifier
-            .height(40.dp)
+            .height(50.dp)
             .padding(2.dp)
             .combinedClickable(onClick = { clickAction() }, onLongClick = { longClickAction() }),
         color = if(selected) LocalCustomColorsPalette.current.selectedCell
