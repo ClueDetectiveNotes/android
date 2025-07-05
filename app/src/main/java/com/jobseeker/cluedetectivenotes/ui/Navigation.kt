@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jobseeker.cluedetectivenotes.ui.view.HandSettingView
+import com.jobseeker.cluedetectivenotes.ui.view.HelpView
 import com.jobseeker.cluedetectivenotes.ui.view.HomeView
 import com.jobseeker.cluedetectivenotes.ui.view.OptionView
 import com.jobseeker.cluedetectivenotes.ui.view.PlayerDetailSettingView
@@ -36,6 +37,9 @@ fun Navigation(){
         }
         composable(Routes.Option.route){
             OptionView()
+        }
+        composable(Routes.Help.route){
+            HelpView(navController = navController)
         }
     }
 }

@@ -37,6 +37,12 @@ fun HomeView(
                         navController.navigate(Routes.Option.route)
                     })
             }
+            Row {
+                Button(modifier = Modifier.width(150.dp), content = { Text(text = "도움말") },
+                    onClick = {
+                        navController.navigate(Routes.Help.route)
+                    })
+            }
         }
     }
     BackOnPressedShuttingDown()
