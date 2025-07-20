@@ -12,6 +12,7 @@ import com.jobseeker.cluedetectivenotes.ui.view.PlayerDetailSettingView
 import com.jobseeker.cluedetectivenotes.ui.view.PlayerSettingView
 import com.jobseeker.cluedetectivenotes.ui.view.PublicCardSettingView
 import com.jobseeker.cluedetectivenotes.ui.view.SheetView
+import com.jobseeker.cluedetectivenotes.ui.view.SubmarkerSettingsView
 
 @Composable
 fun Navigation(){
@@ -36,10 +37,13 @@ fun Navigation(){
             SheetView(navController = navController)
         }
         composable(Routes.Option.route){
-            OptionView()
+            OptionView(navController = navController)
         }
         composable(Routes.Help.route){
             HelpView(navController = navController)
+        }
+        composable(Routes.SubmarkerSettings.route){
+            SubmarkerSettingsView(navController = navController)
         }
     }
 }

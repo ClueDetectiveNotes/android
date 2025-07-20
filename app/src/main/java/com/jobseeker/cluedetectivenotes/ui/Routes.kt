@@ -9,4 +9,5 @@ sealed class Routes (val route: String){
     object Sheet : Routes("SheetView")
     object Option : Routes("OptionView")
     object Help : Routes("HelpView")
+    object SubmarkerSettings : Routes("SubmarkerSettingsView")
 }

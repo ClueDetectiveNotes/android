@@ -1,5 +1,6 @@
 package com.jobseeker.cluedetectivenotes.persistence.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -52,6 +53,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         insertCommonCode(db);
 
+        //서브마커 생성
+        db.execSQL("DROP TABLE IF EXISTS SUB_MARKERS");
+        db.execSQL("create table SUB_MARKERS (SUB_MARKER_ID INTEGER PRIMARY KEY AUTOINCREMENT, SUB_MARKER_VALUE TEXT NOT NULL UNIQUE, SUB_MARKER_TYPE TEXT NOT NULL, SUB_MARKER_IS_ACTIVE BOOLEAN DEFAULT 1, SUB_MARKER_DISPLAY_ORDER INTEGER NOT NULL);");
+
+        insertSubMarkers(db);
+
         //다국어 생성
         db.execSQL("DROP TABLE IF EXISTS MULTI_LANG");
         db.execSQL("create table MULTI_LANG (CODE text, TYPE text, LANG text, VALUE text, primary key(CODE, TYPE, LANG));");
@@ -80,6 +87,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO COMMON_CODE VALUES ('APPLY_DARK_THEME','SELECT_BOX','DARK_THEME_TYPE',2);");
     }
 
+    private void insertSubMarkers(SQLiteDatabase db){
+        // 기본 서브마커들 (0~9)
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('0', 'DEFAULT', 0);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('1', 'DEFAULT', 1);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('2', 'DEFAULT', 2);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('3', 'DEFAULT', 3);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('4', 'DEFAULT', 4);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('5', 'DEFAULT', 5);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('6', 'DEFAULT', 6);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('7', 'DEFAULT', 7);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('8', 'DEFAULT', 8);");
+        db.execSQL("INSERT INTO SUB_MARKERS (SUB_MARKER_VALUE, SUB_MARKER_TYPE, SUB_MARKER_DISPLAY_ORDER) VALUES ('9', 'DEFAULT', 9);");
+    }
+
     private void insertOptionsMultiLang(SQLiteDatabase db){
         //한국어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('LANGUAGE','OPT','KR','언어');");
@@ -94,6 +115,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('BLIND_TRANSPARENCY','OPT','KR','블라인드 투명도');");
 
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SUBMARKER_SETTINGS','OPT','KR','서브마커 설정');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SUBMARKER_SETTINGS_BUTTON','OPT','KR','설정');");
+
         //영어
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('LANGUAGE','OPT','EN','Language');");
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('KR','CM_CD','EN','Korean');");
@@ -106,6 +130,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('APPLY_DARK_THEME','CM_CD','EN','Apply Dark Theme');");
 
         db.execSQL("INSERT INTO MULTI_LANG VALUES ('BLIND_TRANSPARENCY','OPT','EN','Blind Transparency');");
+
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SUBMARKER_SETTINGS','OPT','EN','Submarker Settings');");
+        db.execSQL("INSERT INTO MULTI_LANG VALUES ('SUBMARKER_SETTINGS_BUTTON','OPT','EN','Settings');");
 
     }
 
@@ -291,5 +318,121 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] bindArgs = {value, code};
         db.execSQL("UPDATE OPTIONS SET VALUE = ? WHERE CODE = ?",bindArgs);
+    }
+
+    // 서브마커 관련 메서드들
+    public List<String> getActiveSubMarkerItems() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+            "SUB_MARKERS", 
+            new String[]{"SUB_MARKER_VALUE"}, 
+            "SUB_MARKER_IS_ACTIVE = 1", 
+            null, null, null, 
+            "SUB_MARKER_DISPLAY_ORDER ASC"
+        );
+        
+        List<String> items = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            items.add(cursor.getString(0));
+        }
+        cursor.close();
+        return items;
+    }
+
+    public void addCustomSubMarkerItem(String value) throws Exception {
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        // 중복 체크
+        Cursor cursor = db.query(
+            "SUB_MARKERS", 
+            new String[]{"SUB_MARKER_ID"}, 
+            "SUB_MARKER_VALUE = ?", 
+            new String[]{value}, null, null, null
+        );
+        
+        if (cursor.getCount() > 0) {
+            cursor.close();
+            throw new Exception("이미 존재하는 서브마커입니다.");
+        }
+        cursor.close();
+        
+        // 다음 DISPLAY_ORDER 값 조회
+        Cursor orderCursor = db.rawQuery(
+            "SELECT MAX(SUB_MARKER_DISPLAY_ORDER) FROM SUB_MARKERS WHERE SUB_MARKER_TYPE = 'CUSTOM'", 
+            null
+        );
+        int nextOrder = 1;
+        if (orderCursor.moveToFirst()) {
+            nextOrder = orderCursor.getInt(0) + 1;
+        }
+        orderCursor.close();
+        
+        // 추가
+        ContentValues values = new ContentValues();
+        values.put("SUB_MARKER_VALUE", value);
+        values.put("SUB_MARKER_TYPE", "CUSTOM");
+        values.put("SUB_MARKER_DISPLAY_ORDER", nextOrder);
+        values.put("SUB_MARKER_IS_ACTIVE", 1);
+        
+        long result = db.insert("SUB_MARKERS", null, values);
+        if (result == -1) {
+            throw new Exception("서브마커 추가에 실패했습니다.");
+        }
+    }
+
+    public void removeCustomSubMarkerItem(int markerId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("SUB_MARKERS", "SUB_MARKER_ID = ? AND SUB_MARKER_TYPE = 'CUSTOM'", 
+                  new String[]{String.valueOf(markerId)});
+    }
+
+    public void toggleSubMarkerUsage(int markerId, boolean isActive) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("SUB_MARKER_IS_ACTIVE", isActive ? 1 : 0);
+        
+        db.update("SUB_MARKERS", values, 
+                  "SUB_MARKER_ID = ?", 
+                  new String[]{String.valueOf(markerId)});
+    }
+
+    public boolean isSubMarkerActive(int markerId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+            "SUB_MARKERS", 
+            new String[]{"SUB_MARKER_IS_ACTIVE"}, 
+            "SUB_MARKER_ID = ?", 
+            new String[]{String.valueOf(markerId)}, null, null, null
+        );
+        
+        boolean isActive = false;
+        if (cursor.moveToFirst()) {
+            isActive = cursor.getInt(0) == 1;
+        }
+        cursor.close();
+        return isActive;
+    }
+
+    public List<Map<String, Object>> getAllSubMarkerInfo() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+            "SUB_MARKERS", 
+            new String[]{"SUB_MARKER_ID", "SUB_MARKER_VALUE", "SUB_MARKER_TYPE", "SUB_MARKER_IS_ACTIVE", "SUB_MARKER_DISPLAY_ORDER"}, 
+            null, null, null, null, 
+            "SUB_MARKER_DISPLAY_ORDER ASC"
+        );
+        
+        List<Map<String, Object>> items = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("subMarkerId", cursor.getInt(0));
+            item.put("subMarkerValue", cursor.getString(1));
+            item.put("subMarkerType", cursor.getString(2));
+            item.put("subMarkerIsActive", cursor.getInt(3) == 1);
+            item.put("subMarkerDisplayOrder", cursor.getInt(4));
+            items.add(item);
+        }
+        cursor.close();
+        return items;
     }
 }

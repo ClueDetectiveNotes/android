@@ -29,11 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.jobseeker.cluedetectivenotes.ui.Routes
 import com.jobseeker.cluedetectivenotes.ui.viewModel.OptionViewModel
 
 
 @Composable
 fun OptionView(
+    navController: NavHostController,
     optionViewModel: OptionViewModel = viewModel()
 ) {
     val uiState = optionViewModel.store.uiState.collectAsState()
@@ -210,6 +213,42 @@ fun OptionView(
                     }
                 }
             }//블라인드 투명도 설정
+
+            //서브마커 설정
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)){
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .weight(1f)
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                ){
+                    Text(text = multiLang.getString("OPT.SUBMARKER_SETTINGS"))
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ){
+                    Row {
+                        Button(
+                            onClick = { navController.navigate(Routes.SubmarkerSettings.route) },
+                            shape = RoundedCornerShape(0.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(MaterialTheme.colorScheme.background.value),
+                                contentColor = Color(MaterialTheme.colorScheme.primary.value)
+                            ),
+                            border = BorderStroke(1.dp, Color(MaterialTheme.colorScheme.primary.value))
+                        ) {
+                            Text(text = multiLang.getString("OPT.SUBMARKER_SETTINGS_BUTTON"))
+                        }
+                    }
+                }
+            }//서브마커 설정
 
         }
     }
