@@ -16,6 +16,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -60,6 +63,9 @@ fun SubmarkerSettingsView(
     // 더미 서브마커 데이터
     val dummySubmarkers = listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17")
     
+    // Edit 모드 상태
+    var isEditMode by remember { mutableStateOf(false) }
+    
     Surface(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -68,6 +74,17 @@ fun SubmarkerSettingsView(
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "뒤로가기")
+                        }
+                    },
+                    actions = {
+                        if (!isEditMode) {
+                            IconButton(onClick = { isEditMode = true }) {
+                                Icon(Icons.Default.Edit, contentDescription = "편집")
+                            }
+                        } else {
+                            IconButton(onClick = { isEditMode = false }) {
+                                Icon(Icons.Default.Done, contentDescription = "완료")
+                            }
                         }
                     }
                 )
@@ -78,33 +95,39 @@ fun SubmarkerSettingsView(
                     
                     // 설명 텍스트
                     Text(
-                        text = "서브마커를 활성화/비활성화하고 순서를 변경할 수 있습니다.",
+                        text = if (isEditMode) "서브마커 순서를 변경하고 커스텀 서브마커를 삭제할 수 있습니다." else "서브마커를 활성화/비활성화할 수 있습니다.",
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                     
-                    // ReorderableList
-                    SubmarkerReorderableList(dummySubmarkers)
+                    // 모드에 따른 리스트 표시
+                    if (isEditMode) {
+                        SubmarkerEditModeList(dummySubmarkers)
+                    } else {
+                        SubmarkerViewModeList(dummySubmarkers)
+                    }
                 }
             }
             
-            // 플로팅 액션 버튼 - 우측 하단에 고정
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                FloatingActionButton(
-                    onClick = { 
-                        // TODO: 새 서브마커 추가 다이얼로그 열기
-                        println("새 서브마커 추가 버튼 클릭")
-                    },
-                    modifier = Modifier.padding(16.dp)
+            // 플로팅 액션 버튼 - Edit 모드가 아닐 때만 표시
+            if (!isEditMode) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.BottomEnd
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "새 서브마커 추가"
-                    )
+                    FloatingActionButton(
+                        onClick = { 
+                            // TODO: 새 서브마커 추가 다이얼로그 열기
+                            println("새 서브마커 추가 버튼 클릭")
+                        },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "새 서브마커 추가"
+                        )
+                    }
                 }
             }
         }
@@ -112,12 +135,93 @@ fun SubmarkerSettingsView(
 }
 
 @Composable
-fun SubmarkerReorderableList(submarkers: List<String>) {
+fun SubmarkerViewModeList(submarkers: List<String>) {
     // 서브마커 활성화 상태를 관리하는 Map
     var submarkerStates by remember { 
         mutableStateOf(submarkers.associateWith { true }) // 기본값은 모두 활성화
     }
     
+    // 화면에서만 작동하는 서브마커 리스트 상태
+    var uiSubmarkers by remember { mutableStateOf(submarkers) }
+    
+    val state = rememberReorderableLazyListState(onMove = { from, to ->
+        // 화면에서만 순서 변경
+        val fromIndex = from.index
+        val toIndex = to.index
+        
+        uiSubmarkers = uiSubmarkers.toMutableList().apply {
+            val item = removeAt(fromIndex)
+            add(toIndex, item)
+        }
+        
+        // TODO: 실제 데이터 순서 변경 로직
+        // SQLiteHelper.updateSubMarkerOrder(fromIndex, toIndex)
+        println("서브마커 순서 변경: $fromIndex → $toIndex")
+    })
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        LazyColumn(
+            state = state.listState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize()
+        ) {
+            items(uiSubmarkers, { it }) { submarker ->
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surface)
+                ) {
+                    Row(
+                        Modifier
+                            .height(60.dp)
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .background(Color.White)
+                            .border(1.dp, Color.LightGray)
+                    ) {
+                        // 서브마커 값 - 나머지 공간 모두 차지
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text(
+                                text = submarker,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                        }
+
+                        // 활성화/비활성화 토글
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(80.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Switch(
+                                checked = submarkerStates[submarker] ?: true,
+                                onCheckedChange = { isActive ->
+                                    // 토글 상태 업데이트
+                                    submarkerStates = submarkerStates.toMutableMap().apply {
+                                        put(submarker, isActive)
+                                    }
+
+                                    // TODO: 실제 데이터 업데이트 로직
+                                    // SQLiteHelper.toggleSubMarkerUsage(submarkerId, isActive)
+                                    println("서브마커 $submarker 활성화 상태: $isActive")
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SubmarkerEditModeList(submarkers: List<String>) {
     // 화면에서만 작동하는 서브마커 리스트 상태
     var uiSubmarkers by remember { mutableStateOf(submarkers) }
     
@@ -162,6 +266,42 @@ fun SubmarkerReorderableList(submarkers: List<String>) {
                                 .background(Color.White)
                                 .border(1.dp, Color.LightGray)
                         ) {
+                            // 삭제 버튼 (커스텀 서브마커인 경우만 표시)
+                            if (submarker.toIntOrNull() == null || submarker.toInt() > 9) {
+                                Box(
+                                    modifier = Modifier
+                                        .width(50.dp)
+                                        .fillMaxHeight(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    IconButton(
+                                        onClick = {
+                                            // TODO: 실제 삭제 로직
+                                            uiSubmarkers = uiSubmarkers.toMutableList().apply {
+                                                remove(submarker)
+                                            }
+                                            println("서브마커 삭제: $submarker")
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "삭제",
+                                            tint = Color.Red
+                                        )
+                                    }
+                                }
+                            } else {
+                                // 기본 서브마커는 빈 공간
+                                Box(
+                                    modifier = Modifier
+                                        .width(50.dp)
+                                        .fillMaxHeight(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    // 빈 공간
+                                }
+                            }
+                            
                             // 서브마커 값 - 나머지 공간 모두 차지
                             Box(
                                 modifier = Modifier
@@ -172,28 +312,6 @@ fun SubmarkerReorderableList(submarkers: List<String>) {
                                 Text(
                                     text = submarker,
                                     modifier = Modifier.padding(start = 16.dp)
-                                )
-                            }
-                            
-                            // 활성화/비활성화 토글
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(80.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Switch(
-                                    checked = submarkerStates[submarker] ?: true,
-                                    onCheckedChange = { isActive ->
-                                        // 토글 상태 업데이트
-                                        submarkerStates = submarkerStates.toMutableMap().apply {
-                                            put(submarker, isActive)
-                                        }
-                                        
-                                        // TODO: 실제 데이터 업데이트 로직
-                                        // SQLiteHelper.toggleSubMarkerUsage(submarkerId, isActive)
-                                        println("서브마커 $submarker 활성화 상태: $isActive")
-                                    }
                                 )
                             }
                             
@@ -217,4 +335,4 @@ fun SubmarkerReorderableList(submarkers: List<String>) {
             }
         }
     }
-} 
+}
